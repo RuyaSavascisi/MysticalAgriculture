@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
 import com.blakebr0.mysticalagriculture.container.inventory.UpgradeItemStackHandler;
-import com.blakebr0.mysticalagriculture.init.ModContainerTypes;
+import com.blakebr0.mysticalagriculture.init.ModMenuTypes;
 import com.blakebr0.mysticalagriculture.item.MachineUpgradeItem;
 import com.blakebr0.mysticalagriculture.tileentity.HarvesterTileEntity;
 import net.minecraft.core.BlockPos;
@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.ForgeHooks;
 
 public class HarvesterContainer extends BaseContainerMenu {
     private HarvesterContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf buffer) {
@@ -58,7 +57,7 @@ public class HarvesterContainer extends BaseContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (ForgeHooks.getBurnTime(itemstack1, null) > 0) {
+                } else if (itemstack1.getBurnTime(null) > 0) {
                     if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -95,10 +94,10 @@ public class HarvesterContainer extends BaseContainerMenu {
     }
 
     public static HarvesterContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-        return new HarvesterContainer(ModContainerTypes.HARVESTER.get(), windowId, playerInventory, buffer);
+        return new HarvesterContainer(ModMenuTypes.HARVESTER.get(), windowId, playerInventory, buffer);
     }
 
     public static HarvesterContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, UpgradeItemStackHandler upgradeInventory, BlockPos pos) {
-        return new HarvesterContainer(ModContainerTypes.HARVESTER.get(), windowId, playerInventory, inventory, upgradeInventory, pos);
+        return new HarvesterContainer(ModMenuTypes.HARVESTER.get(), windowId, playerInventory, inventory, upgradeInventory, pos);
     }
 }

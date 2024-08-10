@@ -16,6 +16,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -30,24 +31,25 @@ public final class AwakeningCrafting implements IRecipeManager<IAwakeningRecipe>
     }
 
     @ZenCodeType.Method
-    public static void addRecipe(String name, IItemStack output, IIngredient[] inputs, IItemStack[] essences, @ZenCodeType.OptionalBoolean boolean transferNBT) {
+    public static void addRecipe(String name, IItemStack output, IIngredient[] inputs, IItemStack[] essences, @ZenCodeType.OptionalBoolean boolean transferComponents) {
         var id = CraftTweakerConstants.rl(INSTANCE.fixRecipeName(name));
-        var recipe = new AwakeningRecipe(id, toIngredientsList(inputs), toItemStackList(essences), output.getInternal(), transferNBT);
+        var recipe = new AwakeningRecipe(inputs[0].asVanillaIngredient(), toIngredientsList(inputs), toItemStackList(essences), output.getInternal(), transferComponents);
 
         recipe.setTransformer((slot, stack) -> inputs[slot].getRemainingItem(new MCItemStack(stack)).getInternal());
 
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, recipe));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, new RecipeHolder<>(id, recipe)));
     }
 
     @ZenCodeType.Method
     public static void remove(IItemStack stack) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
+        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.value().getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
     }
 
     private static NonNullList<Ingredient> toIngredientsList(IIngredient... iingredients) {
-        var ingredients = NonNullList.withSize(5, Ingredient.EMPTY);
+        var ingredients = NonNullList.withSize(4, Ingredient.EMPTY);
 
-        for (int i = 0; i < iingredients.length; i++) {
+        // first ingredient is passed in as its own parameter
+        for (int i = 1; i < iingredients.length; i++) {
             ingredients.set(i, iingredients[i].asVanillaIngredient());
         }
 

@@ -1,29 +1,28 @@
 package com.blakebr0.mysticalagriculture.api.crop;
 
+import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import net.minecraft.resources.ResourceLocation;
-
-import static com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI.MOD_ID;
 
 /**
  * Helper class used to specify crop texture locations
  */
 public class CropTextures {
-    public static final ResourceLocation FLOWER_INGOT_BLANK = new ResourceLocation(MOD_ID, "block/flower_ingot");
-    public static final ResourceLocation FLOWER_ROCK_BLANK = new ResourceLocation(MOD_ID, "block/flower_rock");
-    public static final ResourceLocation FLOWER_DUST_BLANK = new ResourceLocation(MOD_ID, "block/flower_dust");
-    public static final ResourceLocation FLOWER_FACE_BLANK = new ResourceLocation(MOD_ID, "block/flower_face");
+    public static final ResourceLocation FLOWER_INGOT_BLANK = MysticalAgricultureAPI.resource("block/flower_ingot");
+    public static final ResourceLocation FLOWER_ROCK_BLANK = MysticalAgricultureAPI.resource("block/flower_rock");
+    public static final ResourceLocation FLOWER_DUST_BLANK = MysticalAgricultureAPI.resource("block/flower_dust");
+    public static final ResourceLocation FLOWER_FACE_BLANK = MysticalAgricultureAPI.resource("block/flower_face");
 
-    public static final ResourceLocation ESSENCE_INGOT_BLANK = new ResourceLocation(MOD_ID, "item/essence_ingot");
-    public static final ResourceLocation ESSENCE_ROCK_BLANK = new ResourceLocation(MOD_ID, "item/essence_rock");
-    public static final ResourceLocation ESSENCE_DUST_BLANK = new ResourceLocation(MOD_ID, "item/essence_dust");
-    public static final ResourceLocation ESSENCE_GEM_BLANK = new ResourceLocation(MOD_ID, "item/essence_gem");
-    public static final ResourceLocation ESSENCE_TALL_GEM_BLANK = new ResourceLocation(MOD_ID, "item/essence_tall_gem");
-    public static final ResourceLocation ESSENCE_DIAMOND_BLANK = new ResourceLocation(MOD_ID, "item/essence_diamond");
-    public static final ResourceLocation ESSENCE_QUARTZ_BLANK = new ResourceLocation(MOD_ID, "item/essence_quartz");
-    public static final ResourceLocation ESSENCE_FLAME_BLANK = new ResourceLocation(MOD_ID, "item/essence_flame");
-    public static final ResourceLocation ESSENCE_ROD_BLANK = new ResourceLocation(MOD_ID, "item/essence_rod");
+    public static final ResourceLocation ESSENCE_INGOT_BLANK = MysticalAgricultureAPI.resource("item/essence_ingot");
+    public static final ResourceLocation ESSENCE_ROCK_BLANK = MysticalAgricultureAPI.resource("item/essence_rock");
+    public static final ResourceLocation ESSENCE_DUST_BLANK = MysticalAgricultureAPI.resource("item/essence_dust");
+    public static final ResourceLocation ESSENCE_GEM_BLANK = MysticalAgricultureAPI.resource("item/essence_gem");
+    public static final ResourceLocation ESSENCE_TALL_GEM_BLANK = MysticalAgricultureAPI.resource("item/essence_tall_gem");
+    public static final ResourceLocation ESSENCE_DIAMOND_BLANK = MysticalAgricultureAPI.resource("item/essence_diamond");
+    public static final ResourceLocation ESSENCE_QUARTZ_BLANK = MysticalAgricultureAPI.resource("item/essence_quartz");
+    public static final ResourceLocation ESSENCE_FLAME_BLANK = MysticalAgricultureAPI.resource("item/essence_flame");
+    public static final ResourceLocation ESSENCE_ROD_BLANK = MysticalAgricultureAPI.resource("item/essence_rod");
 
-    public static final ResourceLocation SEED_BLANK = new ResourceLocation(MOD_ID, "item/mystical_seeds");
+    public static final ResourceLocation SEED_BLANK = MysticalAgricultureAPI.resource("item/mystical_seeds");
 
     public static final CropTextures INGOT_CROP_TEXTURES = new CropTextures(FLOWER_INGOT_BLANK, ESSENCE_INGOT_BLANK);
     public static final CropTextures ROCK_CROP_TEXTURES = new CropTextures(FLOWER_ROCK_BLANK, ESSENCE_ROCK_BLANK);
@@ -100,11 +99,11 @@ public class CropTextures {
         var name = id.getPath();
 
         if (this.flowerTexture == null)
-            this.flowerTexture = new ResourceLocation(modid, "block/flower/" + name + "_flower");
+            this.flowerTexture = ResourceLocation.fromNamespaceAndPath(modid, "block/flower/" + name + "_flower");
         if (this.essenceTexture == null)
-            this.essenceTexture = new ResourceLocation(modid, "item/essence/" + name + "_essence");
+            this.essenceTexture = ResourceLocation.fromNamespaceAndPath(modid, "item/essence/" + name + "_essence");
         if (this.seedTexture == null)
-            this.seedTexture = new ResourceLocation(modid, "item/seeds/" + name + "_seeds");
+            this.seedTexture = ResourceLocation.fromNamespaceAndPath(modid, "item/seeds/" + name + "_seeds");
 
         return this;
     }

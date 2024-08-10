@@ -14,19 +14,21 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.ForgeSpawnEggItem;
+import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class SouliumSpawnerCategory implements IRecipeCategory<ISouliumSpawnerRecipe> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(MysticalAgriculture.MOD_ID, "textures/jei/soulium_spawner.png");
+    private static final ResourceLocation TEXTURE = MysticalAgriculture.resource("textures/jei/soulium_spawner.png");
     public static final RecipeType<ISouliumSpawnerRecipe> RECIPE_TYPE = RecipeType.create(MysticalAgriculture.MOD_ID, "soulium_spawner", ISouliumSpawnerRecipe.class);
 
     private final IDrawable background;
@@ -81,15 +83,23 @@ public class SouliumSpawnerCategory implements IRecipeCategory<ISouliumSpawnerRe
         return recipe.getIngredients()
                 .stream()
                 .flatMap(i -> Arrays.stream(i.getItems()))
-                .map(s -> s.copyWithCount(recipe.getInputCount()))
+                .map(s -> s.copyWithCount(recipe.getCount(0)))
                 .toList();
     }
 
     private static List<ItemStack> createOutputsList(ISouliumSpawnerRecipe recipe) {
+        var level = Minecraft.getInstance().level;
+
+        assert level != null;
+
+        var registry = level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
+
         return recipe.getEntityTypes().unwrap()
                 .stream()
-                .map(WeightedEntry.Wrapper::getData)
-                .map(ForgeSpawnEggItem::fromEntityType)
+                .map(WeightedEntry.Wrapper::data)
+                .map(registry::get)
+                .filter(Objects::nonNull)
+                .map(SpawnEggItem::byId)
                 .filter(Objects::nonNull)
                 .map(ItemStack::new)
                 .toList();

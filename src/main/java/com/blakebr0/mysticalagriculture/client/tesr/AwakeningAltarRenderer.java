@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData;
 
 public class AwakeningAltarRenderer implements BlockEntityRenderer<AwakeningAltarTileEntity> {
     public AwakeningAltarRenderer(BlockEntityRendererProvider.Context context) { }

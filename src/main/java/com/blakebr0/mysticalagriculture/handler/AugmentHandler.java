@@ -3,20 +3,20 @@ package com.blakebr0.mysticalagriculture.handler;
 import com.blakebr0.mysticalagriculture.api.lib.AbilityCache;
 import com.blakebr0.mysticalagriculture.api.util.AugmentUtils;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 public final class AugmentHandler {
     private static final AbilityCache ABILITY_CACHE = new AbilityCache();
 
     @SubscribeEvent
-    public void onPlayerUpdate(LivingEvent.LivingTickEvent event) {
-        var entity = event.getEntity();
+    public void onPlayerUpdate(PlayerTickEvent.Pre event) {
+        var player = event.getEntity();
 
-        if (entity instanceof Player player && !player.isDeadOrDying()) {
+        if (!player.isDeadOrDying()) {
             var level = player.level();
             var augments = AugmentUtils.getArmorAugments(player);
 

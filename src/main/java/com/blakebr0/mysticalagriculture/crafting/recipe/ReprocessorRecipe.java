@@ -4,40 +4,30 @@ import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.mysticalagriculture.api.crafting.IReprocessorRecipe;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class ReprocessorRecipe implements ISpecialRecipe, IReprocessorRecipe {
-    private final ResourceLocation recipeId;
     private final NonNullList<Ingredient> inputs;
-    private final ItemStack output;
+    private final ItemStack result;
 
-    public ReprocessorRecipe(ResourceLocation recipeId, Ingredient input, ItemStack output) {
-        this.recipeId = recipeId;
+    public ReprocessorRecipe(Ingredient input, ItemStack result) {
         this.inputs = NonNullList.of(Ingredient.EMPTY, input);
-        this.output = output;
+        this.result = result;
     }
 
     @Override
-    public ItemStack assemble(IItemHandler inventory, RegistryAccess access) {
-        return this.output.copy();
-    }
-
-    @Override
-    public ItemStack assemble(Container inventory, RegistryAccess access) {
-        return this.assemble(new InvWrapper(inventory), access);
+    public ItemStack assemble(RecipeInput inventory, HolderLookup.Provider provider) {
+        return this.result.copy();
     }
 
     @Override
@@ -46,18 +36,13 @@ public class ReprocessorRecipe implements ISpecialRecipe, IReprocessorRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess access) {
-        return this.output;
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
+        return this.result;
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return this.inputs;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.recipeId;
     }
 
     @Override
@@ -70,39 +55,37 @@ public class ReprocessorRecipe implements ISpecialRecipe, IReprocessorRecipe {
         return ModRecipeTypes.REPROCESSOR.get();
     }
 
-    @Override
-    public boolean matches(IItemHandler inventory) {
-        var stack = inventory.getStackInSlot(0);
-        return this.inputs.get(0).test(stack);
-    }
-
-    @Override
-    public boolean matches(Container inv, Level level) {
-        return this.matches(new InvWrapper(inv));
-    }
-
     public static class Serializer implements RecipeSerializer<ReprocessorRecipe> {
-        @Override
-        public ReprocessorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            var ingredient = json.getAsJsonObject("input");
-            var input = Ingredient.fromJson(ingredient);
-            var output = ShapedRecipe.itemStackFromJson(json.getAsJsonObject("result"));
+        public static final MapCodec<ReprocessorRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
+               builder.group(
+                       Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.inputs.getFirst()),
+                       ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
+               ).apply(builder, ReprocessorRecipe::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, ReprocessorRecipe> STREAM_CODEC = StreamCodec.of(
+                ReprocessorRecipe.Serializer::toNetwork, ReprocessorRecipe.Serializer::fromNetwork
+        );
 
-            return new ReprocessorRecipe(recipeId, input, output);
+        @Override
+        public MapCodec<ReprocessorRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public ReprocessorRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            var input = Ingredient.fromNetwork(buffer);
-            var output = buffer.readItem();
-
-            return new ReprocessorRecipe(recipeId, input, output);
+        public StreamCodec<RegistryFriendlyByteBuf, ReprocessorRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
 
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, ReprocessorRecipe recipe) {
-            recipe.inputs.get(0).toNetwork(buffer);
-            buffer.writeItem(recipe.output);
+        private static ReprocessorRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+            var input = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
+            var result = ItemStack.STREAM_CODEC.decode(buffer);
+
+            return new ReprocessorRecipe(input, result);
+        }
+
+        private static void toNetwork(RegistryFriendlyByteBuf buffer, ReprocessorRecipe recipe) {
+            Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.inputs.getFirst());
+            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
         }
     }
 }

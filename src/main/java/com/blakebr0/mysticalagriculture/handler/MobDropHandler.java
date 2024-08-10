@@ -13,14 +13,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 
 public final class MobDropHandler {
     @SubscribeEvent
     public void onLivingDrops(LivingDropsEvent event) {
         var entity = event.getEntity();
-        var level = entity.getCommandSenderWorld();
+        var level = entity.level();
 
         if (!level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
             return;
@@ -58,7 +58,7 @@ public final class MobDropHandler {
                     }
                 }
 
-                var enlightenmentLevel = EnchantmentHelper.getItemEnchantmentLevel(ModEnchantments.MYSTICAL_ENLIGHTENMENT.get(), held);
+                var enlightenmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MYSTICAL_ENLIGHTENMENT, held);
 
                 if (enlightenmentLevel > 0) {
                     boolean witherDropsCognizant = ModConfigs.WITHER_DROPS_COGNIZANT.get();

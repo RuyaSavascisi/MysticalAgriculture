@@ -2,19 +2,21 @@ package com.blakebr0.mysticalagriculture.data.generator;
 
 import com.blakebr0.mysticalagriculture.api.crop.CropTextures;
 import net.minecraft.client.renderer.texture.atlas.sources.SingleFile;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.SpriteSourceProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.SpriteSourceProvider;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class SpriteSourceGenerator extends SpriteSourceProvider {
-    public SpriteSourceGenerator(PackOutput output, String modid, ExistingFileHelper fileHelper) {
-        super(output, fileHelper, modid);
+    public SpriteSourceGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, String modid, ExistingFileHelper fileHelper) {
+        super(output, lookup, modid, fileHelper);
     }
 
     @Override
-    protected void addSources() {
+    protected void gather() {
         this.atlas(SpriteSourceProvider.BLOCKS_ATLAS)
                 .addSource(new SingleFile(CropTextures.FLOWER_DUST_BLANK, Optional.empty()))
                 .addSource(new SingleFile(CropTextures.FLOWER_FACE_BLANK, Optional.empty()))

@@ -5,173 +5,66 @@ import com.blakebr0.mysticalagriculture.crafting.condition.CropEnabledCondition;
 import com.blakebr0.mysticalagriculture.crafting.condition.CropHasMaterialCondition;
 import com.blakebr0.mysticalagriculture.crafting.condition.SeedCraftingRecipesEnabledCondition;
 import com.blakebr0.mysticalagriculture.crafting.ingredient.CropComponentIngredient;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.NotCondition;
+import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class CraftingRecipeBuilder {
-    private final Item result;
-    private final int count;
-    private final List<String> pattern = Lists.newArrayList();
-    private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
-    private final JsonArray conditions = new JsonArray();
+    private final ItemStack result;
     private String group = "";
+    private ShapedRecipePattern pattern;
+    private CraftingBookCategory category;
+    private final List<ICondition> conditions;
 
-    public CraftingRecipeBuilder(ItemLike output, int count) {
-        this.result = output.asItem();
-        this.count = count;
+    public CraftingRecipeBuilder(ItemStack result) {
+        this.result = result;
+        this.conditions = new ArrayList<>();
     }
 
-    public void addKey(char key, Ingredient ingredient) {
-        this.key.put(key, ingredient);
-    }
-
-    public void addPatternLine(String line) {
-        this.pattern.add(line);
-    }
-
-    public void addCondition(JsonObject condition) {
+    public void addCondition(ICondition condition) {
         this.conditions.add(condition);
     }
 
-    public static CraftingRecipeBuilder newSeedRecipe(Crop crop) {
-        var builder = new CraftingRecipeBuilder(crop.getSeedsItem(), 1);
+    public void build(RecipeOutput consumer, ResourceLocation id) {
+        consumer.accept(id, new ShapedRecipe(this.group, this.category, this.pattern, this.result), null, this.conditions.toArray(new ICondition[0]));
+    }
 
-        var essence = new CropComponentIngredient(crop, CropComponentIngredient.ComponentType.ESSENCE);
-        var seed = new CropComponentIngredient(crop, CropComponentIngredient.ComponentType.SEED);
-        var material = new CropComponentIngredient(crop, CropComponentIngredient.ComponentType.MATERIAL);
+    public static CraftingRecipeBuilder newSeedRecipe(Crop crop) {
+        var builder = new CraftingRecipeBuilder(new ItemStack(crop.getSeedsItem()));
+
+        var essence = CropComponentIngredient.of(crop.getId(), CropComponentIngredient.ComponentType.ESSENCE);
+        var seed = CropComponentIngredient.of(crop.getId(), CropComponentIngredient.ComponentType.SEED);
+        var material = CropComponentIngredient.of(crop.getId(), CropComponentIngredient.ComponentType.MATERIAL);
 
         builder.group = "mysticalagriculture:seeds";
+        builder.category = CraftingBookCategory.MISC;
+        builder.pattern = ShapedRecipePattern.of(
+                Map.of('E', essence, 'S', seed, 'M', material),
+                "MEM",
+                "ESE",
+                "MEM"
+        );
 
-        builder.addKey('E', essence);
-        builder.addKey('S', seed);
-        builder.addKey('M', material);
-
-        builder.addPatternLine("MEM");
-        builder.addPatternLine("ESE");
-        builder.addPatternLine("MEM");
-
-        JsonObject condition;
-
-        condition = new JsonObject();
-        condition.addProperty("type", SeedCraftingRecipesEnabledCondition.Serializer.INSTANCE.getID().toString());
-
-        builder.addCondition(condition);
-
-        condition = new JsonObject();
-        condition.addProperty("type", CropEnabledCondition.Serializer.INSTANCE.getID().toString());
-        condition.addProperty("crop", crop.getId().toString());
-
-        builder.addCondition(condition);
-
-        condition = new JsonObject();
-        condition.addProperty("type", CropHasMaterialCondition.Serializer.INSTANCE.getID().toString());
-        condition.addProperty("crop", crop.getId().toString());
-
-        builder.addCondition(condition);
+        builder.addCondition(new SeedCraftingRecipesEnabledCondition());
+        builder.addCondition(new CropEnabledCondition(crop.getId()));
+        builder.addCondition(new CropHasMaterialCondition(crop.getId()));
 
         var ingredient = crop.getLazyIngredient();
 
         if (ingredient.isTag()) {
-            var tagEmptyCondition = new JsonObject();
-            tagEmptyCondition.addProperty("type", TagEmptyCondition.Serializer.INSTANCE.getID().toString());
-            tagEmptyCondition.addProperty("tag", ingredient.getId());
-
-            condition = new JsonObject();
-            condition.addProperty("type", "forge:not");
-            condition.add("value", tagEmptyCondition);
-
-            builder.addCondition(condition);
+            builder.addCondition(new NotCondition(new TagEmptyCondition(ingredient.getId())));
         }
 
         return builder;
-    }
-
-    public void build(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
-        consumer.accept(new CraftingRecipeBuilder.Result(id, this.result, this.count, this.group, this.pattern, this.key, this.conditions));
-    }
-
-    public static class Result implements FinishedRecipe {
-        private final ResourceLocation id;
-        private final Item result;
-        private final int count;
-        private final String group;
-        private final List<String> pattern;
-        private final Map<Character, Ingredient> key;
-        private final JsonArray conditions;
-
-        public Result(ResourceLocation id, Item result, int count, String group, List<String> pattern, Map<Character, Ingredient> key, JsonArray conditions) {
-            this.id = id;
-            this.result = result;
-            this.count = count;
-            this.group = group;
-            this.pattern = pattern;
-            this.key = key;
-            this.conditions = conditions;
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject json) {
-            if (!this.group.isEmpty()) {
-                json.addProperty("group", this.group);
-            }
-
-            json.add("conditions", this.conditions);
-
-            var pattern = new JsonArray();
-
-            this.pattern.forEach(pattern::add);
-
-            json.add("pattern", pattern);
-
-            var key = new JsonObject();
-
-            this.key.forEach((c, i) -> key.add(c.toString(), i.toJson()));
-
-            json.add("key", key);
-
-            var result = new JsonObject();
-
-            result.addProperty("item", ForgeRegistries.ITEMS.getKey(this.result).toString());
-
-            if (this.count > 1) {
-                result.addProperty("count", this.count);
-            }
-
-            json.add("result", result);
-        }
-
-        @Override
-        public ResourceLocation getId() {
-            return this.id;
-        }
-
-        @Override
-        public RecipeSerializer<?> getType() {
-            return RecipeSerializer.SHAPED_RECIPE;
-        }
-
-        @Override
-        public JsonObject serializeAdvancement() {
-            return null;
-        }
-
-        @Override
-        public ResourceLocation getAdvancementId() {
-            return null;
-        }
     }
 }

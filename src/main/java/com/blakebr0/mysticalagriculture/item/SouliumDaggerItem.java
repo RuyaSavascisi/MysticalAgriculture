@@ -10,9 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -21,7 +18,7 @@ public class SouliumDaggerItem extends BaseSwordItem implements ISoulSiphoningIt
     private final DaggerType type;
 
     public SouliumDaggerItem(Tier tier, DaggerType type) {
-        super(tier, type.getDamage(), -2.4F, p -> p.defaultDurability(type.getDurability()));
+        super(tier, type.getDamage(), -2.4F, p -> p.durability(type.getDurability()));
         this.type = type;
     }
 
@@ -30,9 +27,8 @@ public class SouliumDaggerItem extends BaseSwordItem implements ISoulSiphoningIt
         return "item.mysticalagriculture.soulium_dagger";
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         switch (this.type) {
             case PASSIVE -> {
                 tooltip.add(ModTooltips.PASSIVE_ATTUNED.color(ChatFormatting.GREEN).build());

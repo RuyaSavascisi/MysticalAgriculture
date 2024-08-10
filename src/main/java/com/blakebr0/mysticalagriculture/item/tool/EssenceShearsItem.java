@@ -5,22 +5,19 @@ import com.blakebr0.mysticalagriculture.api.tinkering.AugmentType;
 import com.blakebr0.mysticalagriculture.api.tinkering.ITinkerable;
 import com.blakebr0.mysticalagriculture.api.util.AugmentUtils;
 import com.blakebr0.mysticalagriculture.config.ModConfigs;
+import com.blakebr0.mysticalagriculture.init.ModDataComponentTypes;
 import com.blakebr0.mysticalagriculture.lib.ModTooltips;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
@@ -28,10 +25,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -41,7 +38,7 @@ public class EssenceShearsItem extends BaseShearsItem implements ITinkerable {
     private final int slots;
 
     public EssenceShearsItem(Tier tier, int tinkerableTier, int slots) {
-        super(p -> p.durability(tier.getUses()));
+        super(p -> p.durability(tier.getUses()).component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }
@@ -122,62 +119,37 @@ public class EssenceShearsItem extends BaseShearsItem implements ITinkerable {
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
-        var augments = AugmentUtils.getAugments(stack);
-        var success = false;
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected) {
+        for (var augment : AugmentUtils.getAugments(stack)) {
+            augment.onInventoryTick(stack, level, entity, slot, isSelected);
+        }
+    }
 
-        for (var augment : augments) {
-            if (augment.onBlockStartBreak(stack, pos, player))
-                success = true;
+    @Override
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
+        if (entity == null) {
+            return super.damageItem(stack, amount, null, onBroken);
         }
 
-        return success;
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected) {
-        AugmentUtils.getAugments(stack).forEach(a -> a.onInventoryTick(stack, level, entity, slot, isSelected));
-    }
-
-    @Override
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-        if (stack.hurt(amount, entity.getRandom(), entity instanceof ServerPlayer ? (ServerPlayer) entity : null)) {
-            onBroken.accept(entity);
-
-            AugmentUtils.getAugments(stack).forEach(augment -> {
+        stack.hurtAndBreak(amount, (ServerLevel) entity.level(), entity, (item) -> {
+            for (var augment : AugmentUtils.getAugments(stack)) {
                 Block.popResource(entity.level(), entity.getOnPos(), new ItemStack(augment.getItem()));
-            });
-
-            stack.shrink(1);
+            }
 
             if (entity instanceof Player player) {
                 player.awardStat(Stats.ITEM_BROKEN.get(this));
             }
 
-            stack.setDamageValue(0);
-        }
+            onBroken.accept(item);
+        });
 
         return 0;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(ModTooltips.getTooltipForTier(this.tinkerableTier));
         ModTooltips.addAugmentListToTooltip(tooltip, stack, this.slots);
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> modifiers = HashMultimap.create();
-
-        if (slot == EquipmentSlot.MAINHAND) {
-            AugmentUtils.getAugments(stack).forEach(a -> {
-                a.addToolAttributeModifiers(modifiers, slot, stack);
-            });
-        }
-
-        return modifiers;
     }
 
     @Override

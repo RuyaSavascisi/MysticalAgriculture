@@ -7,8 +7,8 @@ import com.blakebr0.mysticalagriculture.data.generator.ItemModelJsonGenerator;
 import com.blakebr0.mysticalagriculture.data.generator.ItemTagsJsonGenerator;
 import com.blakebr0.mysticalagriculture.data.generator.RecipeJsonGenerator;
 import com.blakebr0.mysticalagriculture.data.generator.SpriteSourceGenerator;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 public final class ModDataGenerators {
     @SubscribeEvent
@@ -20,9 +20,9 @@ public final class ModDataGenerators {
 
         generator.addProvider(event.includeClient(), new BlockModelJsonGenerator(packOutput, MysticalAgriculture.MOD_ID, existingFileHelper));
         generator.addProvider(event.includeClient(), new ItemModelJsonGenerator(packOutput, MysticalAgriculture.MOD_ID, existingFileHelper));
-        generator.addProvider(event.includeClient(), new SpriteSourceGenerator(packOutput, MysticalAgriculture.MOD_ID, existingFileHelper));
+        generator.addProvider(event.includeClient(), new SpriteSourceGenerator(packOutput, lookupProvider, MysticalAgriculture.MOD_ID, existingFileHelper));
 
-        generator.addProvider(event.includeServer(), new RecipeJsonGenerator(packOutput));
+        generator.addProvider(event.includeServer(), new RecipeJsonGenerator(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new BlockTagsJsonGenerator(packOutput, lookupProvider, MysticalAgriculture.MOD_ID, existingFileHelper));
         generator.addProvider(event.includeServer(), new ItemTagsJsonGenerator(packOutput, lookupProvider, MysticalAgriculture.MOD_ID, existingFileHelper));
     }

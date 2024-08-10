@@ -1,6 +1,6 @@
 package com.blakebr0.mysticalagriculture.item;
 
-import com.blakebr0.cucumber.helper.NBTHelper;
+import com.blakebr0.mysticalagriculture.init.ModDataComponentTypes;
 import com.blakebr0.mysticalagriculture.lib.ModTooltips;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -17,8 +17,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -26,13 +24,13 @@ public class EssenceWateringCanItem extends WateringCanItem {
     private final ChatFormatting textColor;
 
     public EssenceWateringCanItem(int range, double chance, ChatFormatting textColor) {
-        super(range, chance);
+        super(range, chance, p -> p.component(ModDataComponentTypes.WATERING_CAN_ACTIVE, false));
         this.textColor = textColor;
     }
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-        var isActive = NBTHelper.getBoolean(stack, "Active");
+        var isActive = isActive(stack);
 
         if (selected && isActive && entity instanceof Player player) {
             var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
@@ -53,7 +51,7 @@ public class EssenceWateringCanItem extends WateringCanItem {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return NBTHelper.getBoolean(stack, "Active");
+        return isActive(stack);
     }
 
     @Override
@@ -62,14 +60,14 @@ public class EssenceWateringCanItem extends WateringCanItem {
         var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
 
         if (trace.getType() != HitResult.Type.BLOCK) {
-            if (NBTHelper.getBoolean(stack, "Water") && player.isCrouching()) {
-                NBTHelper.flipBoolean(stack, "Active");
+            if (isFilled(stack) && player.isCrouching()) {
+                flipActive(stack);
             }
 
             return new InteractionResultHolder<>(InteractionResult.PASS, stack);
         }
 
-        if (NBTHelper.getBoolean(stack, "Water")) {
+        if (isFilled(stack)) {
             return new InteractionResultHolder<>(InteractionResult.PASS, stack);
         }
 
@@ -80,7 +78,7 @@ public class EssenceWateringCanItem extends WateringCanItem {
             var fluid = level.getFluidState(pos);
 
             if (fluid.is(FluidTags.WATER)) {
-                NBTHelper.setBoolean(stack, "Water", true);
+                setFilled(stack, true);
 
                 player.playSound(SoundEvents.BUCKET_FILL, 1.0F, 1.0F);
 
@@ -100,20 +98,32 @@ public class EssenceWateringCanItem extends WateringCanItem {
         var hand = context.getHand();
         var stack = player.getItemInHand(hand);
 
-        if (NBTHelper.getBoolean(stack, "Active"))
+        if (isActive(stack))
             return InteractionResult.PASS;
 
         return super.useOn(context);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag advanced) {
-        super.appendHoverText(stack, level, tooltip, advanced);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag advanced) {
+        super.appendHoverText(stack, context, tooltip, advanced);
 
         var rangeString = String.valueOf(this.range);
         var rangeNumber = Component.literal(rangeString + "x" + rangeString).withStyle(this.textColor);
 
         tooltip.add(ModTooltips.TOOL_AREA.args(rangeNumber).build());
+    }
+
+    public static boolean isActive(ItemStack stack) {
+        return stack.getOrDefault(ModDataComponentTypes.WATERING_CAN_ACTIVE, false);
+    }
+
+    public static void setActive(ItemStack stack, boolean active) {
+        stack.set(ModDataComponentTypes.WATERING_CAN_ACTIVE, active);
+    }
+
+    public static void flipActive(ItemStack stack) {
+        var current = isActive(stack);
+        setActive(stack, !current);
     }
 }

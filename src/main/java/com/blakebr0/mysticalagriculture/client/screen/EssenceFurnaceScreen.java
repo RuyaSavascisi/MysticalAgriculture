@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class EssenceFurnaceScreen extends BaseContainerScreen<EssenceFurnaceContainer> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(MysticalAgriculture.MOD_ID, "textures/gui/reprocessor.png");
+    private static final ResourceLocation BACKGROUND = MysticalAgriculture.resource("textures/gui/reprocessor.png");
     private EssenceFurnaceTileEntity tile;
 
     public EssenceFurnaceScreen(EssenceFurnaceContainer container, Inventory inv, Component title) {

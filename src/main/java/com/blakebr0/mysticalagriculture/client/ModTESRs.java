@@ -9,8 +9,8 @@ import com.blakebr0.mysticalagriculture.client.tesr.InfusionPedestalRenderer;
 import com.blakebr0.mysticalagriculture.client.tesr.SouliumSpawnerRenderer;
 import com.blakebr0.mysticalagriculture.client.tesr.TinkeringTableRenderer;
 import com.blakebr0.mysticalagriculture.init.ModTileEntities;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 public final class ModTESRs {
     @SubscribeEvent

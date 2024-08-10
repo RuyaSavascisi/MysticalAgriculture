@@ -5,11 +5,12 @@ import com.blakebr0.mysticalagriculture.api.crop.CropTier;
 import com.blakebr0.mysticalagriculture.api.farmland.IEssenceFarmland;
 import com.blakebr0.mysticalagriculture.lib.ModTooltips;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -21,10 +22,6 @@ import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.PlantType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +31,10 @@ public class InfusedFarmlandBlock extends FarmBlock implements IColored, IEssenc
     private final CropTier tier;
 
     public InfusedFarmlandBlock(CropTier tier) {
-        super(Properties.copy(Blocks.FARMLAND));
+        super(Properties.ofFullCopy(Blocks.FARMLAND));
         this.tier = tier;
 
         FARMLANDS.add(this);
-    }
-
-    @Override
-    public boolean canSustainPlant(BlockState state, BlockGetter level, BlockPos pos, Direction direction, IPlantable plantable) {
-        var type = plantable.getPlantType(level, pos.relative(direction));
-        return type == PlantType.CROP || type == PlantType.PLAINS;
     }
 
     @Override
@@ -73,8 +64,10 @@ public class InfusedFarmlandBlock extends FarmBlock implements IColored, IEssenc
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> drops = new ArrayList<>();
         var stack = builder.getOptionalParameter(LootContextParams.TOOL);
+        var registry = builder.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        var silkTouch = registry.getHolderOrThrow(Enchantments.SILK_TOUCH);
 
-        if (stack != null && EnchantmentHelper.getTagEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0) {
+        if (stack != null && EnchantmentHelper.getTagEnchantmentLevel(silkTouch, stack) > 0) {
             drops.add(new ItemStack(this));
         } else {
             drops.add(new ItemStack(Blocks.DIRT));
@@ -87,9 +80,8 @@ public class InfusedFarmlandBlock extends FarmBlock implements IColored, IEssenc
         return drops;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(ModTooltips.TIER.args(this.tier.getDisplayName()).build());
     }
 

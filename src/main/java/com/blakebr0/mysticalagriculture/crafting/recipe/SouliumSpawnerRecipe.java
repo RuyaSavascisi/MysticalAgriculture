@@ -1,55 +1,44 @@
 package com.blakebr0.mysticalagriculture.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
+import com.blakebr0.cucumber.crafting.ingredient.IngredientWithCount;
 import com.blakebr0.mysticalagriculture.api.crafting.ISouliumSpawnerRecipe;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandomList;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SouliumSpawnerRecipe implements ISpecialRecipe, ISouliumSpawnerRecipe {
-    private final ResourceLocation recipeId;
-    private final NonNullList<Ingredient> inputs;
-    private final int inputCount;
-    private final WeightedRandomList<WeightedEntry.Wrapper<EntityType<?>>> entityTypes;
+    private final NonNullList<IngredientWithCount> inputs;
+    private final WeightedRandomList<WeightedEntry.Wrapper<ResourceLocation>> entityTypes;
 
-    public SouliumSpawnerRecipe(ResourceLocation recipeId, Ingredient input, int inputCount, WeightedRandomList<WeightedEntry.Wrapper<EntityType<?>>> entityTypes) {
-        this.recipeId = recipeId;
-        this.inputs = NonNullList.of(Ingredient.EMPTY, input);
-        this.inputCount = inputCount;
+    public SouliumSpawnerRecipe(IngredientWithCount input, WeightedRandomList<WeightedEntry.Wrapper<ResourceLocation>> entityTypes) {
+        this.inputs = NonNullList.of(IngredientWithCount.EMPTY, input);
         this.entityTypes = entityTypes;
     }
 
     @Override
-    public ItemStack assemble(IItemHandler inventory, RegistryAccess access) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ItemStack assemble(Container inventory, RegistryAccess access) {
+    public ItemStack assemble(RecipeInput recipeInput, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
@@ -59,18 +48,15 @@ public class SouliumSpawnerRecipe implements ISpecialRecipe, ISouliumSpawnerReci
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess access) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return this.inputs;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.recipeId;
+        return this.inputs.stream()
+                .map(ICustomIngredient::toVanilla)
+                .collect(Collectors.toCollection(NonNullList::create));
     }
 
     @Override
@@ -84,98 +70,80 @@ public class SouliumSpawnerRecipe implements ISpecialRecipe, ISouliumSpawnerReci
     }
 
     @Override
-    public boolean matches(IItemHandler inventory) {
-        var stack = inventory.getStackInSlot(0);
-        return this.inputs.get(0).test(stack);
-    }
-
-    @Override
-    public boolean matches(Container inv, Level level) {
-        return this.matches(new InvWrapper(inv));
-    }
-
-    @Override
-    public WeightedRandomList<WeightedEntry.Wrapper<EntityType<?>>> getEntityTypes() {
+    public WeightedRandomList<WeightedEntry.Wrapper<ResourceLocation>> getEntityTypes() {
         return this.entityTypes;
     }
 
     @Override
-    public EntityType<?> getFirstEntityType() {
-        return this.entityTypes.unwrap().get(0).getData();
+    public ResourceLocation getFirstEntityType() {
+        return this.entityTypes.unwrap().getFirst().data();
     }
 
     @Override
-    public Optional<WeightedEntry.Wrapper<EntityType<?>>> getRandomEntityType(RandomSource random) {
+    public Optional<WeightedEntry.Wrapper<ResourceLocation>> getRandomEntityType(RandomSource random) {
         return this.entityTypes.getRandom(random);
     }
 
     @Override
-    public int getInputCount() {
-        return this.inputCount;
+    public int getCount(int index) {
+        if (index < 0 || index >= this.inputs.size())
+            return -1;
+
+        return this.inputs.get(index).getCount();
     }
 
     public static class Serializer implements RecipeSerializer<SouliumSpawnerRecipe> {
+        public static final MapCodec<SouliumSpawnerRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
+                builder.group(
+                        IngredientWithCount.CODEC.fieldOf("input").forGetter(recipe -> recipe.inputs.getFirst()),
+                        WeightedRandomList.codec(
+                                RecordCodecBuilder.<WeightedEntry.Wrapper<ResourceLocation>>create(wrapper ->
+                                        wrapper.group(
+                                                ResourceLocation.CODEC.fieldOf("entity").forGetter(WeightedEntry.Wrapper::data),
+                                                Weight.CODEC.fieldOf("weight").forGetter(WeightedEntry.Wrapper::weight)
+                                        ).apply(wrapper, WeightedEntry.Wrapper::new)
+                                )
+                        ).fieldOf("entities").forGetter(recipe -> recipe.entityTypes)
+                ).apply(builder, SouliumSpawnerRecipe::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, SouliumSpawnerRecipe> STREAM_CODEC = StreamCodec.of(
+                SouliumSpawnerRecipe.Serializer::toNetwork, SouliumSpawnerRecipe.Serializer::fromNetwork
+        );
+
         @Override
-        public SouliumSpawnerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            var ingredient = GsonHelper.getAsJsonObject(json, "input");
-            var input = Ingredient.fromJson(ingredient);
-            var inputCount = GsonHelper.getAsInt(ingredient, "count", 1);
-
-            List<WeightedEntry.Wrapper<EntityType<?>>> entityTypes = new ArrayList<>();
-
-            for (var entityTypeJson : GsonHelper.getAsJsonArray(json, "entities")) {
-                var entityTypeID = new ResourceLocation(GsonHelper.getAsString(entityTypeJson.getAsJsonObject(), "entity"));
-                var entityTypeWeight = GsonHelper.getAsInt(entityTypeJson.getAsJsonObject(), "weight", 1);
-                var entityType = ForgeRegistries.ENTITY_TYPES.getValue(entityTypeID);
-
-                if (entityType != null) {
-                    entityTypes.add(WeightedEntry.wrap(entityType, entityTypeWeight));
-                } else {
-                    throw new JsonParseException("Unknown entity type: " + entityTypeID);
-                }
-            }
-
-            if (entityTypes.isEmpty()) {
-                throw new JsonParseException("No entities defined for soulium spawner recipe");
-            }
-
-            return new SouliumSpawnerRecipe(recipeId, input, inputCount, WeightedRandomList.create(entityTypes));
+        public MapCodec<SouliumSpawnerRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public SouliumSpawnerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            var input = Ingredient.fromNetwork(buffer);
-            var inputCount = buffer.readVarInt();
-            var entityCount = buffer.readVarInt();
+        public StreamCodec<RegistryFriendlyByteBuf, SouliumSpawnerRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
 
-            List<WeightedEntry.Wrapper<EntityType<?>>> entityTypes = new ArrayList<>();
+        private static SouliumSpawnerRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+            var input = IngredientWithCount.STREAM_CODEC.decode(buffer);
+            var entities = buffer.readVarInt();
 
-            for (int i = 0; i < entityCount; i++) {
+            List<WeightedEntry.Wrapper<ResourceLocation>> entityTypes = new ArrayList<>();
+
+            for (int i = 0; i < entities; i++) {
                 var entityTypeID = buffer.readResourceLocation();
                 var entityTypeWeight = buffer.readVarInt();
-                var entityType = ForgeRegistries.ENTITY_TYPES.getValue(entityTypeID);
 
-                if (entityType != null) {
-                    entityTypes.add(WeightedEntry.wrap(entityType, entityTypeWeight));
-                } else {
-                    throw new JsonParseException("Unknown entity type: " + entityTypeID);
-                }
+                entityTypes.add(WeightedEntry.wrap(entityTypeID, entityTypeWeight));
             }
 
-            return new SouliumSpawnerRecipe(recipeId, input, inputCount, WeightedRandomList.create(entityTypes));
+            return new SouliumSpawnerRecipe(input, WeightedRandomList.create(entityTypes));
         }
 
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, SouliumSpawnerRecipe recipe) {
-            recipe.inputs.get(0).toNetwork(buffer);
-            buffer.writeVarInt(recipe.inputCount);
+        private static void toNetwork(RegistryFriendlyByteBuf buffer, SouliumSpawnerRecipe recipe) {
+            IngredientWithCount.STREAM_CODEC.encode(buffer, recipe.inputs.getFirst());
+
             buffer.writeVarInt(recipe.entityTypes.unwrap().size());
 
             for (var entityType : recipe.entityTypes.unwrap()) {
-                var id = Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(entityType.getData()));
-
-                buffer.writeResourceLocation(id);
-                buffer.writeVarInt(entityType.getWeight().asInt());
+                buffer.writeResourceLocation(entityType.data());
+                buffer.writeVarInt(entityType.weight().asInt());
             }
         }
     }

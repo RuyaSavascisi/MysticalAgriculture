@@ -16,27 +16,27 @@ public class ExperienceDropletItem extends BaseItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var stack = player.getItemInHand(hand);
         int used = 0;
 
-        if (!world.isClientSide()) {
+        if (!level.isClientSide()) {
             if (player.isCrouching()) {
                 int xp = 0;
                 for (int i = 0; i < stack.getCount(); i++) {
                     xp += Utils.randInt(8, 12);
                 }
 
-                var orb = new ExperienceOrb(world, player.getX(), player.getY(), player.getZ(), xp);
+                var orb = new ExperienceOrb(level, player.getX(), player.getY(), player.getZ(), xp);
 
-                world.addFreshEntity(orb);
+                level.addFreshEntity(orb);
 
                 used = stack.getCount();
             } else {
                 int xp = Utils.randInt(8, 12);
-                var orb = new ExperienceOrb(world, player.getX(), player.getY(), player.getZ(), xp);
+                var orb = new ExperienceOrb(level, player.getX(), player.getY(), player.getZ(), xp);
 
-                world.addFreshEntity(orb);
+                level.addFreshEntity(orb);
 
                 used = 1;
             }

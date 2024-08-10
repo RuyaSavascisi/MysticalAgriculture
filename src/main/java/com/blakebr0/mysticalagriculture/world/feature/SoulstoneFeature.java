@@ -119,7 +119,7 @@ public class SoulstoneFeature extends Feature<OreConfiguration> {
                                             blockpos$mutableblockpos.set(l1, i2, j2);
                                             var target = config.targetStates.stream().filter(s -> s.target.test(world.getBlockState(blockpos$mutableblockpos), random)).findFirst().orElse(null);
                                             if (target != null) {
-                                                if (ModBlocks.SOULIUM_ORE.isPresent() && random.nextDouble() < ModConfigs.SOULIUM_ORE_CHANCE.get()) {
+                                                if (ModBlocks.SOULIUM_ORE.isBound() && random.nextDouble() < ModConfigs.SOULIUM_ORE_CHANCE.get()) {
                                                     world.setBlock(blockpos$mutableblockpos, ModBlocks.SOULIUM_ORE.get().defaultBlockState(), 2);
                                                 } else {
                                                     world.setBlock(blockpos$mutableblockpos, target.state, 2);

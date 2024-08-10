@@ -5,29 +5,29 @@ import com.blakebr0.mysticalagriculture.crafting.ingredient.FilledSoulJarIngredi
 import com.blakebr0.mysticalagriculture.init.ModItems;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
 import com.blakebr0.mysticalagriculture.item.SoulJarItem;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.Level;
 
 public class SoulJarEmptyRecipe extends ShapelessRecipe {
-    public SoulJarEmptyRecipe(ResourceLocation id, String group, ItemStack output, NonNullList<Ingredient> inputs) {
-        super(id, group, CraftingBookCategory.MISC, output, inputs);
+    public SoulJarEmptyRecipe(ItemStack result, NonNullList<Ingredient> inputs) {
+        super("", CraftingBookCategory.MISC, result, inputs);
     }
 
     @Override
-    public boolean matches(CraftingContainer inv, Level world) {
+    public boolean matches(CraftingInput inventory, Level level) {
         var hasJar = false;
 
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            var stack = inv.getItem(i);
+        for (int i = 0; i < inventory.size(); i++) {
+            var stack = inventory.getItem(i);
 
             if (hasJar && !stack.isEmpty())
                 return false;
@@ -53,21 +53,28 @@ public class SoulJarEmptyRecipe extends ShapelessRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<SoulJarEmptyRecipe> {
-        @Override
-        public SoulJarEmptyRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            NonNullList<Ingredient> ingredients = NonNullList.withSize(1, new FilledSoulJarIngredient());
+        public static final MapCodec<SoulJarEmptyRecipe> CODEC = MapCodec.unit(() -> new SoulJarEmptyRecipe(
+                new ItemStack(ModItems.SOUL_JAR.get()),
+                NonNullList.withSize(1, FilledSoulJarIngredient.of())
+        ));
+        public static final StreamCodec<RegistryFriendlyByteBuf, SoulJarEmptyRecipe> STREAM_CODEC = StreamCodec.of(
+                SoulJarEmptyRecipe.Serializer::toNetwork, SoulJarEmptyRecipe.Serializer::fromNetwork
+        );
 
-            return new SoulJarEmptyRecipe(recipeId, "", new ItemStack(ModItems.SOUL_JAR.get()), ingredients);
+        @Override
+        public MapCodec<SoulJarEmptyRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public SoulJarEmptyRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            NonNullList<Ingredient> ingredients = NonNullList.withSize(1, new FilledSoulJarIngredient());
-
-            return new SoulJarEmptyRecipe(recipeId, "", new ItemStack(ModItems.SOUL_JAR.get()), ingredients);
+        public StreamCodec<RegistryFriendlyByteBuf, SoulJarEmptyRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
 
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, SoulJarEmptyRecipe recipe) { }
+        private static SoulJarEmptyRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+            return new SoulJarEmptyRecipe(new ItemStack(ModItems.SOUL_JAR.get()), NonNullList.withSize(1, FilledSoulJarIngredient.of()));
+        }
+
+        private static void toNetwork(RegistryFriendlyByteBuf buffer, SoulJarEmptyRecipe recipe) { }
     }
 }

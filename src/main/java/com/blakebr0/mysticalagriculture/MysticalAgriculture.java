@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.helper.ConfigHelper;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.client.EssenceVesselColorManager;
 import com.blakebr0.mysticalagriculture.client.ModClientTooltipComponentFactories;
+import com.blakebr0.mysticalagriculture.client.ModMenuScreens;
 import com.blakebr0.mysticalagriculture.client.ModRecipeBookCategories;
 import com.blakebr0.mysticalagriculture.client.ModTESRs;
 import com.blakebr0.mysticalagriculture.client.ModelHandler;
@@ -18,34 +19,39 @@ import com.blakebr0.mysticalagriculture.handler.AugmentHandler;
 import com.blakebr0.mysticalagriculture.handler.ExperienceCapsuleHandler;
 import com.blakebr0.mysticalagriculture.handler.MobDropHandler;
 import com.blakebr0.mysticalagriculture.handler.MobSoulHandler;
+import com.blakebr0.mysticalagriculture.handler.RegisterCapabilityHandler;
+import com.blakebr0.mysticalagriculture.init.ModArmorMaterials;
 import com.blakebr0.mysticalagriculture.init.ModBiomeModifiers;
 import com.blakebr0.mysticalagriculture.init.ModBlocks;
-import com.blakebr0.mysticalagriculture.init.ModContainerTypes;
+import com.blakebr0.mysticalagriculture.init.ModConditionSerializers;
 import com.blakebr0.mysticalagriculture.init.ModCreativeModeTabs;
+import com.blakebr0.mysticalagriculture.init.ModDataComponentTypes;
 import com.blakebr0.mysticalagriculture.init.ModEnchantments;
+import com.blakebr0.mysticalagriculture.init.ModIngredientTypes;
 import com.blakebr0.mysticalagriculture.init.ModItems;
+import com.blakebr0.mysticalagriculture.init.ModMenuTypes;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
 import com.blakebr0.mysticalagriculture.init.ModTileEntities;
 import com.blakebr0.mysticalagriculture.init.ModWorldFeatures;
-import com.blakebr0.mysticalagriculture.lib.ModItemTier;
 import com.blakebr0.mysticalagriculture.network.NetworkHandler;
 import com.blakebr0.mysticalagriculture.registry.AugmentRegistry;
 import com.blakebr0.mysticalagriculture.registry.CropRegistry;
 import com.blakebr0.mysticalagriculture.registry.MobSoulTypeRegistry;
 import com.blakebr0.mysticalagriculture.registry.PluginRegistry;
 import com.blakebr0.mysticalagriculture.util.RecipeIngredientCache;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,36 +61,40 @@ public final class MysticalAgriculture {
 	public static final String NAME = "Mystical Agriculture";
 	public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 
-	public MysticalAgriculture() throws NoSuchFieldException, IllegalAccessException {
-		var bus = FMLJavaModLoadingContext.get().getModEventBus();
-
+	public MysticalAgriculture(IEventBus bus, ModContainer mod) throws NoSuchFieldException, IllegalAccessException {
 		bus.register(this);
 		bus.register(new ModBlocks());
 		bus.register(new ModItems());
-		bus.register(new ModRecipeSerializers());
+		bus.register(new ModEnchantments());
 		bus.register(new ModDataGenerators());
 
+		ModArmorMaterials.REGISTRY.register(bus);
 		ModCreativeModeTabs.REGISTRY.register(bus);
-		ModEnchantments.REGISTRY.register(bus);
 		ModTileEntities.REGISTRY.register(bus);
-		ModContainerTypes.REGISTRY.register(bus);
+		ModDataComponentTypes.REGISTRY.register(bus);
+		ModMenuTypes.REGISTRY.register(bus);
+		ModIngredientTypes.REGISTRY.register(bus);
+		ModConditionSerializers.REGISTRY.register(bus);
 		ModRecipeTypes.REGISTRY.register(bus);
 		ModRecipeSerializers.REGISTRY.register(bus);
 		ModWorldFeatures.REGISTRY.register(bus);
 		ModBiomeModifiers.REGISTRY.register(bus);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		bus.register(new NetworkHandler());
+		bus.register(new RegisterCapabilityHandler());
+
+		if (FMLEnvironment.dist == Dist.CLIENT) {
 			bus.register(new ColorHandler());
 			bus.register(new ModelHandler());
 			bus.register(new ModTESRs());
 			bus.register(new ModRecipeBookCategories());
 			bus.register(new ModClientTooltipComponentFactories());
-			bus.register(new GuiOverlayHandler());
+			bus.register(new ModMenuScreens());
 			bus.register(EssenceVesselColorManager.INSTANCE);
-		});
+		}
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModConfigs.CLIENT);
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModConfigs.COMMON);
+		mod.registerConfig(ModConfig.Type.CLIENT, ModConfigs.CLIENT);
+		mod.registerConfig(ModConfig.Type.COMMON, ModConfigs.COMMON);
 
 		initAPI();
 
@@ -95,16 +105,12 @@ public final class MysticalAgriculture {
 
 	@SubscribeEvent
 	public void onCommonSetup(FMLCommonSetupEvent event) {
-		MinecraftForge.EVENT_BUS.register(new MobDropHandler());
-		MinecraftForge.EVENT_BUS.register(new MobSoulHandler());
-		MinecraftForge.EVENT_BUS.register(new ExperienceCapsuleHandler());
-		MinecraftForge.EVENT_BUS.register(new AugmentHandler());
-		MinecraftForge.EVENT_BUS.register(DynamicRecipeManager.INSTANCE);
-		MinecraftForge.EVENT_BUS.register(RecipeIngredientCache.INSTANCE);
-
-		ModRecipeSerializers.onCommonSetup();
-		ModItemTier.onCommonSetup();
-		NetworkHandler.onCommonSetup(event);
+		NeoForge.EVENT_BUS.register(new MobDropHandler());
+		NeoForge.EVENT_BUS.register(new MobSoulHandler());
+		NeoForge.EVENT_BUS.register(new ExperienceCapsuleHandler());
+		NeoForge.EVENT_BUS.register(new AugmentHandler());
+		NeoForge.EVENT_BUS.register(DynamicRecipeManager.INSTANCE);
+		NeoForge.EVENT_BUS.register(RecipeIngredientCache.INSTANCE);
 
 		CropRegistry.getInstance().onCommonSetup();
 		AugmentRegistry.getInstance().onCommonSetup();
@@ -113,10 +119,10 @@ public final class MysticalAgriculture {
 
 	@SubscribeEvent
 	public void onClientSetup(FMLClientSetupEvent event) {
-		MinecraftForge.EVENT_BUS.register(new AugmentTooltipHandler());
+		NeoForge.EVENT_BUS.register(new AugmentTooltipHandler());
+		NeoForge.EVENT_BUS.register(new GuiOverlayHandler());
 
 		ModelHandler.onClientSetup(event);
-		ModContainerTypes.onClientSetup();
 	}
 
 	@SubscribeEvent
@@ -124,6 +130,10 @@ public final class MysticalAgriculture {
 		if (ModConfigs.isTheOneProbeInstalled()) {
 			TOPCompat.onInterModEnqueue();
 		}
+	}
+
+	public static ResourceLocation resource(String path) {
+		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
 	}
 
 	private static void initAPI() throws NoSuchFieldException, IllegalAccessException {

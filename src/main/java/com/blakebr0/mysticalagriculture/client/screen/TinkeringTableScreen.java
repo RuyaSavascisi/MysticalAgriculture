@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class TinkeringTableScreen extends BaseContainerScreen<TinkeringTableContainer> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(MysticalAgriculture.MOD_ID, "textures/gui/tinkering_table.png");
+    private static final ResourceLocation BACKGROUND = MysticalAgriculture.resource("textures/gui/tinkering_table.png");
 
     public TinkeringTableScreen(TinkeringTableContainer container, Inventory inv, Component title) {
         super(container, inv, title, BACKGROUND, 176, 197);

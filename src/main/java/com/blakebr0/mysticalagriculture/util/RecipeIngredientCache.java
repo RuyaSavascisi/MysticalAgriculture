@@ -3,19 +3,18 @@ package com.blakebr0.mysticalagriculture.util;
 import com.blakebr0.cucumber.helper.RecipeHelper;
 import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
-import com.blakebr0.mysticalagriculture.network.NetworkHandler;
-import com.blakebr0.mysticalagriculture.network.message.ReloadIngredientCacheMessage;
+import com.blakebr0.mysticalagriculture.network.payloads.ReloadIngredientCachePayload;
 import com.google.common.base.Stopwatch;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,14 +38,14 @@ public class RecipeIngredientCache {
 
     @SubscribeEvent
     public void onDatapackSyncEvent(OnDatapackSyncEvent event) {
-        var message = new ReloadIngredientCacheMessage(this.caches, this.validVesselItems);
+        var payload = new ReloadIngredientCachePayload(this.caches, this.validVesselItems);
         var player = event.getPlayer();
 
         // send the new caches to the client
         if (player != null) {
-            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+            PacketDistributor.sendToPlayer(player, payload);
         } else {
-            NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), message);
+            PacketDistributor.sendToAllPlayers(payload);
         }
     }
 
@@ -91,11 +90,11 @@ public class RecipeIngredientCache {
         return this.validVesselItems.contains(stack.getItem());
     }
 
-    private static <C extends Container, T extends Recipe<C>> void cache(RecipeType<T> type) {
+    private static <C extends RecipeInput, T extends Recipe<C>> void cache(RecipeType<T> type) {
         INSTANCE.caches.put(type, new HashMap<>());
 
-        for (var recipe : RecipeHelper.getRecipes(type).values()) {
-            for (var ingredient : recipe.getIngredients()) {
+        for (var recipe : RecipeHelper.getRecipes(type)) {
+            for (var ingredient : recipe.value().getIngredients()) {
                 var items = new HashSet<>();
                 for (var stack : ingredient.getItems()) {
                     var item = stack.getItem();
@@ -112,8 +111,8 @@ public class RecipeIngredientCache {
     }
 
     private static void cacheVesselItems() {
-        for (var recipe : RecipeHelper.getRecipes(ModRecipeTypes.AWAKENING.get()).values()) {
-            for (var essence : recipe.getEssences()) {
+        for (var recipe : RecipeHelper.getRecipes(ModRecipeTypes.AWAKENING.get())) {
+            for (var essence : recipe.value().getEssences()) {
                 INSTANCE.validVesselItems.add(essence.getItem());
             }
         }

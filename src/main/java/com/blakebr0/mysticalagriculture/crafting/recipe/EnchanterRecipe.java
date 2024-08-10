@@ -1,55 +1,45 @@
 package com.blakebr0.mysticalagriculture.crafting.recipe;
 
 import com.blakebr0.cucumber.crafting.ISpecialRecipe;
+import com.blakebr0.cucumber.crafting.ingredient.IngredientWithCount;
 import com.blakebr0.mysticalagriculture.api.crafting.IEnchanterRecipe;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
-    private final ResourceLocation recipeId;
-    private final NonNullList<Ingredient> inputs;
-    private final List<Integer> inputCounts;
-    private final Enchantment enchantment;
+    private final NonNullList<IngredientWithCount> inputs;
+    private final Holder<Enchantment> enchantment;
 
-    public EnchanterRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, List<Integer> inputCounts, Enchantment enchantment) {
-        this.recipeId = recipeId;
+    public EnchanterRecipe(NonNullList<IngredientWithCount> inputs, Holder<Enchantment> enchantment) {
         this.inputs = inputs;
-        this.inputCounts = inputCounts;
         this.enchantment = enchantment;
     }
 
     @Override
-    public ItemStack assemble(IItemHandler inventory, RegistryAccess access) {
+    public ItemStack assemble(RecipeInput inventory, HolderLookup.Provider provider) {
         return this.getEnchantedOutputItemStack(inventory);
-    }
-
-    @Override
-    public ItemStack assemble(Container inventory, RegistryAccess access) {
-        return this.assemble(new InvWrapper(inventory), access);
     }
 
     @Override
@@ -58,18 +48,15 @@ public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess access) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
-        return this.inputs;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.recipeId;
+        return this.inputs.stream()
+                .map(ICustomIngredient::toVanilla)
+                .collect(Collectors.toCollection(NonNullList::create));
     }
 
     @Override
@@ -83,36 +70,17 @@ public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
     }
 
     @Override
-    public boolean matches(IItemHandler inventory) {
-        for (int i = 0; i < this.inputs.size(); i++) {
-            var stack = inventory.getStackInSlot(i);
-            var ingredient = this.inputs.get(i);
-            var count = this.inputCounts.get(i);
-
-            if (!ingredient.test(stack) || stack.getCount() < count)
-                return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean matches(Container inv, Level level) {
-        return this.matches(new InvWrapper(inv));
-    }
-
-    @Override
-    public NonNullList<ItemStack> getRemainingItems(IItemHandler inventory) {
-        var remaining = NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);
+    public NonNullList<ItemStack> getRemainingItems(RecipeInput inventory) {
+        var remaining = NonNullList.withSize(inventory.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < 2; i++) {
-            var stack = inventory.getStackInSlot(i);
-            var count = this.inputCounts.get(i) * this.getOutputEnchantmentLevel(inventory);
+            var stack = inventory.getItem(i);
+            var count = this.inputs.get(i).getCount() * this.getOutputEnchantmentLevel(inventory);
 
             remaining.set(i, stack.copyWithCount(stack.getCount() - count));
         }
 
-        var stack = inventory.getStackInSlot(2);
+        var stack = inventory.getItem(2);
         if (stack.getCount() > 1) {
             remaining.set(2, stack.copyWithCount(stack.getCount() - 1));
         }
@@ -121,35 +89,38 @@ public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
     }
 
     @Override
-    public List<Integer> getIngredientCounts() {
-        return this.inputCounts;
-    }
-
-    @Override
-    public Enchantment getEnchantment() {
+    public Holder<Enchantment> getEnchantment() {
         return this.enchantment;
     }
 
-    private ItemStack getEnchantedOutputItemStack(IItemHandler inventory) {
-        var stack = inventory.getStackInSlot(2);
+    @Override
+    public int getCount(int index) {
+        if (index < 0 || index >= this.inputs.size())
+            return -1;
 
-        if (this.enchantment.canEnchant(stack)) {
-            var enchantments = EnchantmentHelper.getEnchantments(stack);
+        return this.inputs.get(index).getCount();
+    }
+
+    private ItemStack getEnchantedOutputItemStack(RecipeInput inventory) {
+        var stack = inventory.getItem(2);
+
+        if (this.enchantment.value().canEnchant(stack)) {
+            var enchantments = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(stack));
             var newLevel = this.getOutputEnchantmentLevel(inventory);
 
             for (var enchantment : enchantments.keySet()) {
-                if (enchantment == this.enchantment && enchantments.get(enchantment) >= newLevel)
+                if (enchantment == this.enchantment && enchantments.getLevel(enchantment) >= newLevel)
                     return ItemStack.EMPTY;
 
-                if (enchantment != this.enchantment && !enchantment.isCompatibleWith(this.enchantment))
+                if (enchantment != this.enchantment && Enchantment.areCompatible(enchantment, this.enchantment))
                     return ItemStack.EMPTY;
             }
 
-            enchantments.put(enchantment, newLevel);
+            enchantments.set(enchantment, newLevel);
 
             var result = stack.copyWithCount(1);
 
-            EnchantmentHelper.setEnchantments(enchantments, result);
+            EnchantmentHelper.setEnchantments(result, enchantments.toImmutable());
 
             return result;
         }
@@ -161,17 +132,17 @@ public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
         return ItemStack.EMPTY;
     }
 
-    private int getOutputEnchantmentLevel(IItemHandler inventory) {
+    private int getOutputEnchantmentLevel(RecipeInput inventory) {
         var level = 0;
 
         for (var i = 0; i < this.inputs.size(); i++) {
-            var stack = inventory.getStackInSlot(i);
-            var count = this.inputCounts.get(i);
+            var stack = inventory.getItem(i);
+            var count = this.inputs.get(i).getCount();
 
             var newLevel = stack.getCount() / count;
 
             if (level == 0 || newLevel < level) {
-                level = Math.min(newLevel, this.enchantment.getMaxLevel());
+                level = Math.min(newLevel, this.enchantment.value().getMaxLevel());
             }
         }
 
@@ -179,50 +150,64 @@ public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<EnchanterRecipe> {
+        public static final MapCodec<EnchanterRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
+                builder.group(
+                        IngredientWithCount.CODEC
+                                .codec()
+                                .listOf()
+                                .fieldOf("ingredients")
+                                .flatXmap(
+                                        field -> {
+                                            var ingredients = field.toArray(IngredientWithCount[]::new);
+                                            if (ingredients.length == 0) {
+                                                return DataResult.error(() -> "No ingredients for shapeless recipe");
+                                            } else {
+                                                return ingredients.length > 4
+                                                        ? DataResult.error(() -> "Too many ingredients for shapeless recipe. The maximum is: %s".formatted(4))
+                                                        : DataResult.success(NonNullList.of(IngredientWithCount.EMPTY, ingredients));
+                                            }
+                                        },
+                                        DataResult::success
+                                )
+                                .forGetter(recipe -> recipe.inputs),
+                        Enchantment.CODEC.fieldOf("enchantment").forGetter(recipe -> recipe.enchantment)
+                ).apply(builder, EnchanterRecipe::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, EnchanterRecipe> STREAM_CODEC = StreamCodec.of(
+                EnchanterRecipe.Serializer::toNetwork, EnchanterRecipe.Serializer::fromNetwork
+        );
+
         @Override
-        public EnchanterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            var inputs = NonNullList.withSize(2, Ingredient.EMPTY);
-            var inputCounts = new ArrayList<Integer>(2);
-            var ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
-
-            for (int i = 0; i < ingredients.size(); i++) {
-                inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
-                inputCounts.add(GsonHelper.getAsInt(ingredients.get(i).getAsJsonObject(), "count", 1));
-            }
-
-            var enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(GsonHelper.getAsString(json, "enchantment")));
-
-            return new EnchanterRecipe(recipeId, inputs, inputCounts, enchantment);
+        public MapCodec<EnchanterRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public EnchanterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public StreamCodec<RegistryFriendlyByteBuf, EnchanterRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+
+        private static EnchanterRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
             var size = buffer.readVarInt();
-            var inputs = NonNullList.withSize(size, Ingredient.EMPTY);
-            var inputCounts = new ArrayList<Integer>(size);
+            var inputs = NonNullList.withSize(size, IngredientWithCount.EMPTY);
 
             for (int i = 0; i < size; i++) {
-                inputs.set(i, Ingredient.fromNetwork(buffer));
-                inputCounts.add(buffer.readVarInt());
+                inputs.set(i, IngredientWithCount.STREAM_CODEC.decode(buffer));
             }
 
-            var enchantment = ForgeRegistries.ENCHANTMENTS.getValue(buffer.readResourceLocation());
+            var enchantment = Enchantment.STREAM_CODEC.decode(buffer);
 
-            return new EnchanterRecipe(recipeId, inputs, inputCounts, enchantment);
+            return new EnchanterRecipe(inputs, enchantment);
         }
 
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, EnchanterRecipe recipe) {
+        private static void toNetwork(RegistryFriendlyByteBuf buffer, EnchanterRecipe recipe) {
             buffer.writeVarInt(recipe.inputs.size());
 
             for (var i = 0; i < recipe.inputs.size(); i++) {
-                recipe.inputs.get(i).toNetwork(buffer);
-                buffer.writeVarInt(i < recipe.inputCounts.size() ? recipe.inputCounts.get(i) : 1);
+                IngredientWithCount.STREAM_CODEC.encode(buffer, recipe.inputs.get(i));
             }
 
-            var enchantment = Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(recipe.enchantment));
-
-            buffer.writeResourceLocation(enchantment);
+            Enchantment.STREAM_CODEC.encode(buffer, recipe.enchantment);
         }
     }
 }

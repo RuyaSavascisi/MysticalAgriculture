@@ -7,6 +7,7 @@ import com.blakebr0.mysticalagriculture.api.tinkering.AugmentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -23,18 +24,19 @@ public class MiningAOEAugment extends Augment {
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
-        var level = player.level();
+    public boolean onBlockDestroyed(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
         if (level.isClientSide())
             return false;
 
-        if (player.isShiftKeyDown())
+        if (entity.isShiftKeyDown())
             return false;
 
-        var trace = BlockHelper.rayTraceBlocks(level, player);
-        int side = trace.getDirection().ordinal();
+        if (entity instanceof Player player) {
+            var trace = BlockHelper.rayTraceBlocks(level, player);
+            int side = trace.getDirection().ordinal();
 
-        harvestAOEBlocks(stack, this.range, level, pos, side, player);
+            harvestAOEBlocks(stack, this.range, level, pos, side, player);
+        }
 
         return false;
     }

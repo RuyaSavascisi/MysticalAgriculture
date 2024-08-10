@@ -2,10 +2,10 @@ package com.blakebr0.mysticalagriculture.api.soul;
 
 import com.blakebr0.mysticalagriculture.api.registry.IMobSoulTypeRegistry;
 import com.google.common.collect.Sets;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Set;
 
@@ -148,7 +148,7 @@ public class MobSoulType {
      * @return is the entity valid
      */
     public boolean isEntityApplicable(LivingEntity entity) {
-        var id = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        var id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         return this.entityIds.contains(id);
     }
 
@@ -164,10 +164,9 @@ public class MobSoulType {
                 var entityId = this.entityIds.stream().findFirst().orElse(null);
 
                 if (entityId != null) {
-                    var entity = ForgeRegistries.ENTITY_TYPES.getValue(entityId);
-
-                    if (entity != null) {
-                        this.entityDisplayName = entity.getDescription();
+                    var entity = BuiltInRegistries.ENTITY_TYPE.getOptional(entityId);
+                    if (entity.isPresent()) {
+                        this.entityDisplayName = entity.get().getDescription();
                         return this.entityDisplayName;
                     }
                 }

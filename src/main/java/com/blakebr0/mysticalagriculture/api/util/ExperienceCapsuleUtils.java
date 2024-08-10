@@ -1,5 +1,6 @@
 package com.blakebr0.mysticalagriculture.api.util;
 
+import com.blakebr0.mysticalagriculture.api.MysticalAgricultureDataComponentTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +13,7 @@ public class ExperienceCapsuleUtils {
 
     /**
      * Creates a tag for the experience capsule with this amount of xp
+     *
      * @param xp the amount of xp points
      * @return a tag compound for the specified amount of xp
      */
@@ -25,33 +27,35 @@ public class ExperienceCapsuleUtils {
 
     /**
      * Get a new experience capsule with the specified amount of xp
+     *
      * @param xp   the amount of xp points
      * @param item the experience capsule item
      * @return the experience capsule
      */
     public static ItemStack getExperienceCapsule(int xp, Item item) {
-        var nbt = makeTag(xp);
         var stack = new ItemStack(item);
-
-        stack.setTag(nbt);
+        stack.set(MysticalAgricultureDataComponentTypes.EXPERIENCE_CAPSULE, xp);
         return stack;
     }
 
     /**
      * Gets the amount of experience currently stored in the specified item stack
+     *
      * @param stack the item stack
      * @return the amount of experience
      */
     public static int getExperience(ItemStack stack) {
-        var nbt = stack.getTag();
-        if (nbt != null && nbt.contains("Experience"))
-            return nbt.getInt("Experience");
+        var component = stack.get(MysticalAgricultureDataComponentTypes.EXPERIENCE_CAPSULE);
+
+        if (component != null)
+            return component;
 
         return 0;
     }
 
     /**
      * Add experience to an experience capsule
+     *
      * @param stack  the experience capsule stack
      * @param amount the amount of experience to add
      * @return any experience that wasn't added
@@ -62,22 +66,14 @@ public class ExperienceCapsuleUtils {
             return amount;
         } else {
             int newAmount = Math.min(MAX_XP_POINTS, xp + amount);
-            var nbt = stack.getTag();
-
-            if (nbt == null) {
-                var tag = makeTag(newAmount);
-
-                stack.setTag(tag);
-            } else {
-                nbt.putInt("Experience", newAmount);
-            }
-
+            stack.set(MysticalAgricultureDataComponentTypes.EXPERIENCE_CAPSULE, newAmount);
             return Math.max(0, amount - (newAmount - xp));
         }
     }
 
     /**
      * Remove experience from an experience capsule
+     *
      * @param stack  the experience capsule stack
      * @param amount the amount of experience to remove
      * @return any experience that wasn't removed
@@ -85,16 +81,7 @@ public class ExperienceCapsuleUtils {
     public static int removeExperienceFromCapsule(ItemStack stack, int amount) {
         int xp = getExperience(stack);
         int newAmount = Math.max(0, xp - amount);
-        var nbt = stack.getTag();
-
-        if (nbt == null) {
-            var tag = makeTag(newAmount);
-
-            stack.setTag(tag);
-        } else {
-            nbt.putInt("Experience", newAmount);
-        }
-
+        stack.set(MysticalAgricultureDataComponentTypes.EXPERIENCE_CAPSULE, newAmount);
         return Math.max(0, amount - xp);
     }
 }

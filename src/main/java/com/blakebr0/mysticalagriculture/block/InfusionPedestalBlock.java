@@ -9,7 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -40,8 +40,8 @@ public class InfusionPedestalBlock extends BaseTileEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
-        var tile = world.getBlockEntity(pos);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        var tile = level.getBlockEntity(pos);
 
         if (tile instanceof InfusionPedestalTileEntity pedestal) {
             var inventory = pedestal.getInventory();
@@ -51,31 +51,31 @@ public class InfusionPedestalBlock extends BaseTileEntityBlock {
             if (input.isEmpty() && !held.isEmpty()) {
                 inventory.setStackInSlot(0, StackHelper.withSize(held, 1, false));
                 player.setItemInHand(hand, StackHelper.shrink(held, 1, false));
-                world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F);
             } else if (!input.isEmpty()) {
                 inventory.setStackInSlot(0, ItemStack.EMPTY);
 
-                var item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), input);
+                var item = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), input);
 
                 item.setNoPickUpDelay();
-                world.addFreshEntity(item);
+                level.addFreshEntity(item);
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            var tile = world.getBlockEntity(pos);
+            var tile = level.getBlockEntity(pos);
 
             if (tile instanceof InfusionPedestalTileEntity altar) {
-                Containers.dropContents(world, pos, altar.getInventory().getStacks());
+                Containers.dropContents(level, pos, altar.getInventory().getStacks());
             }
         }
 
-        super.onRemove(state, world, pos, newState, isMoving);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override

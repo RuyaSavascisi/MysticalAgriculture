@@ -13,9 +13,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -28,8 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class InfusionAltarBlock extends BaseTileEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         var tile = level.getBlockEntity(pos);
 
         if (tile instanceof InfusionAltarTileEntity altar) {
@@ -79,7 +78,7 @@ public class InfusionAltarBlock extends BaseTileEntityBlock {
                     level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1.0F, 1.0F);
                 } else if (!input.isEmpty()) {
                     if (held.getItem() instanceof WandItem)
-                        return InteractionResult.PASS;
+                        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
                     var item = new ItemEntity(level, player.getX(), player.getY(), player.getZ(), input);
 
@@ -90,20 +89,20 @@ public class InfusionAltarBlock extends BaseTileEntityBlock {
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            var tile = world.getBlockEntity(pos);
+            var tile = level.getBlockEntity(pos);
 
             if (tile instanceof InfusionAltarTileEntity altar) {
-                Containers.dropContents(world, pos, altar.getInventory().getStacks());
+                Containers.dropContents(level, pos, altar.getInventory().getStacks());
             }
         }
 
-        super.onRemove(state, world, pos, newState, isMoving);
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override
@@ -111,9 +110,8 @@ public class InfusionAltarBlock extends BaseTileEntityBlock {
         return ALTAR_SHAPE;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter world, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(ModTooltips.ACTIVATE_WITH_REDSTONE.build());
     }
 

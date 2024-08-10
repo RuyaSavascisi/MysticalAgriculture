@@ -5,7 +5,7 @@ import com.blakebr0.mysticalagriculture.api.IMysticalAgriculturePlugin;
 import com.blakebr0.mysticalagriculture.api.MysticalAgriculturePlugin;
 import com.blakebr0.mysticalagriculture.api.lib.PluginConfig;
 import com.blakebr0.mysticalagriculture.lib.ModCorePlugin;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

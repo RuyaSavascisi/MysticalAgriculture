@@ -9,19 +9,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderGuiEvent;
 
 public final class GuiOverlayHandler {
-    private static final IGuiOverlay ALTAR_OVERLAY = (gui, gfx, partialTicks, width, height) -> {
+    @SubscribeEvent
+    public void onPostRenderGui(RenderGuiEvent.Post event) {
         var mc = Minecraft.getInstance();
+        var level = mc.level;
 
-        if (mc.level == null)
+        if (level == null)
             return;
 
-        var level = mc.level;
+        var gfx = event.getGuiGraphics();
 
         if (mc.hitResult instanceof BlockHitResult result) {
             var pos = result.getBlockPos();
@@ -53,13 +53,6 @@ public final class GuiOverlayHandler {
                 gfx.drawString(mc.font, stack.getHoverName(), x + 48, y + 5, 16383998);
             }
         }
-    };
-
-    private static final IGuiOverlay ESSENCE_VESSEL_OVERLAY = (gui, gfx, partialTicks, width, height) -> {
-        var mc = Minecraft.getInstance();
-
-        if (mc.level == null)
-            return;
 
         if (mc.hitResult instanceof BlockHitResult result) {
             var pos = result.getBlockPos();
@@ -78,12 +71,6 @@ public final class GuiOverlayHandler {
                 }
             }
         }
-    };
-
-    @SubscribeEvent
-    public void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "altar_overlay", ALTAR_OVERLAY);
-        event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "essence_vessel_overlay", ESSENCE_VESSEL_OVERLAY);
     }
 
     private static void drawEssenceRequirements(GuiGraphics gfx, IAwakeningRecipe recipe, AwakeningAltarTileEntity altar) {

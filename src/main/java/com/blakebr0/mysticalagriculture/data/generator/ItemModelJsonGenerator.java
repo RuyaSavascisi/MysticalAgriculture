@@ -4,10 +4,9 @@ import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 import com.blakebr0.mysticalagriculture.registry.AugmentRegistry;
 import com.blakebr0.mysticalagriculture.registry.CropRegistry;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class ItemModelJsonGenerator extends ItemModelProvider {
     public ItemModelJsonGenerator(PackOutput output, String modid, ExistingFileHelper existingFileHelper) {
@@ -32,7 +31,7 @@ public class ItemModelJsonGenerator extends ItemModelProvider {
             }
         }
 
-        var augmentModel = new ModelFile.UncheckedModelFile(new ResourceLocation(MysticalAgriculture.MOD_ID, "item/augment"));
+        var augmentModel = new ModelFile.UncheckedModelFile(MysticalAgriculture.resource("item/augment"));
 
         for (var augment : AugmentRegistry.getInstance().getAugments()) {
             this.getBuilder(augment.getNameWithSuffix("augment"))

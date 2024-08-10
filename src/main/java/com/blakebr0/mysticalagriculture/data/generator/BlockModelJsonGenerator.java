@@ -5,10 +5,10 @@ import com.blakebr0.mysticalagriculture.registry.CropRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.CropBlock;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.HashMap;
 
@@ -26,7 +26,7 @@ public class BlockModelJsonGenerator extends BlockStateProvider {
             var stemModel = type.getStemModel();
 
             for (int i = 0; i <= 7; i++) {
-                models[i] = new ModelFile.UncheckedModelFile(new ResourceLocation(stemModel.getNamespace(), stemModel.getPath() + "_" + i));
+                models[i] = new ModelFile.UncheckedModelFile(ResourceLocation.fromNamespaceAndPath(stemModel.getNamespace(), stemModel.getPath() + "_" + i));
             }
 
             stemModels.put(type.getId(), models);

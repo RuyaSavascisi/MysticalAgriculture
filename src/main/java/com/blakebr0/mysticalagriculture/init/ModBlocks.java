@@ -28,14 +28,13 @@ import com.blakebr0.mysticalagriculture.block.WitherproofBlock;
 import com.blakebr0.mysticalagriculture.block.WitherproofGlassBlock;
 import com.blakebr0.mysticalagriculture.lib.ModCrops;
 import com.blakebr0.mysticalagriculture.registry.CropRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,111 +42,109 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class ModBlocks {
-    public static final Map<RegistryObject<Block>, Supplier<Block>> ENTRIES = new LinkedHashMap<>();
+    public static final Map<DeferredHolder<Block, Block>, Supplier<Block>> ENTRIES = new LinkedHashMap<>();
 
-    public static final RegistryObject<Block> PROSPERITY_BLOCK = register("prosperity_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
-    public static final RegistryObject<Block> INFERIUM_BLOCK = register("inferium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
-    public static final RegistryObject<Block> PRUDENTIUM_BLOCK = register("prudentium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
-    public static final RegistryObject<Block> TERTIUM_BLOCK = register("tertium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
-    public static final RegistryObject<Block> IMPERIUM_BLOCK = register("imperium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 5.0F, true));
-    public static final RegistryObject<Block> SUPREMIUM_BLOCK = register("supremium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
-    public static final RegistryObject<Block> AWAKENED_SUPREMIUM_BLOCK = register("awakened_supremium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
-    public static final RegistryObject<Block> SOULIUM_BLOCK = register("soulium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
-    public static final RegistryObject<Block> PROSPERITY_INGOT_BLOCK = register("prosperity_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> INFERIUM_INGOT_BLOCK = register("inferium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> PRUDENTIUM_INGOT_BLOCK = register("prudentium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> TERTIUM_INGOT_BLOCK = register("tertium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> IMPERIUM_INGOT_BLOCK = register("imperium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> SUPREMIUM_INGOT_BLOCK = register("supremium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> AWAKENED_SUPREMIUM_INGOT_BLOCK = register("awakened_supremium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> SOULIUM_INGOT_BLOCK = register("soulium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> PROSPERITY_GEMSTONE_BLOCK = register("prosperity_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> INFERIUM_GEMSTONE_BLOCK = register("inferium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> PRUDENTIUM_GEMSTONE_BLOCK = register("prudentium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> TERTIUM_GEMSTONE_BLOCK = register("tertium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> IMPERIUM_GEMSTONE_BLOCK = register("imperium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> SUPREMIUM_GEMSTONE_BLOCK = register("supremium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> AWAKENED_SUPREMIUM_GEMSTONE_BLOCK = register("awakened_supremium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> SOULIUM_GEMSTONE_BLOCK = register("soulium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
-    public static final RegistryObject<Block> INFERIUM_FARMLAND = register("inferium_farmland", () -> new InfusedFarmlandBlock(CropTier.ONE));
-    public static final RegistryObject<Block> PRUDENTIUM_FARMLAND = register("prudentium_farmland", () -> new InfusedFarmlandBlock(CropTier.TWO));
-    public static final RegistryObject<Block> TERTIUM_FARMLAND = register("tertium_farmland", () -> new InfusedFarmlandBlock(CropTier.THREE));
-    public static final RegistryObject<Block> IMPERIUM_FARMLAND = register("imperium_farmland", () -> new InfusedFarmlandBlock(CropTier.FOUR));
-    public static final RegistryObject<Block> SUPREMIUM_FARMLAND = register("supremium_farmland", () -> new InfusedFarmlandBlock(CropTier.FIVE));
-    public static final RegistryObject<Block> INFERIUM_GROWTH_ACCELERATOR = register("inferium_growth_accelerator", () -> new GrowthAcceleratorBlock(12, CropTier.ONE.getTextColor()));
-    public static final RegistryObject<Block> PRUDENTIUM_GROWTH_ACCELERATOR = register("prudentium_growth_accelerator", () -> new GrowthAcceleratorBlock(24, CropTier.TWO.getTextColor()));
-    public static final RegistryObject<Block> TERTIUM_GROWTH_ACCELERATOR = register("tertium_growth_accelerator", () -> new GrowthAcceleratorBlock(36, CropTier.THREE.getTextColor()));
-    public static final RegistryObject<Block> IMPERIUM_GROWTH_ACCELERATOR = register("imperium_growth_accelerator", () -> new GrowthAcceleratorBlock(48, CropTier.FOUR.getTextColor()));
-    public static final RegistryObject<Block> SUPREMIUM_GROWTH_ACCELERATOR = register("supremium_growth_accelerator", () -> new GrowthAcceleratorBlock(60, CropTier.FIVE.getTextColor()));
-    public static final RegistryObject<Block> PROSPERITY_ORE = register("prosperity_ore", () -> new BaseOreBlock(SoundType.STONE, 3.0F, 3.0F, 2, 5));
-    public static final RegistryObject<Block> DEEPSLATE_PROSPERITY_ORE = register("deepslate_prosperity_ore", () -> new BaseOreBlock(SoundType.DEEPSLATE, 4.5F, 3.0F, 2, 5));
-    public static final RegistryObject<Block> INFERIUM_ORE = register("inferium_ore", () -> new BaseOreBlock(SoundType.STONE, 3.0F, 3.0F, 2, 5));
-    public static final RegistryObject<Block> DEEPSLATE_INFERIUM_ORE = register("deepslate_inferium_ore", () -> new BaseOreBlock(SoundType.DEEPSLATE, 4.5F, 3.0F, 2, 5));
-    public static final RegistryObject<Block> SOULIUM_ORE = register("soulium_ore", () -> new BaseOreBlock(SoundType.STONE, 3.0F, 3.0F, 3, 7));
-    public static final RegistryObject<Block> SOULSTONE = register("soulstone", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_COBBLE = register("soulstone_cobble", () -> new BaseBlock(SoundType.STONE, 2.0F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_BRICKS = register("soulstone_bricks", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_CRACKED_BRICKS = register("soulstone_cracked_bricks", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_CHISELED_BRICKS = register("soulstone_chiseled_bricks", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_SMOOTH = register("soulstone_smooth", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOUL_GLASS = register("soul_glass", () -> new BaseGlassBlock(SoundType.GLASS, 0.3F, 0.3F));
-    public static final RegistryObject<Block> SOULSTONE_SLAB = register("soulstone_slab", () -> new BaseSlabBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_COBBLE_SLAB = register("soulstone_cobble_slab", () -> new BaseSlabBlock(SoundType.STONE, 2.0F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_BRICKS_SLAB = register("soulstone_bricks_slab", () -> new BaseSlabBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_SMOOTH_SLAB = register("soulstone_smooth_slab", () -> new BaseSlabBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_STAIRS = register("soulstone_stairs", () -> new BaseStairsBlock(SOULSTONE.lazyMap(Block::defaultBlockState), SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_COBBLE_STAIRS = register("soulstone_cobble_stairs", () -> new BaseStairsBlock(SOULSTONE_COBBLE.lazyMap(Block::defaultBlockState), SoundType.STONE, 2.0F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_BRICKS_STAIRS = register("soulstone_bricks_stairs", () -> new BaseStairsBlock(SOULSTONE_BRICKS.lazyMap(Block::defaultBlockState), SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_COBBLE_WALL = register("soulstone_cobble_wall", () -> new BaseWallBlock(SoundType.STONE, 2.0F, 6.0F, true));
-    public static final RegistryObject<Block> SOULSTONE_BRICKS_WALL = register("soulstone_bricks_wall", () -> new BaseWallBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> WITHERPROOF_BLOCK = register("witherproof_block", WitherproofBlock::new);
-    public static final RegistryObject<Block> WITHERPROOF_BRICKS = register("witherproof_bricks", WitherproofBlock::new);
-    public static final RegistryObject<Block> WITHERPROOF_GLASS = register("witherproof_glass", WitherproofGlassBlock::new);
-    public static final RegistryObject<Block> INFUSION_PEDESTAL = register("infusion_pedestal", InfusionPedestalBlock::new);
-    public static final RegistryObject<Block> INFUSION_ALTAR = register("infusion_altar", InfusionAltarBlock::new);
-    public static final RegistryObject<Block> AWAKENING_PEDESTAL = register("awakening_pedestal", AwakeningPedestalBlock::new);
-    public static final RegistryObject<Block> AWAKENING_ALTAR = register("awakening_altar", AwakeningAltarBlock::new);
-    public static final RegistryObject<Block> ESSENCE_VESSEL = register("essence_vessel", EssenceVesselBlock::new);
-    public static final RegistryObject<Block> TINKERING_TABLE = register("tinkering_table", TinkeringTableBlock::new);
-    public static final RegistryObject<Block> ENCHANTER = register("enchanter", EnchanterBlock::new);
-    public static final RegistryObject<Block> MACHINE_FRAME = register("machine_frame", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
-    public static final RegistryObject<Block> FURNACE = register("furnace", EssenceFurnaceBlock::new);
-    public static final RegistryObject<Block> REPROCESSOR = register("seed_reprocessor", ReprocessorBlock::new);
-    public static final RegistryObject<Block> SOUL_EXTRACTOR = register("soul_extractor", SoulExtractorBlock::new);
-    public static final RegistryObject<Block> HARVESTER = register("harvester", HarvesterBlock::new);
-    public static final RegistryObject<Block> SOULIUM_SPAWNER = register("soulium_spawner", SouliumSpawnerBlock::new);
+    public static final DeferredHolder<Block, Block> PROSPERITY_BLOCK = register("prosperity_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> INFERIUM_BLOCK = register("inferium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> PRUDENTIUM_BLOCK = register("prudentium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> TERTIUM_BLOCK = register("tertium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> IMPERIUM_BLOCK = register("imperium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 5.0F, true));
+    public static final DeferredHolder<Block, Block> SUPREMIUM_BLOCK = register("supremium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> AWAKENED_SUPREMIUM_BLOCK = register("awakened_supremium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULIUM_BLOCK = register("soulium_block", () -> new BaseBlock(SoundType.STONE, 4.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> PROSPERITY_INGOT_BLOCK = register("prosperity_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> INFERIUM_INGOT_BLOCK = register("inferium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> PRUDENTIUM_INGOT_BLOCK = register("prudentium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> TERTIUM_INGOT_BLOCK = register("tertium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> IMPERIUM_INGOT_BLOCK = register("imperium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SUPREMIUM_INGOT_BLOCK = register("supremium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> AWAKENED_SUPREMIUM_INGOT_BLOCK = register("awakened_supremium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULIUM_INGOT_BLOCK = register("soulium_ingot_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> PROSPERITY_GEMSTONE_BLOCK = register("prosperity_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> INFERIUM_GEMSTONE_BLOCK = register("inferium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> PRUDENTIUM_GEMSTONE_BLOCK = register("prudentium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> TERTIUM_GEMSTONE_BLOCK = register("tertium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> IMPERIUM_GEMSTONE_BLOCK = register("imperium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SUPREMIUM_GEMSTONE_BLOCK = register("supremium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> AWAKENED_SUPREMIUM_GEMSTONE_BLOCK = register("awakened_supremium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULIUM_GEMSTONE_BLOCK = register("soulium_gemstone_block", () -> new BaseBlock(SoundType.METAL, 5.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> INFERIUM_FARMLAND = register("inferium_farmland", () -> new InfusedFarmlandBlock(CropTier.ONE));
+    public static final DeferredHolder<Block, Block> PRUDENTIUM_FARMLAND = register("prudentium_farmland", () -> new InfusedFarmlandBlock(CropTier.TWO));
+    public static final DeferredHolder<Block, Block> TERTIUM_FARMLAND = register("tertium_farmland", () -> new InfusedFarmlandBlock(CropTier.THREE));
+    public static final DeferredHolder<Block, Block> IMPERIUM_FARMLAND = register("imperium_farmland", () -> new InfusedFarmlandBlock(CropTier.FOUR));
+    public static final DeferredHolder<Block, Block> SUPREMIUM_FARMLAND = register("supremium_farmland", () -> new InfusedFarmlandBlock(CropTier.FIVE));
+    public static final DeferredHolder<Block, Block> INFERIUM_GROWTH_ACCELERATOR = register("inferium_growth_accelerator", () -> new GrowthAcceleratorBlock(12, CropTier.ONE.getTextColor()));
+    public static final DeferredHolder<Block, Block> PRUDENTIUM_GROWTH_ACCELERATOR = register("prudentium_growth_accelerator", () -> new GrowthAcceleratorBlock(24, CropTier.TWO.getTextColor()));
+    public static final DeferredHolder<Block, Block> TERTIUM_GROWTH_ACCELERATOR = register("tertium_growth_accelerator", () -> new GrowthAcceleratorBlock(36, CropTier.THREE.getTextColor()));
+    public static final DeferredHolder<Block, Block> IMPERIUM_GROWTH_ACCELERATOR = register("imperium_growth_accelerator", () -> new GrowthAcceleratorBlock(48, CropTier.FOUR.getTextColor()));
+    public static final DeferredHolder<Block, Block> SUPREMIUM_GROWTH_ACCELERATOR = register("supremium_growth_accelerator", () -> new GrowthAcceleratorBlock(60, CropTier.FIVE.getTextColor()));
+    public static final DeferredHolder<Block, Block> PROSPERITY_ORE = register("prosperity_ore", () -> new BaseOreBlock(SoundType.STONE, 3.0F, 3.0F, 2, 5));
+    public static final DeferredHolder<Block, Block> DEEPSLATE_PROSPERITY_ORE = register("deepslate_prosperity_ore", () -> new BaseOreBlock(SoundType.DEEPSLATE, 4.5F, 3.0F, 2, 5));
+    public static final DeferredHolder<Block, Block> INFERIUM_ORE = register("inferium_ore", () -> new BaseOreBlock(SoundType.STONE, 3.0F, 3.0F, 2, 5));
+    public static final DeferredHolder<Block, Block> DEEPSLATE_INFERIUM_ORE = register("deepslate_inferium_ore", () -> new BaseOreBlock(SoundType.DEEPSLATE, 4.5F, 3.0F, 2, 5));
+    public static final DeferredHolder<Block, Block> SOULIUM_ORE = register("soulium_ore", () -> new BaseOreBlock(SoundType.STONE, 3.0F, 3.0F, 3, 7));
+    public static final DeferredHolder<Block, Block> SOULSTONE = register("soulstone", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_COBBLE = register("soulstone_cobble", () -> new BaseBlock(SoundType.STONE, 2.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_BRICKS = register("soulstone_bricks", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_CRACKED_BRICKS = register("soulstone_cracked_bricks", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_CHISELED_BRICKS = register("soulstone_chiseled_bricks", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_SMOOTH = register("soulstone_smooth", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOUL_GLASS = register("soul_glass", () -> new BaseGlassBlock(SoundType.GLASS, 0.3F, 0.3F));
+    public static final DeferredHolder<Block, Block> SOULSTONE_SLAB = register("soulstone_slab", () -> new BaseSlabBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_COBBLE_SLAB = register("soulstone_cobble_slab", () -> new BaseSlabBlock(SoundType.STONE, 2.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_BRICKS_SLAB = register("soulstone_bricks_slab", () -> new BaseSlabBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_SMOOTH_SLAB = register("soulstone_smooth_slab", () -> new BaseSlabBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_STAIRS = register("soulstone_stairs", () -> new BaseStairsBlock(() -> SOULSTONE.get().defaultBlockState(), SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_COBBLE_STAIRS = register("soulstone_cobble_stairs", () -> new BaseStairsBlock(() -> SOULSTONE_COBBLE.get().defaultBlockState(), SoundType.STONE, 2.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_BRICKS_STAIRS = register("soulstone_bricks_stairs", () -> new BaseStairsBlock(() -> SOULSTONE_BRICKS.get().defaultBlockState(), SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_COBBLE_WALL = register("soulstone_cobble_wall", () -> new BaseWallBlock(SoundType.STONE, 2.0F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> SOULSTONE_BRICKS_WALL = register("soulstone_bricks_wall", () -> new BaseWallBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> WITHERPROOF_BLOCK = register("witherproof_block", WitherproofBlock::new);
+    public static final DeferredHolder<Block, Block> WITHERPROOF_BRICKS = register("witherproof_bricks", WitherproofBlock::new);
+    public static final DeferredHolder<Block, Block> WITHERPROOF_GLASS = register("witherproof_glass", WitherproofGlassBlock::new);
+    public static final DeferredHolder<Block, Block> INFUSION_PEDESTAL = register("infusion_pedestal", InfusionPedestalBlock::new);
+    public static final DeferredHolder<Block, Block> INFUSION_ALTAR = register("infusion_altar", InfusionAltarBlock::new);
+    public static final DeferredHolder<Block, Block> AWAKENING_PEDESTAL = register("awakening_pedestal", AwakeningPedestalBlock::new);
+    public static final DeferredHolder<Block, Block> AWAKENING_ALTAR = register("awakening_altar", AwakeningAltarBlock::new);
+    public static final DeferredHolder<Block, Block> ESSENCE_VESSEL = register("essence_vessel", EssenceVesselBlock::new);
+    public static final DeferredHolder<Block, Block> TINKERING_TABLE = register("tinkering_table", TinkeringTableBlock::new);
+    public static final DeferredHolder<Block, Block> ENCHANTER = register("enchanter", EnchanterBlock::new);
+    public static final DeferredHolder<Block, Block> MACHINE_FRAME = register("machine_frame", () -> new BaseBlock(SoundType.STONE, 1.5F, 6.0F, true));
+    public static final DeferredHolder<Block, Block> FURNACE = register("furnace", EssenceFurnaceBlock::new);
+    public static final DeferredHolder<Block, Block> REPROCESSOR = register("seed_reprocessor", ReprocessorBlock::new);
+    public static final DeferredHolder<Block, Block> SOUL_EXTRACTOR = register("soul_extractor", SoulExtractorBlock::new);
+    public static final DeferredHolder<Block, Block> HARVESTER = register("harvester", HarvesterBlock::new);
+    public static final DeferredHolder<Block, Block> SOULIUM_SPAWNER = register("soulium_spawner", SouliumSpawnerBlock::new);
 
-    public static final RegistryObject<Block> INFERIUM_CROP = registerNoItem("inferium_crop", () -> new InferiumCropBlock(ModCrops.INFERIUM));
+    public static final DeferredHolder<Block, Block> INFERIUM_CROP = registerNoItem("inferium_crop", () -> new InferiumCropBlock(ModCrops.INFERIUM));
 
     @SubscribeEvent
     public void onRegisterBlocks(RegisterEvent event) {
-        event.register(ForgeRegistries.Keys.BLOCKS, registry -> {
+        event.register(Registries.BLOCK, registry -> {
             ENTRIES.forEach((reg, block) -> {
                 registry.register(reg.getId(), block.get());
             });
 
             CropRegistry.getInstance().setAllowRegistration(true);
-            CropRegistry.getInstance().onRegisterBlocks(event.getForgeRegistry());
+            CropRegistry.getInstance().onRegisterBlocks(registry);
             CropRegistry.getInstance().setAllowRegistration(false);
         });
     }
 
-    private static RegistryObject<Block> register(String name, Supplier<Block> block) {
+    private static DeferredHolder<Block, Block> register(String name, Supplier<Block> block) {
         return register(name, block, b -> () -> new BaseBlockItem(b.get()));
     }
 
-    private static RegistryObject<Block> register(String name, Supplier<Block> block, Function<RegistryObject<Block>, Supplier<? extends BlockItem>> item) {
-        var loc = new ResourceLocation(MysticalAgriculture.MOD_ID, name);
-        var reg = RegistryObject.create(loc, ForgeRegistries.BLOCKS);
-        ENTRIES.put(reg, block);
-        ModItems.BLOCK_ENTRIES.add(() -> item.apply(reg).get());
-        return reg;
+    private static DeferredHolder<Block, Block> register(String name, Supplier<Block> block, Function<DeferredHolder<Block, Block>, Supplier<? extends BlockItem>> item) {
+        var holder = registerNoItem(name, block);
+        ModItems.BLOCK_ENTRIES.add(() -> item.apply(holder).get());
+        return holder;
     }
 
-    public static RegistryObject<Block> registerNoItem(String name, Supplier<Block> block) {
-        var loc = new ResourceLocation(MysticalAgriculture.MOD_ID, name);
-        var reg = RegistryObject.create(loc, ForgeRegistries.BLOCKS);
-        ENTRIES.put(reg, block);
-        return reg;
+    public static DeferredHolder<Block, Block> registerNoItem(String name, Supplier<Block> block) {
+        var id = MysticalAgriculture.resource(name);
+        var holder = DeferredHolder.create(Registries.BLOCK, id);
+        ENTRIES.put(holder, block);
+        return holder;
     }
 }

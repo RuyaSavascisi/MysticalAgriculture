@@ -4,14 +4,14 @@ import com.blakebr0.cucumber.helper.ParsingHelper;
 import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonParser;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoader;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModLoader;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,18 +32,14 @@ public class EssenceVesselColorManager implements PreparableReloadListener {
     @Override
     public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager manager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
         return CompletableFuture.runAsync(() -> {
-            if (ModLoader.isLoadingStateValid()) {
+            if (!ModLoader.hasErrors()) {
                 this.load(manager);
             }
         }, backgroundExecutor).thenCompose(barrier::wait);
     }
 
     public int getColor(ItemStack stack) {
-        var id = ForgeRegistries.ITEMS.getKey(stack.getItem());
-        if (id == null) {
-            return 0xFFFFFF;
-        }
-
+        var id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         return this.colors.getOrDefault(id.toString(), 0xFFFFFF);
     }
 

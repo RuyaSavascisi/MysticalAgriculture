@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalagriculture.init;
 
-import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.util.FeatureFlagDisplayItemGenerator;
 import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 import com.blakebr0.mysticalagriculture.api.util.MobSoulUtils;
@@ -12,13 +11,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MysticalAgriculture.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> CREATIVE_TAB = REGISTRY.register("creative_tab", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = REGISTRY.register("creative_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.mysticalagriculture"))
             .icon(() -> new ItemStack(ModItems.INFERIUM_ESSENCE.get()))
             .displayItems(FeatureFlagDisplayItemGenerator.create((parameters, output) -> {
@@ -168,10 +167,7 @@ public final class ModCreativeModeTabs {
                 }
 
                 output.accept(ModItems.EXPERIENCE_CAPSULE);
-
-                stack = new ItemStack(ModItems.WATERING_CAN.get());
-                NBTHelper.setBoolean(stack, "Water", false);
-                output.accept(stack);
+                output.accept(ModItems.WATERING_CAN);
 
                 output.accept(ModItems.DIAMOND_SICKLE);
                 output.accept(ModItems.DIAMOND_SCYTHE);
@@ -201,11 +197,7 @@ public final class ModCreativeModeTabs {
                 output.accept(ModItems.INFERIUM_AXE);
                 output.accept(ModItems.INFERIUM_HOE);
 //                output.accept(ModItems.IMPERIUM_STAFF);
-
-                stack = new ItemStack(ModItems.INFERIUM_WATERING_CAN.get());
-                NBTHelper.setBoolean(stack, "Water", false);
-                NBTHelper.setBoolean(stack, "Active", false);
-                output.accept(stack);
+                output.accept(ModItems.INFERIUM_WATERING_CAN);
                 output.accept(ModItems.INFERIUM_BOW);
                 output.accept(ModItems.INFERIUM_CROSSBOW);
                 output.accept(ModItems.INFERIUM_SHEARS);
@@ -218,12 +210,7 @@ public final class ModCreativeModeTabs {
                 output.accept(ModItems.PRUDENTIUM_AXE);
                 output.accept(ModItems.PRUDENTIUM_HOE);
 //                output.accept(ModItems.PRUDENTIUM_STAFF);
-
-                stack = new ItemStack(ModItems.PRUDENTIUM_WATERING_CAN.get());
-                NBTHelper.setBoolean(stack, "Water", false);
-                NBTHelper.setBoolean(stack, "Active", false);
-                output.accept(stack);
-
+                output.accept(ModItems.PRUDENTIUM_WATERING_CAN);
                 output.accept(ModItems.PRUDENTIUM_BOW);
                 output.accept(ModItems.PRUDENTIUM_CROSSBOW);
                 output.accept(ModItems.PRUDENTIUM_SHEARS);
@@ -236,12 +223,7 @@ public final class ModCreativeModeTabs {
                 output.accept(ModItems.TERTIUM_AXE);
                 output.accept(ModItems.TERTIUM_HOE);
 //                output.accept(ModItems.TERTIUM_STAFF);
-
-                stack = new ItemStack(ModItems.TERTIUM_WATERING_CAN.get());
-                NBTHelper.setBoolean(stack, "Water", false);
-                NBTHelper.setBoolean(stack, "Active", false);
-                output.accept(stack);
-
+                output.accept(ModItems.TERTIUM_WATERING_CAN);
                 output.accept(ModItems.TERTIUM_BOW);
                 output.accept(ModItems.TERTIUM_CROSSBOW);
                 output.accept(ModItems.TERTIUM_SHEARS);
@@ -254,12 +236,7 @@ public final class ModCreativeModeTabs {
                 output.accept(ModItems.IMPERIUM_AXE);
                 output.accept(ModItems.IMPERIUM_HOE);
 //                output.accept(ModItems.IMPERIUM_STAFF);
-
-                stack = new ItemStack(ModItems.IMPERIUM_WATERING_CAN.get());
-                NBTHelper.setBoolean(stack, "Water", false);
-                NBTHelper.setBoolean(stack, "Active", false);
-                output.accept(stack);
-
+                output.accept(ModItems.IMPERIUM_WATERING_CAN);
                 output.accept(ModItems.IMPERIUM_BOW);
                 output.accept(ModItems.IMPERIUM_CROSSBOW);
                 output.accept(ModItems.IMPERIUM_SHEARS);
@@ -272,12 +249,7 @@ public final class ModCreativeModeTabs {
                 output.accept(ModItems.SUPREMIUM_AXE);
                 output.accept(ModItems.SUPREMIUM_HOE);
 //                output.accept(ModItems.SUPREMIUM_STAFF);
-
-                stack = new ItemStack(ModItems.SUPREMIUM_WATERING_CAN.get());
-                NBTHelper.setBoolean(stack, "Water", false);
-                NBTHelper.setBoolean(stack, "Active", false);
-                output.accept(stack);
-
+                output.accept(ModItems.SUPREMIUM_WATERING_CAN);
                 output.accept(ModItems.SUPREMIUM_BOW);
                 output.accept(ModItems.SUPREMIUM_CROSSBOW);
                 output.accept(ModItems.SUPREMIUM_SHEARS);
@@ -289,13 +261,7 @@ public final class ModCreativeModeTabs {
                 output.accept(ModItems.AWAKENED_SUPREMIUM_SHOVEL);
                 output.accept(ModItems.AWAKENED_SUPREMIUM_AXE);
                 output.accept(ModItems.AWAKENED_SUPREMIUM_HOE);
-//                output.accept(ModItems.AWAKENED_SUPREMIUM_STAFF);
-
-                stack = new ItemStack(ModItems.AWAKENED_SUPREMIUM_WATERING_CAN.get());
-                NBTHelper.setBoolean(stack, "Water", false);
-                NBTHelper.setBoolean(stack, "Active", false);
-                output.accept(stack);
-
+                output.accept(ModItems.AWAKENED_SUPREMIUM_WATERING_CAN);
                 output.accept(ModItems.AWAKENED_SUPREMIUM_BOW);
                 output.accept(ModItems.AWAKENED_SUPREMIUM_CROSSBOW);
                 output.accept(ModItems.AWAKENED_SUPREMIUM_SHEARS);

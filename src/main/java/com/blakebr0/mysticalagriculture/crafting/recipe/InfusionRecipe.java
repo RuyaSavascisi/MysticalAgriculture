@@ -4,61 +4,51 @@ import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.mysticalagriculture.api.crafting.IInfusionRecipe;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.function.BiFunction;
 
 public class InfusionRecipe implements ISpecialRecipe, IInfusionRecipe {
     public static final int RECIPE_SIZE = 9;
-    private final ResourceLocation recipeId;
+    private final Ingredient input;
     private final NonNullList<Ingredient> inputs;
-    private final ItemStack output;
-    private final boolean transferNBT;
+    private final ItemStack result;
+    private final boolean transferComponents;
     // for CraftTweaker recipes
     private BiFunction<Integer, ItemStack, ItemStack> transformer;
 
-    public InfusionRecipe(ResourceLocation recipeId, NonNullList<Ingredient> inputs, ItemStack output, boolean transferNBT) {
-        this.recipeId = recipeId;
+    // the input is specified separately in JSON but is part of the ingredients list in practice
+    public InfusionRecipe(Ingredient input, NonNullList<Ingredient> inputs, ItemStack result, boolean transferComponents) {
+        this.input = input;
         this.inputs = inputs;
-        this.output = output;
-        this.transferNBT = transferNBT;
+        this.result = result;
+        this.transferComponents = transferComponents;
     }
 
     @Override
-    public ItemStack assemble(IItemHandler inventory, RegistryAccess access) {
-        var stack = inventory.getStackInSlot(0);
-        var result = this.output.copy();
+    public ItemStack assemble(RecipeInput inventory, HolderLookup.Provider lookup) {
+        var stack = inventory.getItem(0);
+        var result = this.result.copy();
 
-        if (this.transferNBT) {
-            var tag = stack.getTag();
-
-            if (tag != null) {
-                result.setTag(tag.copy());
-
-                return result;
-            }
+        if (this.transferComponents) {
+            result.applyComponents(stack.getComponents());
         }
 
         return result;
-    }
-
-    @Override
-    public ItemStack assemble(Container inventory, RegistryAccess access) {
-        return this.assemble(new InvWrapper(inventory), access);
     }
 
     @Override
@@ -67,18 +57,13 @@ public class InfusionRecipe implements ISpecialRecipe, IInfusionRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess access) {
-        return this.output;
+    public ItemStack getResultItem(HolderLookup.Provider lookup) {
+        return this.result;
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return this.inputs;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.recipeId;
     }
 
     @Override
@@ -92,14 +77,9 @@ public class InfusionRecipe implements ISpecialRecipe, IInfusionRecipe {
     }
 
     @Override
-    public boolean matches(IItemHandler inventory) {
-        var altarStack = inventory.getStackInSlot(0);
-        return !this.inputs.isEmpty() && this.inputs.get(0).test(altarStack) && ISpecialRecipe.super.matches(inventory);
-    }
-
-    @Override
-    public boolean matches(Container inv, Level level) {
-        return this.matches(new InvWrapper(inv));
+    public boolean matches(RecipeInput inventory, Level level) {
+        var altarStack = inventory.getItem(0);
+        return !this.inputs.isEmpty() && this.inputs.getFirst().test(altarStack) && ISpecialRecipe.super.matches(inventory, level);
     }
 
     @Override
@@ -135,50 +115,67 @@ public class InfusionRecipe implements ISpecialRecipe, IInfusionRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<InfusionRecipe> {
+        public static final MapCodec<InfusionRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
+                builder.group(
+                        Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.input),
+                        Ingredient.CODEC_NONEMPTY
+                                .listOf()
+                                .fieldOf("ingredients")
+                                .flatXmap(
+                                        field -> {
+                                            var ingredients = field.toArray(Ingredient[]::new);
+                                            if (ingredients.length == 0) {
+                                                return DataResult.error(() -> "No ingredients for shapeless recipe");
+                                            } else {
+                                                return ingredients.length > 8
+                                                        ? DataResult.error(() -> "Too many ingredients for shapeless recipe. The maximum is: %s".formatted(8))
+                                                        : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
+                                            }
+                                        },
+                                        DataResult::success
+                                )
+                                .forGetter(recipe -> recipe.inputs),
+                        ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                        Codec.BOOL.fieldOf("transfer_components").forGetter(recipe -> recipe.transferComponents)
+                ).apply(builder, InfusionRecipe::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, InfusionRecipe> STREAM_CODEC = StreamCodec.of(
+                InfusionRecipe.Serializer::toNetwork, InfusionRecipe.Serializer::fromNetwork
+        );
+
         @Override
-        public InfusionRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            var inputs = NonNullList.withSize(RECIPE_SIZE, Ingredient.EMPTY);
-            var input = GsonHelper.getAsJsonObject(json, "input");
-
-            inputs.set(0, Ingredient.fromJson(input));
-
-            var ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
-
-            for (int i = 0; i < ingredients.size(); i++) {
-                inputs.set(i + 1, Ingredient.fromJson(ingredients.get(i)));
-            }
-
-            var result = ShapedRecipe.itemStackFromJson(json.getAsJsonObject("result"));
-            var transferNBT = GsonHelper.getAsBoolean(json, "transfer_nbt", false);
-
-            return new InfusionRecipe(recipeId, inputs, result, transferNBT);
+        public MapCodec<InfusionRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public InfusionRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public StreamCodec<RegistryFriendlyByteBuf, InfusionRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+
+        private static InfusionRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
             int size = buffer.readVarInt();
             var inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
             for (int i = 0; i < size; i++) {
-                inputs.set(i, Ingredient.fromNetwork(buffer));
+                inputs.set(i, Ingredient.CONTENTS_STREAM_CODEC.decode(buffer));
             }
 
-            var output = buffer.readItem();
+            var result = ItemStack.STREAM_CODEC.decode(buffer);
             var transferNBT = buffer.readBoolean();
 
-            return new InfusionRecipe(recipeId, inputs, output, transferNBT);
+            return new InfusionRecipe(inputs.getFirst(), inputs, result, transferNBT);
         }
 
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, InfusionRecipe recipe) {
+        private static void toNetwork(RegistryFriendlyByteBuf buffer, InfusionRecipe recipe) {
             buffer.writeVarInt(recipe.inputs.size());
 
             for (var ingredient : recipe.inputs) {
-                ingredient.toNetwork(buffer);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, ingredient);
             }
 
-            buffer.writeItem(recipe.output);
-            buffer.writeBoolean(recipe.transferNBT);
+            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+            buffer.writeBoolean(recipe.transferComponents);
         }
     }
 }

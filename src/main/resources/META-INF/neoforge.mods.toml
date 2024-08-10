@@ -1,0 +1,36 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+    issueTrackerURL="https://github.com/BlakeBr0/MysticalAgriculture/issues"
+    modId="mysticalagriculture"
+    version="${mod_version}"
+    displayName="Mystical Agriculture"
+    # updateJSONURL="http://myurl.me/"
+    displayURL="https://blakesmods.com/mystical-agriculture"
+    # logoFile="examplemod.png"
+    authors="BlakeBr0"
+    credits="Mark719, xun468, Cavemanrockx"
+    description='''
+    Grow all your resources!
+    '''
+
+    [[dependencies.mysticalagriculture]]
+        modId="neoforge"
+        mandatory=true
+        versionRange="[21.0.0-beta,)"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.mysticalagriculture]]
+        modId="minecraft"
+        mandatory=true
+        versionRange="[1.21,1.21.1)"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.mysticalagriculture]]
+        modId="cucumber"
+        mandatory=true
+        versionRange="[7.0.5,)"
+        ordering="NONE"
+        side="BOTH"

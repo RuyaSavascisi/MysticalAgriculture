@@ -5,7 +5,7 @@ import com.blakebr0.mysticalagriculture.api.tinkering.AugmentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 
 import java.util.EnumSet;
 

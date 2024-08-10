@@ -7,8 +7,8 @@ import net.minecraft.world.item.Item;
 import java.util.function.Supplier;
 
 public class CropType {
-    public static final CropType RESOURCE = new CropType(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, "resource"), new ResourceLocation(MysticalAgricultureAPI.MOD_ID, "block/mystical_resource_crop"));
-    public static final CropType MOB = new CropType(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, "mob"), new ResourceLocation(MysticalAgricultureAPI.MOD_ID, "block/mystical_mob_crop"));
+    public static final CropType RESOURCE = new CropType(ResourceLocation.fromNamespaceAndPath(MysticalAgricultureAPI.MOD_ID, "resource"), ResourceLocation.fromNamespaceAndPath(MysticalAgricultureAPI.MOD_ID, "block/mystical_resource_crop"));
+    public static final CropType MOB = new CropType(ResourceLocation.fromNamespaceAndPath(MysticalAgricultureAPI.MOD_ID, "mob"), ResourceLocation.fromNamespaceAndPath(MysticalAgricultureAPI.MOD_ID, "block/mystical_mob_crop"));
 
     private final ResourceLocation id;
     private final ResourceLocation stemModel;

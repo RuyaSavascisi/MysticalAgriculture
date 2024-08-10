@@ -3,6 +3,7 @@ package com.blakebr0.mysticalagriculture.item;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.util.Formatting;
 import com.blakebr0.mysticalagriculture.api.util.ExperienceCapsuleUtils;
+import com.blakebr0.mysticalagriculture.init.ModDataComponentTypes;
 import com.blakebr0.mysticalagriculture.lib.ModTooltips;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.network.chat.Component;
@@ -13,14 +14,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
 public class ExperienceCapsuleItem extends BaseItem {
     public ExperienceCapsuleItem() {
-        super(p -> p.stacksTo(1));
+        super(p -> p
+                .stacksTo(1)
+                .component(ModDataComponentTypes.EXPERIENCE_CAPSULE, 0)
+        );
     }
 
     @Override
@@ -53,9 +55,8 @@ public class ExperienceCapsuleItem extends BaseItem {
         return InteractionResultHolder.pass(stack);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         var experience = ExperienceCapsuleUtils.getExperience(stack);
 
         tooltip.add(ModTooltips.EXPERIENCE_CAPSULE.args(Formatting.number(experience), Formatting.number(ExperienceCapsuleUtils.MAX_XP_POINTS)).build());

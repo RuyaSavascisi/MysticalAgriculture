@@ -16,7 +16,7 @@ public class WitherproofGlassBlock extends BaseGlassBlock {
     }
 
     @Override
-    public void wasExploded(Level world, BlockPos pos, Explosion explosion) { }
+    public void wasExploded(Level level, BlockPos pos, Explosion explosion) { }
 
     @Override
     public boolean dropFromExplosion(Explosion explosion) {

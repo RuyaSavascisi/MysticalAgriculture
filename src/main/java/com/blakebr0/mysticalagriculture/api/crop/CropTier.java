@@ -12,12 +12,12 @@ import java.util.function.Supplier;
 import static com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI.MOD_ID;
 
 public class CropTier {
-    public static final CropTier ELEMENTAL = new CropTier(new ResourceLocation(MOD_ID, "elemental"), 1, 0x748E00, ChatFormatting.YELLOW);
-    public static final CropTier ONE = new CropTier(new ResourceLocation(MOD_ID, "1"), 1, 0x748E00, ChatFormatting.YELLOW);
-    public static final CropTier TWO = new CropTier(new ResourceLocation(MOD_ID, "2"), 2, 0x008C23, ChatFormatting.GREEN);
-    public static final CropTier THREE = new CropTier(new ResourceLocation(MOD_ID, "3"), 3, 0xB74900, ChatFormatting.GOLD);
-    public static final CropTier FOUR = new CropTier(new ResourceLocation(MOD_ID, "4"), 4, 0x007FDB, ChatFormatting.AQUA);
-    public static final CropTier FIVE = new CropTier(new ResourceLocation(MOD_ID, "5"), 5, 0xC40000, ChatFormatting.RED);
+    public static final CropTier ELEMENTAL = new CropTier(ResourceLocation.fromNamespaceAndPath(MOD_ID, "elemental"), 1, 0x748E00, ChatFormatting.YELLOW);
+    public static final CropTier ONE = new CropTier(ResourceLocation.fromNamespaceAndPath(MOD_ID, "1"), 1, 0x748E00, ChatFormatting.YELLOW);
+    public static final CropTier TWO = new CropTier(ResourceLocation.fromNamespaceAndPath(MOD_ID, "2"), 2, 0x008C23, ChatFormatting.GREEN);
+    public static final CropTier THREE = new CropTier(ResourceLocation.fromNamespaceAndPath(MOD_ID, "3"), 3, 0xB74900, ChatFormatting.GOLD);
+    public static final CropTier FOUR = new CropTier(ResourceLocation.fromNamespaceAndPath(MOD_ID, "4"), 4, 0x007FDB, ChatFormatting.AQUA);
+    public static final CropTier FIVE = new CropTier(ResourceLocation.fromNamespaceAndPath(MOD_ID, "5"), 5, 0xC40000, ChatFormatting.RED);
 
     private final ResourceLocation id;
     private final int value;

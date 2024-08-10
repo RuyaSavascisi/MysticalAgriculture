@@ -10,6 +10,7 @@ import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
 import com.blakebr0.mysticalagriculture.init.ModTileEntities;
 import com.blakebr0.mysticalagriculture.util.IActivatable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -17,9 +18,9 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class AwakeningAltarTileEntity extends BaseInventoryTileEntity implements
             .pos(0, 0, -3).pos(2, 0, -2).pos(0, 0, 3).pos(-2, 0, 2).build();
     private final BaseItemStackHandler inventory;
     private final BaseItemStackHandler recipeInventory;
-    private final CachedRecipe<IAwakeningRecipe> recipe;
+    private final CachedRecipe<RecipeInput, IAwakeningRecipe> recipe;
     private int progress;
     private boolean active;
 
@@ -53,24 +54,19 @@ public class AwakeningAltarTileEntity extends BaseInventoryTileEntity implements
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
 
         this.progress = tag.getInt("Progress");
         this.active = tag.getBoolean("Active");
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
 
         tag.putInt("Progress", this.progress);
         tag.putBoolean("Active", this.active);
-    }
-
-    @Override
-    public AABB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
     }
 
     @Override

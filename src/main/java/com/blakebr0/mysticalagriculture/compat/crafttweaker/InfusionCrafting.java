@@ -15,6 +15,7 @@ import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -31,22 +32,22 @@ public final class InfusionCrafting implements IRecipeManager<IInfusionRecipe> {
     @ZenCodeType.Method
     public static void addRecipe(String name, IItemStack output, IIngredient[] inputs, @ZenCodeType.OptionalBoolean boolean transferNBT) {
         var id = CraftTweakerConstants.rl(INSTANCE.fixRecipeName(name));
-        var recipe = new InfusionRecipe(id, toIngredientsList(inputs), output.getInternal(), transferNBT);
+        var recipe = new InfusionRecipe(inputs[0].asVanillaIngredient(), toIngredientsList(inputs), output.getInternal(), transferNBT);
 
         recipe.setTransformer((slot, stack) -> inputs[slot].getRemainingItem(new MCItemStack(stack)).getInternal());
 
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, recipe));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, new RecipeHolder<>(id, recipe)));
     }
 
     @ZenCodeType.Method
     public static void remove(IItemStack stack) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
+        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.value().getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
     }
 
     private static NonNullList<Ingredient> toIngredientsList(IIngredient... iingredients) {
         var ingredients = NonNullList.withSize(InfusionRecipe.RECIPE_SIZE, Ingredient.EMPTY);
 
-        for (int i = 0; i < iingredients.length; i++) {
+        for (int i = 1; i < iingredients.length; i++) {
             ingredients.set(i, iingredients[i].asVanillaIngredient());
         }
 

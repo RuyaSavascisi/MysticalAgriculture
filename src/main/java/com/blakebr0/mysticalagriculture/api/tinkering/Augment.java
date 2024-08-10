@@ -5,6 +5,7 @@ import com.blakebr0.mysticalagriculture.api.lib.AbilityCache;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -20,12 +21,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * The default implementation of an Augment
@@ -34,7 +34,7 @@ import java.util.EnumSet;
  */
 public class Augment {
     private final ResourceLocation id;
-    private final RegistryObject<Item> item;
+    private final DeferredHolder<Item, Item> item;
     private int tier;
     private EnumSet<AugmentType> types;
     private int primaryColor;
@@ -43,7 +43,7 @@ public class Augment {
 
     public Augment(ResourceLocation id, int tier, EnumSet<AugmentType> types, int primaryColor, int secondaryColor) {
         this.id = id;
-        this.item = RegistryObject.create(new ResourceLocation(MysticalAgricultureAPI.MOD_ID, id.getPath() + "_augment"), ForgeRegistries.ITEMS);
+        this.item = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MysticalAgricultureAPI.MOD_ID, id.getPath() + "_augment"));
         this.tier = tier;
         this.types = types;
         this.primaryColor = primaryColor;
@@ -232,7 +232,7 @@ public class Augment {
     }
 
     /**
-     * Called when a block is destroyed using this item, {@link Item#mineBlock(ItemStack, Level, BlockState, BlockPos, LivingEntity)}
+     * Called when a block is destroyed using this item, {@link Item#on(ItemStack, Level, BlockState, BlockPos, LivingEntity)}
      * @param stack the item
      * @param level the level
      * @param state the block destroyed
@@ -241,17 +241,6 @@ public class Augment {
      * @return was the action successful
      */
     public boolean onBlockDestroyed(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
-        return false;
-    }
-
-    /**
-     * Called when a block is broken with this item, {@link Item#onBlockStartBreak(ItemStack, BlockPos, Player)}
-     * @param stack the item
-     * @param pos the pos of the block broken
-     * @param player the player
-     * @return was the action successful
-     */
-    public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
         return false;
     }
 
@@ -306,6 +295,14 @@ public class Augment {
      */
     @Deprecated(forRemoval = true)
     public void addArmorAttributeModifiers(Multimap<Attribute, AttributeModifier> attributes, EquipmentSlot slot, ItemStack stack) { }
+
+    /**
+     * The list of {@link AttributeModifier}s that will be automatically applied when equipping this augment
+     * @return the attribute modifiers that this augment will apply to the item
+     */
+    public List<AugmentAttributeModifier> getAttributeModifiers() {
+        return List.of();
+    }
 
     /**
      * Does this augment have a set bonus

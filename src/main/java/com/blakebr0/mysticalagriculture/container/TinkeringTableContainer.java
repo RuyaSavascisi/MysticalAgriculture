@@ -6,7 +6,7 @@ import com.blakebr0.mysticalagriculture.api.util.AugmentUtils;
 import com.blakebr0.mysticalagriculture.container.slot.AugmentSlot;
 import com.blakebr0.mysticalagriculture.container.slot.ElementSlot;
 import com.blakebr0.mysticalagriculture.container.slot.TinkerableSlot;
-import com.blakebr0.mysticalagriculture.init.ModContainerTypes;
+import com.blakebr0.mysticalagriculture.init.ModMenuTypes;
 import com.blakebr0.mysticalagriculture.tileentity.TinkeringTableTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 public class TinkeringTableContainer extends BaseContainerMenu {
     private final IItemHandlerModifiable inventory;
@@ -112,10 +112,10 @@ public class TinkeringTableContainer extends BaseContainerMenu {
     }
 
     public static TinkeringTableContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-        return new TinkeringTableContainer(ModContainerTypes.TINKERING_TABLE.get(), windowId, playerInventory, buffer);
+        return new TinkeringTableContainer(ModMenuTypes.TINKERING_TABLE.get(), windowId, playerInventory, buffer);
     }
 
     public static TinkeringTableContainer create(int windowId, Inventory playerInventory, IItemHandlerModifiable inventory, BlockPos pos) {
-        return new TinkeringTableContainer(ModContainerTypes.TINKERING_TABLE.get(), windowId, playerInventory, inventory, pos);
+        return new TinkeringTableContainer(ModMenuTypes.TINKERING_TABLE.get(), windowId, playerInventory, inventory, pos);
     }
 }

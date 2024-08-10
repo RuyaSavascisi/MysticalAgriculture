@@ -1,9 +1,9 @@
 package com.blakebr0.mysticalagriculture.api.crafting;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Used to represent an Awakening recipe for the recipe type
  */
-public interface IAwakeningRecipe extends Recipe<Container> {
+public interface IAwakeningRecipe extends Recipe<RecipeInput> {
     /**
      * The list of essence items required for this recipe
      * @return the list of essences

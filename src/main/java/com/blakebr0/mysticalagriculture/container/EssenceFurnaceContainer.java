@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.container.BaseContainerMenu;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
 import com.blakebr0.mysticalagriculture.container.inventory.UpgradeItemStackHandler;
-import com.blakebr0.mysticalagriculture.init.ModContainerTypes;
+import com.blakebr0.mysticalagriculture.init.ModMenuTypes;
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
 import com.blakebr0.mysticalagriculture.item.MachineUpgradeItem;
 import com.blakebr0.mysticalagriculture.tileentity.EssenceFurnaceTileEntity;
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.ForgeHooks;
 
 public class EssenceFurnaceContainer extends BaseContainerMenu {
     private EssenceFurnaceContainer(MenuType<?> type, int id, Inventory playerInventory, BlockPos pos) {
@@ -67,7 +66,7 @@ public class EssenceFurnaceContainer extends BaseContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (ForgeHooks.getBurnTime(itemstack1, null) > 0) {
+                } else if (itemstack1.getBurnTime(null) > 0) {
                     if (!this.moveItemStackTo(itemstack1, 2, 3, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -99,10 +98,10 @@ public class EssenceFurnaceContainer extends BaseContainerMenu {
     }
 
     public static EssenceFurnaceContainer create(int windowId, Inventory playerInventory, FriendlyByteBuf buffer) {
-        return new EssenceFurnaceContainer(ModContainerTypes.FURNACE.get(), windowId, playerInventory, buffer.readBlockPos());
+        return new EssenceFurnaceContainer(ModMenuTypes.FURNACE.get(), windowId, playerInventory, buffer.readBlockPos());
     }
 
     public static EssenceFurnaceContainer create(int windowId, Inventory playerInventory, BaseItemStackHandler inventory, UpgradeItemStackHandler upgradeInventory, BlockPos pos) {
-        return new EssenceFurnaceContainer(ModContainerTypes.FURNACE.get(), windowId, playerInventory, inventory, upgradeInventory, pos);
+        return new EssenceFurnaceContainer(ModMenuTypes.FURNACE.get(), windowId, playerInventory, inventory, upgradeInventory, pos);
     }
 }

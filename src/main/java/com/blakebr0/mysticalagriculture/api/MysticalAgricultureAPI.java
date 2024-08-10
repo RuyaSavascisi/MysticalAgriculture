@@ -12,9 +12,9 @@ import net.minecraft.world.level.block.Block;
 
 public class MysticalAgricultureAPI {
     public static final String MOD_ID = "mysticalagriculture";
-    public static final TagKey<Block> CROPS_TAG = BlockTags.create(new ResourceLocation("mysticalagriculture:crops"));
-    public static final TagKey<Item> ESSENCES_TAG = ItemTags.create(new ResourceLocation("mysticalagriculture:essences"));
-    public static final TagKey<Item> SEEDS_TAG = ItemTags.create(new ResourceLocation("mysticalagriculture:seeds"));
+    public static final TagKey<Block> CROPS_TAG = BlockTags.create(ResourceLocation.parse("mysticalagriculture:crops"));
+    public static final TagKey<Item> ESSENCES_TAG = ItemTags.create(ResourceLocation.parse("mysticalagriculture:essences"));
+    public static final TagKey<Item> SEEDS_TAG = ItemTags.create(ResourceLocation.parse("mysticalagriculture:seeds"));
 
     private static ICropRegistry cropRegistry;
     private static IAugmentRegistry augmentRegistry;
@@ -42,5 +42,14 @@ public class MysticalAgricultureAPI {
      */
     public static IMobSoulTypeRegistry getMobSoulTypeRegistry() {
         return soulTypeRegistry;
+    }
+
+    /**
+     * Creates a {@link ResourceLocation} in the `mysticalagriculture` namespace
+     * @param path the path
+     * @return the resource location
+     */
+    public static ResourceLocation resource(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 }

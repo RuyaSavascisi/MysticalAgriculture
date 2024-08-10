@@ -12,6 +12,7 @@ import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
 
@@ -28,13 +29,13 @@ public final class ReprocessorCrafting implements IRecipeManager<IReprocessorRec
     @ZenCodeType.Method
     public static void addRecipe(String name, IItemStack output, IIngredient input) {
         var id = CraftTweakerConstants.rl(INSTANCE.fixRecipeName(name));
-        var recipe = new ReprocessorRecipe(id, input.asVanillaIngredient(), output.getInternal());
+        var recipe = new ReprocessorRecipe(input.asVanillaIngredient(), output.getInternal());
 
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, recipe));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, new RecipeHolder<>(id, recipe)));
     }
 
     @ZenCodeType.Method
     public static void remove(IItemStack stack) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
+        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.value().getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
     }
 }

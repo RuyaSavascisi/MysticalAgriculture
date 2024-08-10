@@ -6,7 +6,7 @@ import com.blakebr0.mysticalagriculture.api.tinkering.Augment;
 import com.blakebr0.mysticalagriculture.item.AugmentItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,13 +44,13 @@ public final class AugmentRegistry implements IAugmentRegistry {
         MysticalAgriculture.LOGGER.info("Loaded {} augments", this.augments.size());
     }
 
-    public void onRegisterItems(IForgeRegistry<Item> registry) {
+    public void onRegisterItems(RegisterEvent.RegisterHelper<Item> registry) {
         PluginRegistry.getInstance().forEach((plugin, config) -> plugin.onRegisterAugments(this));
 
         this.augments.forEach((id, a) -> {
             var item = new AugmentItem(a);
 
-            registry.register(new ResourceLocation(MysticalAgriculture.MOD_ID, a.getNameWithSuffix("augment")), item);
+            registry.register(id.withSuffix("_augment"), item);
         });
 
         PluginRegistry.getInstance().forEach((plugin, config) -> plugin.onPostRegisterAugments(this));

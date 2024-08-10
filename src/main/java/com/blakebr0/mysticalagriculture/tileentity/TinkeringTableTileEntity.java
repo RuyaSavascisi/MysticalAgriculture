@@ -9,15 +9,12 @@ import com.blakebr0.mysticalagriculture.container.TinkeringTableContainer;
 import com.blakebr0.mysticalagriculture.init.ModTileEntities;
 import com.blakebr0.mysticalagriculture.lib.ModCrops;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
 public class TinkeringTableTileEntity extends BaseInventoryTileEntity implements MenuProvider {
     private final BaseItemStackHandler inventory;
@@ -40,11 +37,6 @@ public class TinkeringTableTileEntity extends BaseInventoryTileEntity implements
     @Override
     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player) {
         return TinkeringTableContainer.create(windowId, playerInventory, this.inventory, this.getBlockPos());
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        return LazyOptional.empty();
     }
 
     public static BaseItemStackHandler createInventoryHandler() {

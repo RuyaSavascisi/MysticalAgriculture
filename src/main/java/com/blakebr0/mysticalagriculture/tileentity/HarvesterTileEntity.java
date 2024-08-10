@@ -14,6 +14,7 @@ import com.blakebr0.mysticalagriculture.util.IUpgradeableMachine;
 import com.blakebr0.mysticalagriculture.util.MachineUpgradeTier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -26,11 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +42,6 @@ public class HarvesterTileEntity extends BaseInventoryTileEntity implements Menu
     private final BaseItemStackHandler inventory;
     private final UpgradeItemStackHandler upgradeInventory;
     private final DynamicEnergyStorage energy;
-    private final LazyOptional<IEnergyStorage> energyCapability = LazyOptional.of(this::getEnergy);
     private List<BlockPos> positions;
     private BlockPos lastPosition = BlockPos.ZERO;
     private MachineUpgradeTier tier;
@@ -84,38 +79,27 @@ public class HarvesterTileEntity extends BaseInventoryTileEntity implements Menu
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
 
         this.progress = tag.getInt("Progress");
         this.fuelLeft = tag.getInt("FuelLeft");
         this.fuelItemValue = tag.getInt("FuelItemValue");
-        this.energy.deserializeNBT(tag.get("Energy"));
+        this.energy.deserializeNBT(lookup, tag.get("Energy"));
         this.lastPosition = BlockPos.of(tag.getLong("LastPosition"));
-        this.upgradeInventory.deserializeNBT(tag.getCompound("UpgradeInventory"));
+        this.upgradeInventory.deserializeNBT(lookup, tag.getCompound("UpgradeInventory"));
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
 
         tag.putInt("Progress", this.progress);
         tag.putInt("FuelLeft", this.fuelLeft);
         tag.putInt("FuelItemValue", this.fuelItemValue);
         tag.putInt("Energy", this.energy.getEnergyStored());
         tag.putLong("LastPosition", this.lastPosition.asLong());
-        tag.put("UpgradeInventory", this.upgradeInventory.serializeNBT());
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!this.isRemoved()) {
-            if (cap == ForgeCapabilities.ENERGY) {
-                return ForgeCapabilities.ENERGY.orEmpty(cap, this.energyCapability);
-            }
-        }
-
-        return super.getCapability(cap, side);
+        tag.put("UpgradeInventory", this.upgradeInventory.serializeNBT(lookup));
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, HarvesterTileEntity tile) {
@@ -123,7 +107,7 @@ public class HarvesterTileEntity extends BaseInventoryTileEntity implements Menu
             var fuel = tile.inventory.getStackInSlot(0);
 
             if (tile.fuelLeft <= 0 && !fuel.isEmpty()) {
-                tile.fuelItemValue = ForgeHooks.getBurnTime(fuel, null);
+                tile.fuelItemValue = fuel.getBurnTime(null);
 
                 if (tile.fuelItemValue > 0) {
                     tile.fuelLeft = tile.fuelItemValue *= FUEL_TICK_MULTIPLIER;
@@ -231,7 +215,7 @@ public class HarvesterTileEntity extends BaseInventoryTileEntity implements Menu
 
     public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
         return BaseItemStackHandler.create(16, onContentsChanged, builder -> {
-            builder.setCanInsert((slot, stack) -> slot == 0 && ForgeHooks.getBurnTime(stack, null) > 0);
+            builder.setCanInsert((slot, stack) -> slot == 0 && stack.getBurnTime(null) > 0);
             builder.setCanExtract(slot -> slot > 0);
         });
     }

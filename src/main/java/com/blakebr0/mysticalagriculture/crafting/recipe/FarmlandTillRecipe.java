@@ -1,42 +1,43 @@
 package com.blakebr0.mysticalagriculture.crafting.recipe;
 
-import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 public class FarmlandTillRecipe extends ShapelessRecipe {
     private final ItemStack result;
 
-    public FarmlandTillRecipe(ResourceLocation id, String group, ItemStack result, NonNullList<Ingredient> inputs) {
-        super(id, group, CraftingBookCategory.MISC, result, inputs);
+    public FarmlandTillRecipe(String group, ItemStack result, NonNullList<Ingredient> inputs) {
+        super(group, CraftingBookCategory.MISC, result, inputs);
         this.result = result;
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        var remaining = super.getRemainingItems(inv);
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inventory) {
+        var remaining = super.getRemainingItems(inventory);
 
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            var stack = inv.getItem(i);
+        for (int i = 0; i < inventory.size(); i++) {
+            var stack = inventory.getItem(i);
 
             if (stack.getItem() instanceof HoeItem) {
                 var hoe = stack.copy();
 
-                if (!hoe.hurt(1, Utils.RANDOM, null)) {
+                hoe.setDamageValue(hoe.getDamageValue() - 1);
+
+                if (hoe.getDamageValue() > 0) {
                     remaining.set(i, hoe);
                 }
             }
@@ -51,58 +52,64 @@ public class FarmlandTillRecipe extends ShapelessRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<FarmlandTillRecipe> {
-        @Override
-        public FarmlandTillRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            var group = GsonHelper.getAsString(json, "group", "");
-            var ingredients = readIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
+        public static final MapCodec<FarmlandTillRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
+                builder.group(
+                        Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessRecipe::getGroup),
+                        ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                        Ingredient.CODEC_NONEMPTY
+                                .listOf()
+                                .fieldOf("ingredients")
+                                .flatXmap(
+                                        field -> {
+                                            Ingredient[] ingredients = field.toArray(Ingredient[]::new); // Neo skip the empty check and immediately create the array.
+                                            if (ingredients.length == 0) {
+                                                return DataResult.error(() -> "No ingredients for shapeless recipe");
+                                            } else {
+                                                return ingredients.length > ShapedRecipePattern.getMaxHeight() * ShapedRecipePattern.getMaxWidth()
+                                                        ? DataResult.error(() -> "Too many ingredients for shapeless recipe. The maximum is: %s".formatted(ShapedRecipePattern.getMaxHeight() * ShapedRecipePattern.getMaxWidth()))
+                                                        : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
+                                            }
+                                        },
+                                        DataResult::success
+                                )
+                                .forGetter(ShapelessRecipe::getIngredients)
+                ).apply(builder, FarmlandTillRecipe::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, FarmlandTillRecipe> STREAM_CODEC = StreamCodec.of(
+                FarmlandTillRecipe.Serializer::toNetwork, FarmlandTillRecipe.Serializer::fromNetwork
+        );
 
-            if (ingredients.isEmpty()) {
-                throw new JsonParseException("No ingredients for shapeless recipe");
-            } else {
-                var result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-                return new FarmlandTillRecipe(recipeId, group, result, ingredients);
-            }
+        @Override
+        public MapCodec<FarmlandTillRecipe> codec() {
+            return CODEC;
         }
 
-        private static NonNullList<Ingredient> readIngredients(JsonArray array) {
-            NonNullList<Ingredient> ingredients = NonNullList.create();
-
-            for (int i = 0; i < array.size(); ++i) {
-                var ingredient = Ingredient.fromJson(array.get(i));
-
-                if (!ingredient.isEmpty()) {
-                    ingredients.add(ingredient);
-                }
-            }
-
-            return ingredients;
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, FarmlandTillRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
 
-        @Override
-        public FarmlandTillRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        private static FarmlandTillRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
             var group = buffer.readUtf(32767);
             int size = buffer.readVarInt();
             var inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
-            for (int j = 0; j < inputs.size(); ++j) {
-                inputs.set(j, Ingredient.fromNetwork(buffer));
-            }
+            inputs.replaceAll(ignored -> Ingredient.CONTENTS_STREAM_CODEC.decode(buffer));
 
-            var result = buffer.readItem();
+            var result = ItemStack.STREAM_CODEC.decode(buffer);
 
-            return new FarmlandTillRecipe(recipeId, group, result, inputs);
+            return new FarmlandTillRecipe(group, result, inputs);
         }
 
-        @Override
-        public void toNetwork(FriendlyByteBuf buffer, FarmlandTillRecipe recipe) {
+        private static void toNetwork(RegistryFriendlyByteBuf buffer, FarmlandTillRecipe recipe) {
             buffer.writeUtf(recipe.getGroup());
             buffer.writeVarInt(recipe.getIngredients().size());
 
             for (var ingredient : recipe.getIngredients()) {
-                ingredient.toNetwork(buffer);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, ingredient);
             }
 
-            buffer.writeItem(recipe.result);
+            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
         }
     }
 }

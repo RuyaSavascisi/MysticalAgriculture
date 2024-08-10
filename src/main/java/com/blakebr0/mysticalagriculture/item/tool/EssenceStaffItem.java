@@ -5,15 +5,14 @@ import com.blakebr0.cucumber.lib.Tooltips;
 import com.blakebr0.mysticalagriculture.api.tinkering.AugmentType;
 import com.blakebr0.mysticalagriculture.api.tinkering.IElementalItem;
 import com.blakebr0.mysticalagriculture.api.tinkering.ITinkerable;
+import com.blakebr0.mysticalagriculture.init.ModDataComponentTypes;
 import com.blakebr0.mysticalagriculture.lib.ModTooltips;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 
 public class EssenceStaffItem extends BaseItem implements ITinkerable, IElementalItem {
@@ -22,14 +21,13 @@ public class EssenceStaffItem extends BaseItem implements ITinkerable, IElementa
     private final int slots;
 
     public EssenceStaffItem(int tinkerableTier, int slots) {
-        super();
+        super(p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Tooltips.NOT_YET_IMPLEMENTED.build());
         tooltip.add(ModTooltips.getTooltipForTier(this.tinkerableTier));
         ModTooltips.addAugmentListToTooltip(tooltip, stack, this.slots);

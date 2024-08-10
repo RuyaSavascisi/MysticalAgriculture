@@ -1,24 +1,22 @@
 package com.blakebr0.mysticalagriculture.crafting.condition;
 
-import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 import com.blakebr0.mysticalagriculture.registry.AugmentRegistry;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import net.neoforged.neoforge.common.conditions.ICondition;
 
 public class AugmentEnabledCondition implements ICondition {
-    private static final ResourceLocation ID = new ResourceLocation(MysticalAgriculture.MOD_ID, "augment_enabled");
+    public static final MapCodec<AugmentEnabledCondition> CODEC = RecordCodecBuilder.mapCodec(builder ->
+            builder.group(
+                    ResourceLocation.CODEC.fieldOf("augment").forGetter(condition -> condition.augment)
+            ).apply(builder, AugmentEnabledCondition::new)
+    );
+
     private final ResourceLocation augment;
 
     public AugmentEnabledCondition(ResourceLocation augment) {
         this.augment = augment;
-    }
-
-    @Override
-    public ResourceLocation getID() {
-        return ID;
     }
 
     @Override
@@ -27,22 +25,8 @@ public class AugmentEnabledCondition implements ICondition {
         return augment != null && augment.isEnabled();
     }
 
-    public static class Serializer implements IConditionSerializer<AugmentEnabledCondition> {
-        public static final Serializer INSTANCE = new Serializer();
-
-        @Override
-        public void write(JsonObject json, AugmentEnabledCondition value) {
-            json.addProperty("augment", value.augment.toString());
-        }
-
-        @Override
-        public AugmentEnabledCondition read(JsonObject json) {
-            return new AugmentEnabledCondition(new ResourceLocation(GsonHelper.getAsString(json, "augment")));
-        }
-
-        @Override
-        public ResourceLocation getID() {
-            return AugmentEnabledCondition.ID;
-        }
+    @Override
+    public MapCodec<? extends ICondition> codec() {
+        return CODEC;
     }
 }

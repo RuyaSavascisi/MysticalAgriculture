@@ -22,7 +22,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,7 @@ public class MysticalCropBlock extends CropBlock implements ICropProvider {
     private final Crop crop;
 
     public MysticalCropBlock(Crop crop) {
-        super(Properties.copy(Blocks.WHEAT));
+        super(Properties.ofFullCopy(Blocks.WHEAT));
         this.crop = crop;
     }
 
@@ -42,11 +41,11 @@ public class MysticalCropBlock extends CropBlock implements ICropProvider {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (!this.canGrow(world, pos))
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!this.canGrow(level, pos))
             return;
 
-        super.randomTick(state, world, pos, random);
+        super.randomTick(state, level, pos, random);
     }
 
     @Override
@@ -112,12 +111,12 @@ public class MysticalCropBlock extends CropBlock implements ICropProvider {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         if (level instanceof Level) {
-            return this.canGrow((Level) level, pos) && super.isValidBonemealTarget(level, pos, state, isClient);
+            return this.canGrow((Level) level, pos) && super.isValidBonemealTarget(level, pos, state);
         }
 
-        return super.isValidBonemealTarget(level, pos, state, isClient);
+        return super.isValidBonemealTarget(level, pos, state);
     }
 
     @Override
@@ -151,9 +150,8 @@ public class MysticalCropBlock extends CropBlock implements ICropProvider {
         var biomes = this.crop.getRequiredBiomes();
 
         if (!biomes.isEmpty()) {
-            var biome = level.getBiome(pos);
-            var biomeId = ForgeRegistries.BIOMES.getKey(biome.value());
-            return biomes.contains(biomeId);
+            var biome = level.getBiome(pos).getKey();
+            return biome != null && biomes.contains(biome.location());
         }
 
         return true;

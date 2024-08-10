@@ -4,7 +4,7 @@ import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.mysticalagriculture.api.crop.ICropProvider;
 import com.blakebr0.mysticalagriculture.lib.ModTooltips;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -18,9 +18,7 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.SaplingBlock;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.neoforged.neoforge.event.EventHooks;
 
 import java.util.List;
 
@@ -54,9 +52,8 @@ public class MysticalFertilizerItem extends BaseItem {
         return InteractionResult.PASS;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(ModTooltips.MYSTICAL_FERTILIZER.build());
     }
 
@@ -64,13 +61,13 @@ public class MysticalFertilizerItem extends BaseItem {
         var state = level.getBlockState(pos);
 
         if (player != null) {
-            int hook = ForgeEventFactory.onApplyBonemeal(player, level, pos, state, stack);
-            if (hook != 0) return hook > 0;
+            var event = EventHooks.fireBonemealEvent(player, level, pos, state, stack);
+            if (event.isCanceled()) return event.isSuccessful();
         }
 
         var block = state.getBlock();
 
-        if (block instanceof BonemealableBlock growable && growable.isValidBonemealTarget(level, pos, state, level.isClientSide())) {
+        if (block instanceof BonemealableBlock growable && growable.isValidBonemealTarget(level, pos, state)) {
             if (!level.isClientSide()) {
                 var rand = level.getRandom();
 
@@ -80,7 +77,7 @@ public class MysticalFertilizerItem extends BaseItem {
                     if (growable instanceof CropBlock crop) {
                         level.setBlock(pos, crop.getStateForAge(crop.getMaxAge()), 2);
                     } else if (growable instanceof SaplingBlock sapling) {
-                        var event = ForgeEventFactory.blockGrowFeature(level, rand, pos, null);
+                        var event = EventHooks.fireBlockGrowFeature(level, rand, pos, null);
                         if (event.isCanceled())
                             return false;
 
@@ -110,8 +107,8 @@ public class MysticalFertilizerItem extends BaseItem {
         protected ItemStack execute(BlockSource source, ItemStack stack) {
             this.setSuccess(true);
 
-            var level = source.getLevel();
-            var pos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            var level = source.level();
+            var pos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
 
             if (MysticalFertilizerItem.applyFertilizer(stack, level, pos, null)) {
                 if (!level.isClientSide()) {

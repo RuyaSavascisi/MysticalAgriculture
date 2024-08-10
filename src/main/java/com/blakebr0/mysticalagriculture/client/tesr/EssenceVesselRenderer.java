@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 
 public class EssenceVesselRenderer implements BlockEntityRenderer<EssenceVesselTileEntity> {
-    private static final ResourceLocation VESSEL_CONTENT_TEXTURE = new ResourceLocation(MysticalAgriculture.MOD_ID, "block/essence_vessel_contents");
+    private static final ResourceLocation VESSEL_CONTENT_TEXTURE = MysticalAgriculture.resource("block/essence_vessel_contents");
 
     public EssenceVesselRenderer(BlockEntityRendererProvider.Context context) { }
 
@@ -113,12 +113,11 @@ public class EssenceVesselRenderer implements BlockEntityRenderer<EssenceVesselT
     }
 
     private static void addVertex(VertexConsumer renderer, PoseStack stack, float x, float y, float z, float u, float v, int color, int combinedLight) {
-        renderer.vertex(stack.last().pose(), x, y, z)
-                .color(color)
-                .uv(u, v)
-                .uv2(combinedLight)
-                .normal(1, 0, 0)
-                .endVertex();
+        renderer.addVertex(stack.last().pose(), x, y, z)
+                .setColor(color)
+                .setUv(u, v)
+                .setLight(combinedLight) // TODO: 1.21 this was changed
+                .setNormal(1, 0, 0);
     }
 }
 

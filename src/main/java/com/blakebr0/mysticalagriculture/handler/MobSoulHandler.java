@@ -11,8 +11,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +58,7 @@ public final class MobSoulHandler {
     private static double getSoulSiphonerTotal(ISoulSiphoningItem siphoner, ItemStack stack, LivingEntity entity) {
         double amount = siphoner.getSiphonAmount(stack, entity);
 
-        var enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.SOUL_SIPHONER.get(), stack);
+        var enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.SOUL_SIPHONER, stack);
         if (enchantmentLevel > 0) {
             amount *= (1.0D + (0.1D * enchantmentLevel));
         }

@@ -13,10 +13,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
-import java.util.UUID;
 
 public class HealthBoostAugment extends Augment {
-    private static final UUID ATTRIBUTE_ID = UUID.fromString("e04addf9-0fe8-4498-b5a8-45e5201cd76d");
+    private static final ResourceLocation ATTRIBUTE_ID = MysticalAgriculture.resource("health_boost_augment");
     private final int amplifier;
 
     public HealthBoostAugment(ResourceLocation id, int tier, int amplifier) {
@@ -35,13 +34,13 @@ public class HealthBoostAugment extends Augment {
 
             var modifier = health.getModifier(ATTRIBUTE_ID);
             if (modifier != null) {
-                if (boost < modifier.getAmount())
+                if (boost < modifier.amount())
                     return;
 
                 health.removeModifier(modifier);
 
                 cache.getCachedAbilities(player).forEach(c -> {
-                    var augment = AugmentRegistry.getInstance().getAugmentById(new ResourceLocation(c));
+                    var augment = AugmentRegistry.getInstance().getAugmentById(ResourceLocation.parse(c));
 
                     if (augment instanceof HealthBoostAugment && cache.isCached(augment, player)) {
                         cache.removeQuietly(c, player);
@@ -49,7 +48,7 @@ public class HealthBoostAugment extends Augment {
                 });
             }
 
-            health.addPermanentModifier(new AttributeModifier(ATTRIBUTE_ID, MysticalAgriculture.MOD_ID + ":health_boost_augment", boost, AttributeModifier.Operation.ADDITION));
+            health.addPermanentModifier(new AttributeModifier(ATTRIBUTE_ID, boost, AttributeModifier.Operation.ADD_VALUE));
 
             cache.add(this, player, () -> {
                 float max = player.getMaxHealth() - boost;

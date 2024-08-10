@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SouliumSpawnerScreen extends BaseContainerScreen<SouliumSpawnerContainer> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(MysticalAgriculture.MOD_ID, "textures/gui/soulium_spawner.png");
+    private static final ResourceLocation BACKGROUND = MysticalAgriculture.resource("textures/gui/soulium_spawner.png");
     private SouliumSpawnerTileEntity tile;
 
     public SouliumSpawnerScreen(SouliumSpawnerContainer container, Inventory inv, Component title) {

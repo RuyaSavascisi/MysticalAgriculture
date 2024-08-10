@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -73,18 +74,16 @@ public class TillingAOEAugment extends Augment {
     }
 
     // TODO: ForgeHooks.onUseHoe
-    private static boolean tryTill(ItemStack stack, Player player, Level world, BlockPos pos, Direction direction, InteractionHand hand) {
-        if (direction != Direction.DOWN && world.isEmptyBlock(pos.above())) {
-            var state = HOE_LOOKUP.get(world.getBlockState(pos).getBlock());
+    private static boolean tryTill(ItemStack stack, Player player, Level level, BlockPos pos, Direction direction, InteractionHand hand) {
+        if (direction != Direction.DOWN && level.isEmptyBlock(pos.above())) {
+            var state = HOE_LOOKUP.get(level.getBlockState(pos).getBlock());
 
             if (state != null) {
-                if (!world.isClientSide()) {
-                    world.setBlock(pos, state, 11);
+                if (!level.isClientSide()) {
+                    level.setBlock(pos, state, 11);
 
                     if (player != null) {
-                        stack.hurtAndBreak(1, player, (entity) -> {
-                            entity.broadcastBreakEvent(hand);
-                        });
+                        stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
                     }
                 }
 

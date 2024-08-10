@@ -9,8 +9,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class TinkerableUtils {
+    private static final EquipmentSlot[] ARMOR_EQUIPMENT_SLOTS = { EquipmentSlot.HEAD, EquipmentSlot.BODY, EquipmentSlot.LEGS, EquipmentSlot.FEET };
+
     /**
      * Gets the {@link ITinkerable} instance from the provided item stack if applicable
+     *
      * @param stack the item
      * @return the {@link ITinkerable} or null
      */
@@ -21,6 +24,7 @@ public class TinkerableUtils {
 
     /**
      * Gets the minimum {@link ITinkerable} tier for the player's equipped armor
+     *
      * @param player the player
      * @return the minimum {@link ITinkerable} tier, or -1 if not wearing a full set
      */
@@ -28,7 +32,7 @@ public class TinkerableUtils {
         int tier = -1;
 
         for (int i = 0; i < 4; i++) {
-            var stack = player.getItemBySlot(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i));
+            var stack = player.getItemBySlot(ARMOR_EQUIPMENT_SLOTS[i]);
             var tinkerable = getTinkerable(stack);
 
             if (tinkerable == null)
@@ -45,8 +49,9 @@ public class TinkerableUtils {
 
     /**
      * Checks if the provided player has a full set of the minimum {@link ITinkerable} tier equipped
+     *
      * @param player the player
-     * @param tier the {@link ITinkerable} tier
+     * @param tier   the {@link ITinkerable} tier
      * @return has the minimum tier equipped
      */
     public static boolean hasArmorSetMinimumTier(Player player, int tier) {
@@ -55,6 +60,7 @@ public class TinkerableUtils {
 
     /**
      * Get the tooltip color for the provided int tier
+     *
      * @param tier the tier
      * @return the color
      */
@@ -71,6 +77,7 @@ public class TinkerableUtils {
 
     /**
      * Gets the text component variant of the provided tier number for use in tooltips
+     *
      * @param tier the tier
      * @return the formatted tier
      */

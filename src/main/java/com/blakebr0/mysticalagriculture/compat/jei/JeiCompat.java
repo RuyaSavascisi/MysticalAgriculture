@@ -29,10 +29,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 @JeiPlugin
 public final class JeiCompat implements IModPlugin {
-    public static final ResourceLocation UID = new ResourceLocation(MysticalAgriculture.MOD_ID, "jei_plugin");
+    public static final ResourceLocation UID = MysticalAgriculture.resource("jei_plugin");
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -74,12 +75,12 @@ public final class JeiCompat implements IModPlugin {
         if (level != null) {
             var manager = level.getRecipeManager();
 
-            registration.addRecipes(InfusionCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.INFUSION.get()));
-            registration.addRecipes(AwakeningCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.AWAKENING.get()));
-            registration.addRecipes(EnchanterCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.ENCHANTER.get()));
-            registration.addRecipes(ReprocessorCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.REPROCESSOR.get()));
-            registration.addRecipes(SoulExtractorCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.SOUL_EXTRACTION.get()));
-            registration.addRecipes(SouliumSpawnerCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.SOULIUM_SPAWNER.get()));
+            registration.addRecipes(InfusionCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.INFUSION.get()).stream().map(RecipeHolder::value).toList());
+            registration.addRecipes(AwakeningCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.AWAKENING.get()).stream().map(RecipeHolder::value).toList());
+            registration.addRecipes(EnchanterCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.ENCHANTER.get()).stream().map(RecipeHolder::value).toList());
+            registration.addRecipes(ReprocessorCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.REPROCESSOR.get()).stream().map(RecipeHolder::value).toList());
+            registration.addRecipes(SoulExtractorCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.SOUL_EXTRACTION.get()).stream().map(RecipeHolder::value).toList());
+            registration.addRecipes(SouliumSpawnerCategory.RECIPE_TYPE, manager.getAllRecipesFor(ModRecipeTypes.SOULIUM_SPAWNER.get()).stream().map(RecipeHolder::value).toList());
             registration.addRecipes(CruxCategory.RECIPE_TYPE, CruxRecipe.getGeneratedRecipes());
         }
 
@@ -101,11 +102,9 @@ public final class JeiCompat implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        ModItems.SOUL_JAR.ifPresent(jar ->
-            registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, jar, (stack, context) -> {
-                var type = MobSoulUtils.getType(stack);
-                return type != null ? type.getEntityIds().toString() : "";
-            })
-        );
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, ModItems.SOUL_JAR.get(), (stack, context) -> {
+            var type = MobSoulUtils.getType(stack);
+            return type != null ? type.getEntityIds().toString() : "";
+        });
     }
 }

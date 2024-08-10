@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class EnchanterCategory implements IRecipeCategory<IEnchanterRecipe> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(MysticalAgriculture.MOD_ID, "textures/jei/enchanter.png");
+    private static final ResourceLocation TEXTURE = MysticalAgriculture.resource("textures/jei/enchanter.png");
     public static final RecipeType<IEnchanterRecipe> RECIPE_TYPE = RecipeType.create(MysticalAgriculture.MOD_ID, "enchanter", IEnchanterRecipe.class);
 
     private final IDrawable background;
@@ -75,19 +75,19 @@ public class EnchanterCategory implements IRecipeCategory<IEnchanterRecipe> {
         }
 
         var enchantment = recipe.getEnchantment();
+        var maxLevel = enchantment.value().getMaxLevel();
 
         if (slot == 3) {
-            return IntStream.rangeClosed(1, enchantment.getMaxLevel())
+            return IntStream.rangeClosed(1, maxLevel)
                     .mapToObj(i -> EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, i)))
                     .toList();
         }
 
         var ingredients = recipe.getIngredients();
-        var counts = recipe.getIngredientCounts();
 
         return Arrays.stream(ingredients.get(slot).getItems()).flatMap(stack ->
-            IntStream.rangeClosed(1, enchantment.getMaxLevel())
-                    .mapToObj(i -> stack.copyWithCount(counts.get(slot) * i))
+            IntStream.rangeClosed(1, maxLevel)
+                    .mapToObj(i -> stack.copyWithCount(recipe.getCount(slot) * i))
         ).toList();
     }
 }

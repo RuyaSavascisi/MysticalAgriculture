@@ -12,7 +12,7 @@ import com.blakebr0.mysticalagriculture.item.MysticalSeedsItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -111,7 +111,7 @@ public final class CropRegistry implements ICropRegistry {
         this.allowRegistration = allowed;
     }
 
-    public void onRegisterBlocks(IForgeRegistry<Block> registry) {
+    public void onRegisterBlocks(RegisterEvent.RegisterHelper<Block> registry) {
         PluginRegistry.getInstance().forEach((plugin, config) -> {
             this.currentPluginConfig = config;
 
@@ -128,7 +128,7 @@ public final class CropRegistry implements ICropRegistry {
                 c.setCropBlock(() -> defaultCrop, true);
             }
 
-            var id = new ResourceLocation(MysticalAgriculture.MOD_ID, c.getNameWithSuffix("crop"));
+            var id = MysticalAgriculture.resource(c.getNameWithSuffix("crop"));
 
             registry.register(id, crop);
         });
@@ -136,7 +136,7 @@ public final class CropRegistry implements ICropRegistry {
         this.crops = getSortedCropsMap(crops);
     }
 
-    public void onRegisterItems(IForgeRegistry<Item> registry) {
+    public void onRegisterItems(RegisterEvent.RegisterHelper<Item> registry) {
         var crops = this.crops.values();
 
         crops.stream().filter(Crop::shouldRegisterEssenceItem).forEach(c -> {
@@ -147,7 +147,7 @@ public final class CropRegistry implements ICropRegistry {
                 c.setEssenceItem(() -> defaultEssence, true);
             }
 
-            var id = new ResourceLocation(MysticalAgriculture.MOD_ID, c.getNameWithSuffix("essence"));
+            var id = MysticalAgriculture.resource(c.getNameWithSuffix("essence"));
 
             registry.register(id, essence);
         });
@@ -160,7 +160,7 @@ public final class CropRegistry implements ICropRegistry {
                 c.setSeedsItem(() -> defaultSeeds, true);
             }
 
-            var id = new ResourceLocation(MysticalAgriculture.MOD_ID, c.getNameWithSuffix("seeds"));
+            var id = MysticalAgriculture.resource(c.getNameWithSuffix("seeds"));
 
             registry.register(id, seeds);
         });

@@ -1,21 +1,20 @@
 package com.blakebr0.mysticalagriculture.augment;
 
 import com.blakebr0.cucumber.helper.ColorHelper;
+import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 import com.blakebr0.mysticalagriculture.api.tinkering.Augment;
+import com.blakebr0.mysticalagriculture.api.tinkering.AugmentAttributeModifier;
 import com.blakebr0.mysticalagriculture.api.tinkering.AugmentType;
-import com.google.common.collect.Multimap;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.EnumSet;
-import java.util.UUID;
+import java.util.List;
 
 public class StrengthAugment extends Augment {
-    private static final UUID ATTRIBUTE_ID = UUID.fromString("527f7039-70c4-45e5-bdb7-b8721642cee5");
+    private static final ResourceLocation ATTRIBUTE_ID = MysticalAgriculture.resource("strength_augment");
     private final int amplifier;
 
     public StrengthAugment(ResourceLocation id, int tier, int amplifier) {
@@ -24,8 +23,10 @@ public class StrengthAugment extends Augment {
     }
 
     @Override
-    public void addToolAttributeModifiers(Multimap<Attribute, AttributeModifier> attributes, EquipmentSlot slot, ItemStack stack) {
-        attributes.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTRIBUTE_ID, "Tool modifier", 5 * this.amplifier, AttributeModifier.Operation.ADDITION));
+    public List<AugmentAttributeModifier> getAttributeModifiers() {
+        return List.of(
+                new AugmentAttributeModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTRIBUTE_ID, 5 * this.amplifier, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
+        );
     }
 
     private static int getColor(int color, int tier) {

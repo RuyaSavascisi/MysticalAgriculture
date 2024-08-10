@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SoulExtractorScreen extends BaseContainerScreen<SoulExtractorContainer> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(MysticalAgriculture.MOD_ID, "textures/gui/soul_extractor.png");
+    private static final ResourceLocation BACKGROUND = MysticalAgriculture.resource("textures/gui/soul_extractor.png");
     private SoulExtractorTileEntity tile;
 
     public SoulExtractorScreen(SoulExtractorContainer container, Inventory inv, Component title) {

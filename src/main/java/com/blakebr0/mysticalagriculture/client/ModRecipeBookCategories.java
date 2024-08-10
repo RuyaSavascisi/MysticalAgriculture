@@ -2,8 +2,8 @@ package com.blakebr0.mysticalagriculture.client;
 
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
 import net.minecraft.client.RecipeBookCategories;
-import net.minecraftforge.client.event.RegisterRecipeBookCategoriesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RegisterRecipeBookCategoriesEvent;
 
 public final class ModRecipeBookCategories {
     @SubscribeEvent

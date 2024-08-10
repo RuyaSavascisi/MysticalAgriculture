@@ -14,12 +14,12 @@ import com.google.common.base.Stopwatch;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.model.data.ModelData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,41 +27,41 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 public final class ModelHandler {
-    private static final ResourceLocation MISSING_NO = new ResourceLocation("minecraft", "missingno");
+    private static final ResourceLocation MISSING_NO = ResourceLocation.fromNamespaceAndPath("minecraft", "missingno");
 
     @SubscribeEvent
     public void onRegisterAdditionalModels(ModelEvent.RegisterAdditional event) {
         if (!ModConfigs.ANIMATED_GROWTH_ACCELERATORS.get()) {
             for (var type : List.of("block", "item")) {
                 for (var tier : List.of("inferium", "prudentium", "tertium", "imperium", "supremium")) {
-                    event.register(new ResourceLocation(MysticalAgriculture.MOD_ID, String.format("%s/%s_growth_accelerator_static", type, tier)));
+                    event.register(ModelResourceLocation.inventory(MysticalAgriculture.resource(String.format("%s/%s_growth_accelerator_static", type, tier))));
                 }
             }
         }
 
         for (int i = 0; i < 8; i++) {
-            event.register(new ResourceLocation(MysticalAgriculture.MOD_ID, "block/mystical_resource_crop_" + i));
-            event.register(new ResourceLocation(MysticalAgriculture.MOD_ID, "block/mystical_mob_crop_" + i));
+            event.register(ModelResourceLocation.standalone(MysticalAgriculture.resource("block/mystical_resource_crop_" + i)));
+            event.register(ModelResourceLocation.standalone(MysticalAgriculture.resource("block/mystical_mob_crop_" + i)));
         }
 
         for (var type : CropRegistry.getInstance().getTypes()) {
-            event.register(new ResourceLocation(CropTextures.FLOWER_INGOT_BLANK + "_" + type.getName()));
-            event.register(new ResourceLocation(CropTextures.FLOWER_ROCK_BLANK + "_" + type.getName()));
-            event.register(new ResourceLocation(CropTextures.FLOWER_DUST_BLANK + "_" + type.getName()));
-            event.register(new ResourceLocation(CropTextures.FLOWER_FACE_BLANK + "_" + type.getName()));
+            event.register(ModelResourceLocation.standalone(CropTextures.FLOWER_INGOT_BLANK.withSuffix("_" + type.getName())));
+            event.register(ModelResourceLocation.standalone(CropTextures.FLOWER_ROCK_BLANK.withSuffix("_" + type.getName())));
+            event.register(ModelResourceLocation.standalone(CropTextures.FLOWER_DUST_BLANK.withSuffix("_" + type.getName())));
+            event.register(ModelResourceLocation.standalone(CropTextures.FLOWER_FACE_BLANK.withSuffix("_" + type.getName())));
         }
 
-        event.register(CropTextures.ESSENCE_INGOT_BLANK);
-        event.register(CropTextures.ESSENCE_ROCK_BLANK);
-        event.register(CropTextures.ESSENCE_DUST_BLANK);
-        event.register(CropTextures.ESSENCE_GEM_BLANK);
-        event.register(CropTextures.ESSENCE_TALL_GEM_BLANK);
-        event.register(CropTextures.ESSENCE_DIAMOND_BLANK);
-        event.register(CropTextures.ESSENCE_QUARTZ_BLANK);
-        event.register(CropTextures.ESSENCE_FLAME_BLANK);
-        event.register(CropTextures.ESSENCE_ROD_BLANK);
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_INGOT_BLANK));
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_ROCK_BLANK));
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_DUST_BLANK));
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_GEM_BLANK));
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_TALL_GEM_BLANK));
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_DIAMOND_BLANK));
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_QUARTZ_BLANK));
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_FLAME_BLANK));
+        event.register(ModelResourceLocation.standalone(CropTextures.ESSENCE_ROD_BLANK));
 
-        event.register(CropTextures.SEED_BLANK);
+        event.register(ModelResourceLocation.standalone(CropTextures.SEED_BLANK));
     }
 
     @SubscribeEvent
@@ -73,11 +73,11 @@ public final class ModelHandler {
         if (!ModConfigs.ANIMATED_GROWTH_ACCELERATORS.get()) {
             for (var tier : List.of("inferium", "prudentium", "tertium", "imperium", "supremium")) {
                 var loc = String.format("%s_growth_accelerator", tier);
-                var blockModel = registry.get(new ResourceLocation(MysticalAgriculture.MOD_ID, "block/" + loc + "_static"));
-                var itemModel = registry.get(new ResourceLocation(MysticalAgriculture.MOD_ID, "item/" + loc + "_static"));
+                var blockModel = registry.get(ModelResourceLocation.inventory(MysticalAgriculture.resource("block/" + loc + "_static")));
+                var itemModel = registry.get(ModelResourceLocation.inventory(MysticalAgriculture.resource("item/" + loc + "_static")));
 
-                registry.replace(new ModelResourceLocation(MysticalAgriculture.MOD_ID, loc, ""), blockModel);
-                registry.replace(new ModelResourceLocation(MysticalAgriculture.MOD_ID, loc, "inventory"), itemModel);
+                registry.replace(ModelResourceLocation.inventory(MysticalAgriculture.resource(loc)), blockModel);
+                registry.replace(ModelResourceLocation.inventory(MysticalAgriculture.resource(loc)), itemModel);
             }
         }
 
@@ -85,16 +85,16 @@ public final class ModelHandler {
 
         for (var cropType : CropRegistry.getInstance().getTypes()) {
             cropModels.put(cropType.getId(), IntStream.range(0, 7)
-                    .mapToObj(i -> registry.get(new ResourceLocation(cropType.getStemModel() + "_" + i)))
+                    .mapToObj(i -> registry.get(ModelResourceLocation.inventory(cropType.getStemModel().withSuffix("_" + i))))
                     .toArray(BakedModel[]::new));
         }
 
         for (var crop : CropRegistry.getInstance().getCrops()) {
             var textures = crop.getTextures();
             var crops = crop.getCropBlock();
-            var cropId = ForgeRegistries.BLOCKS.getKey(crops);
+            var cropId = BuiltInRegistries.BLOCK.getKey(crops);
 
-            if (cropId != null) {
+            {
                 for (int i = 0; i < 7; i++) {
                     var location = new ModelResourceLocation(cropId, "age=" + i);
                     var bakedModel = registry.get(location);
@@ -111,7 +111,7 @@ public final class ModelHandler {
                 if (bakedModel == null || bakedModel.getParticleIcon(ModelData.EMPTY).contents().name().equals(MISSING_NO)) {
                     var flower = textures.getFlowerTexture();
                     var type = crop.getType().getId();
-                    var path = new ResourceLocation(type.getNamespace(), flower.getPath() + "_" + type.getPath());
+                    var path = ModelResourceLocation.inventory(ResourceLocation.fromNamespaceAndPath(type.getNamespace(), flower.getPath() + "_" + type.getPath()));
                     var model = registry.get(path);
 
                     registry.replace(location, model);
@@ -119,9 +119,9 @@ public final class ModelHandler {
             }
 
             var essence = crop.getEssenceItem();
-            var essenceId = ForgeRegistries.ITEMS.getKey(essence);
+            var essenceId = BuiltInRegistries.ITEM.getKey(essence);
 
-            if (essenceId != null) {
+            {
                 var location = new ModelResourceLocation(essenceId, "inventory");
                 var bakedModel = registry.get(location);
 
@@ -134,9 +134,9 @@ public final class ModelHandler {
             }
 
             var seeds = crop.getSeedsItem();
-            var seedsId = ForgeRegistries.ITEMS.getKey(seeds);
+            var seedsId = BuiltInRegistries.ITEM.getKey(seeds);
 
-            if (seedsId != null) {
+            {
                 var location = new ModelResourceLocation(seedsId, "inventory");
                 var bakedModel = registry.get(location);
 
@@ -156,50 +156,50 @@ public final class ModelHandler {
 
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            ItemProperties.register(ModItems.EXPERIENCE_CAPSULE.get(), new ResourceLocation("fill"), ExperienceCapsuleItem.getFillPropertyGetter());
-            ItemProperties.register(ModItems.SOUL_JAR.get(), new ResourceLocation("fill"), SoulJarItem.getFillPropertyGetter());
-            ItemProperties.register(ModItems.INFERIUM_BOW.get(), new ResourceLocation("pull"), EssenceBowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.INFERIUM_BOW.get(), new ResourceLocation("pulling"), EssenceBowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.INFERIUM_CROSSBOW.get(), new ResourceLocation("pull"), EssenceCrossbowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.INFERIUM_CROSSBOW.get(), new ResourceLocation("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.INFERIUM_CROSSBOW.get(), new ResourceLocation("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
-            ItemProperties.register(ModItems.INFERIUM_CROSSBOW.get(), new ResourceLocation("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
-            ItemProperties.register(ModItems.INFERIUM_FISHING_ROD.get(), new ResourceLocation("cast"), EssenceFishingRodItem.getCastPropertyGetter());
-            ItemProperties.register(ModItems.PRUDENTIUM_BOW.get(), new ResourceLocation("pull"), EssenceBowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.PRUDENTIUM_BOW.get(), new ResourceLocation("pulling"), EssenceBowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.PRUDENTIUM_CROSSBOW.get(), new ResourceLocation("pull"), EssenceCrossbowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.PRUDENTIUM_CROSSBOW.get(), new ResourceLocation("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.PRUDENTIUM_CROSSBOW.get(), new ResourceLocation("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
-            ItemProperties.register(ModItems.PRUDENTIUM_CROSSBOW.get(), new ResourceLocation("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
-            ItemProperties.register(ModItems.PRUDENTIUM_FISHING_ROD.get(), new ResourceLocation("cast"), EssenceFishingRodItem.getCastPropertyGetter());
-            ItemProperties.register(ModItems.TERTIUM_BOW.get(), new ResourceLocation("pull"), EssenceBowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.TERTIUM_BOW.get(), new ResourceLocation("pulling"), EssenceBowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.TERTIUM_CROSSBOW.get(), new ResourceLocation("pull"), EssenceCrossbowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.TERTIUM_CROSSBOW.get(), new ResourceLocation("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.TERTIUM_CROSSBOW.get(), new ResourceLocation("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
-            ItemProperties.register(ModItems.TERTIUM_CROSSBOW.get(), new ResourceLocation("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
-            ItemProperties.register(ModItems.TERTIUM_FISHING_ROD.get(), new ResourceLocation("cast"), EssenceFishingRodItem.getCastPropertyGetter());
-            ItemProperties.register(ModItems.IMPERIUM_BOW.get(), new ResourceLocation("pull"), EssenceBowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.IMPERIUM_BOW.get(), new ResourceLocation("pulling"), EssenceBowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.IMPERIUM_CROSSBOW.get(), new ResourceLocation("pull"), EssenceCrossbowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.IMPERIUM_CROSSBOW.get(), new ResourceLocation("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.IMPERIUM_CROSSBOW.get(), new ResourceLocation("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
-            ItemProperties.register(ModItems.IMPERIUM_CROSSBOW.get(), new ResourceLocation("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
-            ItemProperties.register(ModItems.IMPERIUM_FISHING_ROD.get(), new ResourceLocation("cast"), EssenceFishingRodItem.getCastPropertyGetter());
-            ItemProperties.register(ModItems.SUPREMIUM_BOW.get(), new ResourceLocation("pull"), EssenceBowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.SUPREMIUM_BOW.get(), new ResourceLocation("pulling"), EssenceBowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.SUPREMIUM_CROSSBOW.get(), new ResourceLocation("pull"), EssenceCrossbowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.SUPREMIUM_CROSSBOW.get(), new ResourceLocation("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.SUPREMIUM_CROSSBOW.get(), new ResourceLocation("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
-            ItemProperties.register(ModItems.SUPREMIUM_CROSSBOW.get(), new ResourceLocation("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
-            ItemProperties.register(ModItems.SUPREMIUM_FISHING_ROD.get(), new ResourceLocation("cast"), EssenceFishingRodItem.getCastPropertyGetter());
-            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_BOW.get(), new ResourceLocation("pull"), EssenceBowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_BOW.get(), new ResourceLocation("pulling"), EssenceBowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), new ResourceLocation("pull"), EssenceCrossbowItem.getPullPropertyGetter());
-            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), new ResourceLocation("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
-            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), new ResourceLocation("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
-            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), new ResourceLocation("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
-            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_FISHING_ROD.get(), new ResourceLocation("cast"), EssenceFishingRodItem.getCastPropertyGetter());
+            ItemProperties.register(ModItems.EXPERIENCE_CAPSULE.get(), ResourceLocation.withDefaultNamespace("fill"), ExperienceCapsuleItem.getFillPropertyGetter());
+            ItemProperties.register(ModItems.SOUL_JAR.get(), ResourceLocation.withDefaultNamespace("fill"), SoulJarItem.getFillPropertyGetter());
+            ItemProperties.register(ModItems.INFERIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceBowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.INFERIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceBowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.INFERIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceCrossbowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.INFERIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.INFERIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
+            ItemProperties.register(ModItems.INFERIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
+            ItemProperties.register(ModItems.INFERIUM_FISHING_ROD.get(), ResourceLocation.withDefaultNamespace("cast"), EssenceFishingRodItem.getCastPropertyGetter());
+            ItemProperties.register(ModItems.PRUDENTIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceBowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.PRUDENTIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceBowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.PRUDENTIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceCrossbowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.PRUDENTIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.PRUDENTIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
+            ItemProperties.register(ModItems.PRUDENTIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
+            ItemProperties.register(ModItems.PRUDENTIUM_FISHING_ROD.get(), ResourceLocation.withDefaultNamespace("cast"), EssenceFishingRodItem.getCastPropertyGetter());
+            ItemProperties.register(ModItems.TERTIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceBowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.TERTIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceBowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.TERTIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceCrossbowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.TERTIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.TERTIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
+            ItemProperties.register(ModItems.TERTIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
+            ItemProperties.register(ModItems.TERTIUM_FISHING_ROD.get(), ResourceLocation.withDefaultNamespace("cast"), EssenceFishingRodItem.getCastPropertyGetter());
+            ItemProperties.register(ModItems.IMPERIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceBowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.IMPERIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceBowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.IMPERIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceCrossbowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.IMPERIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.IMPERIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
+            ItemProperties.register(ModItems.IMPERIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
+            ItemProperties.register(ModItems.IMPERIUM_FISHING_ROD.get(), ResourceLocation.withDefaultNamespace("cast"), EssenceFishingRodItem.getCastPropertyGetter());
+            ItemProperties.register(ModItems.SUPREMIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceBowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.SUPREMIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceBowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceCrossbowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
+            ItemProperties.register(ModItems.SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
+            ItemProperties.register(ModItems.SUPREMIUM_FISHING_ROD.get(), ResourceLocation.withDefaultNamespace("cast"), EssenceFishingRodItem.getCastPropertyGetter());
+            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceBowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_BOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceBowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pull"), EssenceCrossbowItem.getPullPropertyGetter());
+            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("pulling"), EssenceCrossbowItem.getPullingPropertyGetter());
+            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("charged"), EssenceCrossbowItem.getChargedPropertyGetter());
+            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
+            ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_FISHING_ROD.get(), ResourceLocation.withDefaultNamespace("cast"), EssenceFishingRodItem.getCastPropertyGetter());
         });
     }
 }

@@ -12,7 +12,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -23,9 +22,9 @@ import snownee.jade.api.config.IPluginConfig;
 
 @WailaPlugin
 public class JadeCompat implements IWailaPlugin {
-    private static final ResourceLocation CROP_PROVIDER = new ResourceLocation(MysticalAgriculture.MOD_ID, "crop");
-    private static final ResourceLocation INFERIUM_CROP_PROVIDER = new ResourceLocation(MysticalAgriculture.MOD_ID, "inferium_crop");
-    private static final ResourceLocation INFUSED_FARMLAND_PROVIDER = new ResourceLocation(MysticalAgriculture.MOD_ID, "infused_farmland");
+    private static final ResourceLocation CROP_PROVIDER = MysticalAgriculture.resource("crop");
+    private static final ResourceLocation INFERIUM_CROP_PROVIDER = MysticalAgriculture.resource("inferium_crop");
+    private static final ResourceLocation INFUSED_FARMLAND_PROVIDER = MysticalAgriculture.resource("infused_farmland");
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
@@ -61,9 +60,8 @@ public class JadeCompat implements IWailaPlugin {
 
                 var biomes = crop.getRequiredBiomes();
                 if (!biomes.isEmpty()) {
-                    var biome = level.getBiome(pos);
-                    var id = ForgeRegistries.BIOMES.getKey(biome.value());
-                    if (!biomes.contains(id)) {
+                    var biome = level.getBiome(pos).getKey();
+                    if (biome != null && !biomes.contains(biome.location())) {
                         tooltip.add(ModTooltips.INVALID_BIOME.color(ChatFormatting.RED).build());
                     }
                 }
