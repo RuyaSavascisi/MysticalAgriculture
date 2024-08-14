@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalagriculture.crafting;
 
-import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.cucumber.event.RecipeManagerLoadingEvent;
 import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 import com.blakebr0.mysticalagriculture.api.crop.Crop;
@@ -41,7 +40,7 @@ public class DynamicRecipeManager {
         }
     }
 
-    private static RecipeHolder<ISpecialRecipe> makeSeedRecipe(Crop crop) {
+    private static RecipeHolder<Recipe<?>> makeSeedRecipe(Crop crop) {
         if (!crop.isEnabled() || !crop.getRecipeConfig().isSeedInfusionRecipeEnabled())
             return null;
 
@@ -103,7 +102,7 @@ public class DynamicRecipeManager {
         return new RecipeHolder<>(id, new ShapedRecipe("", CraftingBookCategory.MISC, pattern, result));
     }
 
-    private static RecipeHolder<ISpecialRecipe> makeReprocessorRecipe(Crop crop) {
+    private static RecipeHolder<Recipe<?>> makeReprocessorRecipe(Crop crop) {
         if (!crop.isEnabled() || !crop.getRecipeConfig().isSeedReprocessorRecipeEnabled())
             return null;
 

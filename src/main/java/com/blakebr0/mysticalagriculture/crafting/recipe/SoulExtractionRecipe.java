@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalagriculture.crafting.recipe;
 
-import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.mysticalagriculture.api.crafting.ISoulExtractionRecipe;
 import com.blakebr0.mysticalagriculture.api.soul.MobSoulType;
@@ -19,29 +18,27 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-public class SoulExtractionRecipe implements ISpecialRecipe, ISoulExtractionRecipe {
+public class SoulExtractionRecipe implements ISoulExtractionRecipe {
     private final NonNullList<Ingredient> inputs;
     private final MobSoulType type;
     private final double souls;
     private final Result result;
-    private final ItemStack resultStack;
 
     public SoulExtractionRecipe(Ingredient input, Result result) {
         this.inputs = NonNullList.of(Ingredient.EMPTY, input);
         this.type = MobSoulTypeRegistry.getInstance().getMobSoulTypeById(result.type);
-        this.souls = result.amount;
+        this.souls = result.souls;
         this.result = result;
-        this.resultStack = MobSoulUtils.getSoulJar(type, souls, ModItems.SOUL_JAR.get());
     }
 
     @Override
-    public boolean matches(RecipeInput inventory, Level level) {
+    public boolean matches(CraftingInput inventory, Level level) {
         var input = inventory.getItem(0);
 
         if (!this.inputs.getFirst().test(input))
@@ -49,14 +46,14 @@ public class SoulExtractionRecipe implements ISpecialRecipe, ISoulExtractionReci
 
         var output = inventory.getItem(2);
 
-        if (!output.is(this.resultStack.getItem()))
+        if (!output.is(this.result.stack.getItem()))
             return false;
 
         return MobSoulUtils.canAddTypeToJar(output, this.type) && !MobSoulUtils.isJarFull(output);
     }
 
     @Override
-    public ItemStack assemble(RecipeInput inventory, HolderLookup.Provider provider) {
+    public ItemStack assemble(CraftingInput inventory, HolderLookup.Provider provider) {
         var stack = inventory.getItem(2);
         var jar = StackHelper.withSize(stack, 1, false);
 
@@ -72,7 +69,7 @@ public class SoulExtractionRecipe implements ISpecialRecipe, ISoulExtractionReci
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider provider) {
-        return this.resultStack;
+        return this.result.stack;
     }
 
     @Override
@@ -104,7 +101,7 @@ public class SoulExtractionRecipe implements ISpecialRecipe, ISoulExtractionReci
         public static final MapCodec<SoulExtractionRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
                 builder.group(
                         Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.inputs.getFirst()),
-                        Result.CODEC.fieldOf("output").forGetter(recipe -> recipe.result)
+                        Result.CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
                 ).apply(builder, SoulExtractionRecipe::new)
         );
         public static final StreamCodec<RegistryFriendlyByteBuf, SoulExtractionRecipe> STREAM_CODEC = StreamCodec.of(
@@ -134,19 +131,29 @@ public class SoulExtractionRecipe implements ISpecialRecipe, ISoulExtractionReci
         }
     }
 
-    public record Result(ResourceLocation type, double amount) {
+    public static class Result {
         public static final MapCodec<Result> CODEC = RecordCodecBuilder.mapCodec(builder ->
                builder.group(
-                       ResourceLocation.CODEC.fieldOf("type").forGetter(Result::type),
-                       Codec.DOUBLE.fieldOf("amount").forGetter(Result::amount)
+                       ResourceLocation.CODEC.fieldOf("type").forGetter(result -> result.type),
+                       Codec.DOUBLE.fieldOf("souls").forGetter(result -> result.souls)
                ).apply(builder, Result::new)
         );
         public static final StreamCodec<RegistryFriendlyByteBuf, Result> STREAM_CODEC = StreamCodec.composite(
                 ResourceLocation.STREAM_CODEC,
-                Result::type,
+                result -> result.type,
                 ByteBufCodecs.DOUBLE,
-                Result::amount,
+                result -> result.souls,
                 Result::new
         );
+
+        public final ResourceLocation type;
+        public final double souls;
+        public final ItemStack stack;
+
+        public Result(ResourceLocation type, double souls) {
+            this.type = type;
+            this.souls = souls;
+            this.stack = MobSoulUtils.getFilledSoulJar(MobSoulTypeRegistry.getInstance().getMobSoulTypeById(type), ModItems.SOUL_JAR.get());
+        }
     }
 }

@@ -2,8 +2,9 @@ package com.blakebr0.mysticalagriculture.api.crafting;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
 
 import java.util.List;
 import java.util.Map;
@@ -11,15 +12,24 @@ import java.util.Map;
 /**
  * Used to represent an Awakening recipe for the recipe type
  */
-public interface IAwakeningRecipe extends Recipe<RecipeInput> {
+public interface IAwakeningRecipe extends Recipe<CraftingInput> {
+    /**
+     * The item that is placed on the Altar
+     *
+     * @return the altar ingredient
+     */
+    Ingredient getAltarIngredient();
+
     /**
      * The list of essence items required for this recipe
+     *
      * @return the list of essences
      */
     NonNullList<ItemStack> getEssences();
 
     /**
      * Gets a map of missing essences and the amount of each that is missing
+     *
      * @param items the list essence vessel items
      * @return a map of missing essences -> amount missing
      */

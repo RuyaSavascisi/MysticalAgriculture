@@ -12,7 +12,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "forge:gems/diamond"
+        "tag": "c:gems/diamond"
       }
     }
   ],
@@ -67,6 +67,5 @@
   "result": {
     "count": 1,
     "id": "mysticalagriculture:diamond_seeds"
-  },
-  "transfer_components": false
+  }
 }

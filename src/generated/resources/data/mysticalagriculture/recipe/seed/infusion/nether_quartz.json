@@ -12,7 +12,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "forge:gems/quartz"
+        "tag": "c:gems/quartz"
       }
     }
   ],
@@ -67,6 +67,5 @@
   "result": {
     "count": 1,
     "id": "mysticalagriculture:nether_quartz_seeds"
-  },
-  "transfer_components": false
+  }
 }

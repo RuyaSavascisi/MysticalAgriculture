@@ -2,37 +2,33 @@ package com.blakebr0.mysticalagriculture.api.util;
 
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureDataComponentTypes;
-import com.blakebr0.mysticalagriculture.api.components.MobSoulTypeComponent;
+import com.blakebr0.mysticalagriculture.api.components.SoulJarComponent;
 import com.blakebr0.mysticalagriculture.api.soul.MobSoulType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class MobSoulUtils {
     /**
-     * Creates a tag compound for this mob soul type using the max amount of souls
+     * Creates a {@link DataComponentMap} with the necessary components for this mob soul type using the max amount of souls
      *
      * @param type the mod soul type
-     * @return a tag compound for the specified mob soul type
+     * @return a {@link SoulJarComponent} for the specified mob soul type
      */
-    public static CompoundTag makeTag(MobSoulType type) {
-        return makeTag(type, type.getSoulRequirement());
+    public static DataComponentMap makeComponentMap(MobSoulType type) {
+        return makeComponentMap(type, type.getSoulRequirement());
     }
 
     /**
-     * Creates a tag compound for this mob soul type using the provided soul amount
+     * Creates a {@link DataComponentMap} with the necessary components for this mob soul type using the provided soul amount
      *
      * @param type  the mob soul type
      * @param souls the amount of souls in this tag
-     * @return a tag compound for the specified mob soul type
+     * @return a {@link DataComponentMap} for the specified mob soul type
      */
-    public static CompoundTag makeTag(MobSoulType type, double souls) {
-        var nbt = new CompoundTag();
-
-        nbt.putString("Type", type.getId().toString());
-        nbt.putDouble("Souls", Math.min(souls, type.getSoulRequirement()));
-
-        return nbt;
+    public static DataComponentMap makeComponentMap(MobSoulType type, double souls) {
+        var component  = new SoulJarComponent(type.getId(), Math.min(souls, type.getSoulRequirement()));
+        return DataComponentMap.builder().set(MysticalAgricultureDataComponentTypes.SOUL_JAR, component).build();
     }
 
     /**
@@ -45,7 +41,7 @@ public class MobSoulUtils {
      */
     public static ItemStack getSoulJar(MobSoulType type, double souls, Item item) {
         var stack = new ItemStack(item);
-        stack.set(MysticalAgricultureDataComponentTypes.MOB_SOUL_TYPE, new MobSoulTypeComponent(type.getId(), souls));
+        stack.set(MysticalAgricultureDataComponentTypes.SOUL_JAR, new SoulJarComponent(type.getId(), souls));
         return stack;
     }
 
@@ -58,7 +54,7 @@ public class MobSoulUtils {
      */
     public static ItemStack getFilledSoulJar(MobSoulType type, Item item) {
         var stack = new ItemStack(item);
-        stack.set(MysticalAgricultureDataComponentTypes.MOB_SOUL_TYPE, new MobSoulTypeComponent(type.getId(), type.getSoulRequirement()));
+        stack.set(MysticalAgricultureDataComponentTypes.SOUL_JAR, new SoulJarComponent(type.getId(), type.getSoulRequirement()));
         return stack;
     }
 
@@ -69,10 +65,10 @@ public class MobSoulUtils {
      * @return the mob soul type
      */
     public static MobSoulType getType(ItemStack stack) {
-        var component = stack.get(MysticalAgricultureDataComponentTypes.MOB_SOUL_TYPE);
+        var component = stack.get(MysticalAgricultureDataComponentTypes.SOUL_JAR);
 
         if (component != null) {
-            return MysticalAgricultureAPI.getMobSoulTypeRegistry().getMobSoulTypeById(component.id());
+            return MysticalAgricultureAPI.getMobSoulTypeRegistry().getMobSoulTypeById(component.type());
         }
 
         return null;
@@ -85,7 +81,7 @@ public class MobSoulUtils {
      * @return the amount of souls
      */
     public static double getSouls(ItemStack stack) {
-        var component = stack.get(MysticalAgricultureDataComponentTypes.MOB_SOUL_TYPE);
+        var component = stack.get(MysticalAgricultureDataComponentTypes.SOUL_JAR);
 
         if (component != null) {
             return component.souls();
@@ -132,16 +128,16 @@ public class MobSoulUtils {
 
         double requirement = type.getSoulRequirement();
         if (containedType == null) {
-            stack.set(MysticalAgricultureDataComponentTypes.MOB_SOUL_TYPE, new MobSoulTypeComponent(type.getId(), amount));
+            stack.set(MysticalAgricultureDataComponentTypes.SOUL_JAR, new SoulJarComponent(type.getId(), amount));
             return Math.max(0, amount - requirement);
         } else {
             double souls = getSouls(stack);
             if (souls < requirement) {
-                var component = stack.get(MysticalAgricultureDataComponentTypes.MOB_SOUL_TYPE);
+                var component = stack.get(MysticalAgricultureDataComponentTypes.SOUL_JAR);
 
                 if (component != null) {
                     double newSouls = Math.min(requirement, souls + amount);
-                    stack.set(MysticalAgricultureDataComponentTypes.MOB_SOUL_TYPE, new MobSoulTypeComponent(type.getId(), newSouls));
+                    stack.set(MysticalAgricultureDataComponentTypes.SOUL_JAR, new SoulJarComponent(type.getId(), newSouls));
                     return Math.max(0, amount - (newSouls - souls));
                 }
             }

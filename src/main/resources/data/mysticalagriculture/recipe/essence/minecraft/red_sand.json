@@ -1,0 +1,30 @@
+{
+  "type": "cucumber:shaped_no_mirror",
+  "neoforge:conditions": [
+    {
+      "type": "mysticalagriculture:crop_enabled",
+      "crop": "mysticalagriculture:fire"
+    },
+    {
+      "type": "mysticalagriculture:crop_enabled",
+      "crop": "mysticalagriculture:dirt"
+    }
+  ],
+  "pattern": [
+    "FE ",
+    "EF ",
+    "   "
+  ],
+  "key": {
+    "E": {
+      "item": "mysticalagriculture:fire_essence"
+    },
+    "F": {
+      "item": "mysticalagriculture:dirt_essence"
+    }
+  },
+  "result": {
+    "id": "minecraft:red_sand",
+    "count": 16
+  }
+}

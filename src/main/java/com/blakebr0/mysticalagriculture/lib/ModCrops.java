@@ -39,100 +39,100 @@ public final class ModCrops {
     public static final Crop CORAL = new Crop(MysticalAgriculture.resource("coral"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:coral_agglomeratio"));
     public static final Crop HONEY = new Crop(MysticalAgriculture.resource("honey"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:honey_agglomeratio"));
     public static final Crop AMETHYST = new Crop(MysticalAgriculture.resource("amethyst"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.item("minecraft:amethyst_shard"));
-    public static final Crop PIG = new Crop(MysticalAgriculture.resource("pig"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.PIG)));
-    public static final Crop CHICKEN = new Crop(MysticalAgriculture.resource("chicken"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.CHICKEN)));
-    public static final Crop COW = new Crop(MysticalAgriculture.resource("cow"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.COW)));
-    public static final Crop SHEEP = new Crop(MysticalAgriculture.resource("sheep"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.SHEEP)));
-    public static final Crop SQUID = new Crop(MysticalAgriculture.resource("squid"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.SQUID)));
-    public static final Crop FISH = new Crop(MysticalAgriculture.resource("fish"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.FISH)));
-    public static final Crop SLIME = new Crop(MysticalAgriculture.resource("slime"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.SLIME)));
-    public static final Crop TURTLE = new Crop(MysticalAgriculture.resource("turtle"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.TURTLE)));
+    public static final Crop PIG = new Crop(MysticalAgriculture.resource("pig"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.PIG)));
+    public static final Crop CHICKEN = new Crop(MysticalAgriculture.resource("chicken"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.CHICKEN)));
+    public static final Crop COW = new Crop(MysticalAgriculture.resource("cow"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.COW)));
+    public static final Crop SHEEP = new Crop(MysticalAgriculture.resource("sheep"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.SHEEP)));
+    public static final Crop SQUID = new Crop(MysticalAgriculture.resource("squid"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.SQUID)));
+    public static final Crop FISH = new Crop(MysticalAgriculture.resource("fish"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.FISH)));
+    public static final Crop SLIME = new Crop(MysticalAgriculture.resource("slime"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.SLIME)));
+    public static final Crop TURTLE = new Crop(MysticalAgriculture.resource("turtle"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.TURTLE)));
 
-    public static final Crop IRON = new Crop(MysticalAgriculture.resource("iron"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/iron"));
+    public static final Crop IRON = new Crop(MysticalAgriculture.resource("iron"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/iron"));
     public static final Crop COPPER = new Crop(MysticalAgriculture.resource("copper"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.item("minecraft:copper_ingot"));
-    public static final Crop NETHER_QUARTZ = new Crop(MysticalAgriculture.resource("nether_quartz"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:gems/quartz"));
-    public static final Crop GLOWSTONE = new Crop(MysticalAgriculture.resource("glowstone"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:dusts/glowstone"));
-    public static final Crop REDSTONE = new Crop(MysticalAgriculture.resource("redstone"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:dusts/redstone"));
+    public static final Crop NETHER_QUARTZ = new Crop(MysticalAgriculture.resource("nether_quartz"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:gems/quartz"));
+    public static final Crop GLOWSTONE = new Crop(MysticalAgriculture.resource("glowstone"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:dusts/glowstone"));
+    public static final Crop REDSTONE = new Crop(MysticalAgriculture.resource("redstone"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:dusts/redstone"));
     public static final Crop OBSIDIAN = new Crop(MysticalAgriculture.resource("obsidian"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.item("minecraft:obsidian"));
     public static final Crop PRISMARINE = new Crop(MysticalAgriculture.resource("prismarine"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:prismarine_agglomeratio"));
-    public static final Crop ZOMBIE = new Crop(MysticalAgriculture.resource("zombie"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.ZOMBIE)));
-    public static final Crop SKELETON = new Crop(MysticalAgriculture.resource("skeleton"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.SKELETON)));
-    public static final Crop CREEPER = new Crop(MysticalAgriculture.resource("creeper"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.CREEPER)));
-    public static final Crop SPIDER = new Crop(MysticalAgriculture.resource("spider"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.SPIDER)));
-    public static final Crop RABBIT = new Crop(MysticalAgriculture.resource("rabbit"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.RABBIT)));
+    public static final Crop ZOMBIE = new Crop(MysticalAgriculture.resource("zombie"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.ZOMBIE)));
+    public static final Crop SKELETON = new Crop(MysticalAgriculture.resource("skeleton"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.SKELETON)));
+    public static final Crop CREEPER = new Crop(MysticalAgriculture.resource("creeper"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.CREEPER)));
+    public static final Crop SPIDER = new Crop(MysticalAgriculture.resource("spider"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.SPIDER)));
+    public static final Crop RABBIT = new Crop(MysticalAgriculture.resource("rabbit"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.RABBIT)));
 
-    public static final Crop GOLD = new Crop(MysticalAgriculture.resource("gold"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/gold"));
-    public static final Crop LAPIS_LAZULI = new Crop(MysticalAgriculture.resource("lapis_lazuli"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:gems/lapis"));
+    public static final Crop GOLD = new Crop(MysticalAgriculture.resource("gold"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/gold"));
+    public static final Crop LAPIS_LAZULI = new Crop(MysticalAgriculture.resource("lapis_lazuli"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:gems/lapis"));
     public static final Crop END = new Crop(MysticalAgriculture.resource("end"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:end_agglomeratio"));
-    public static final Crop EXPERIENCE = new Crop(MysticalAgriculture.resource("experience"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:experience_capsule", ExperienceCapsuleUtils.makeTag(ExperienceCapsuleUtils.MAX_XP_POINTS)));
-    public static final Crop BLAZE = new Crop(MysticalAgriculture.resource("blaze"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.BLAZE)));
-    public static final Crop GHAST = new Crop(MysticalAgriculture.resource("ghast"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.GHAST)));
-    public static final Crop ENDERMAN = new Crop(MysticalAgriculture.resource("enderman"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.ENDERMAN)));
+    public static final Crop EXPERIENCE = new Crop(MysticalAgriculture.resource("experience"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:experience_capsule", ExperienceCapsuleUtils.makeComponentMap(ExperienceCapsuleUtils.MAX_XP_POINTS)));
+    public static final Crop BLAZE = new Crop(MysticalAgriculture.resource("blaze"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.BLAZE)));
+    public static final Crop GHAST = new Crop(MysticalAgriculture.resource("ghast"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.GHAST)));
+    public static final Crop ENDERMAN = new Crop(MysticalAgriculture.resource("enderman"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.ENDERMAN)));
 
-    public static final Crop DIAMOND = new Crop(MysticalAgriculture.resource("diamond"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:gems/diamond"));
-    public static final Crop EMERALD = new Crop(MysticalAgriculture.resource("emerald"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:gems/emerald"));
+    public static final Crop DIAMOND = new Crop(MysticalAgriculture.resource("diamond"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:gems/diamond"));
+    public static final Crop EMERALD = new Crop(MysticalAgriculture.resource("emerald"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:gems/emerald"));
     public static final Crop NETHERITE = new Crop(MysticalAgriculture.resource("netherite"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.item("minecraft:netherite_ingot"));
-    public static final Crop WITHER_SKELETON = new Crop(MysticalAgriculture.resource("wither_skeleton"), CropTier.FIVE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.WITHER)));
+    public static final Crop WITHER_SKELETON = new Crop(MysticalAgriculture.resource("wither_skeleton"), CropTier.FIVE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.WITHER)));
 
     // COMMON
-    public static final Crop RUBBER = new Crop(MysticalAgriculture.resource("rubber"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("forge:rubber"));
-    public static final Crop SILICON = new Crop(MysticalAgriculture.resource("silicon"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("forge:silicon"));
-    public static final Crop SULFUR = new Crop(MysticalAgriculture.resource("sulfur"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("forge:dusts/sulfur"));
-    public static final Crop ALUMINUM = new Crop(MysticalAgriculture.resource("aluminum"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/aluminum"));
+    public static final Crop RUBBER = new Crop(MysticalAgriculture.resource("rubber"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("c:rubber"));
+    public static final Crop SILICON = new Crop(MysticalAgriculture.resource("silicon"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("c:silicon"));
+    public static final Crop SULFUR = new Crop(MysticalAgriculture.resource("sulfur"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("c:dusts/sulfur"));
+    public static final Crop ALUMINUM = new Crop(MysticalAgriculture.resource("aluminum"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("c:ingots/aluminum"));
     public static final Crop SALTPETER = new Crop(MysticalAgriculture.resource("saltpeter"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("mysticalagriculture:material/saltpeter"));
-    public static final Crop TIN = new Crop(MysticalAgriculture.resource("tin"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/tin"));
-    public static final Crop BRONZE = new Crop(MysticalAgriculture.resource("bronze"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/bronze"));
-    public static final Crop ZINC = new Crop(MysticalAgriculture.resource("zinc"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/zinc"));
-    public static final Crop BRASS = new Crop(MysticalAgriculture.resource("brass"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/brass"));
-    public static final Crop SILVER = new Crop(MysticalAgriculture.resource("silver"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/silver"));
-    public static final Crop LEAD = new Crop(MysticalAgriculture.resource("lead"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/lead"));
-    public static final Crop GRAPHITE = new Crop(MysticalAgriculture.resource("graphite"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/graphite"));
-    public static final Crop STEEL = new Crop(MysticalAgriculture.resource("steel"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/steel"));
-    public static final Crop NICKEL = new Crop(MysticalAgriculture.resource("nickel"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/nickel"));
-    public static final Crop CONSTANTAN = new Crop(MysticalAgriculture.resource("constantan"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/constantan"));
-    public static final Crop ELECTRUM = new Crop(MysticalAgriculture.resource("electrum"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/electrum"));
-    public static final Crop INVAR = new Crop(MysticalAgriculture.resource("invar"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/invar"));
-    public static final Crop MITHRIL = new Crop(MysticalAgriculture.resource("mithril"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0x659ABB, LazyIngredient.tag("forge:ingots/mithril"));
-    public static final Crop TUNGSTEN = new Crop(MysticalAgriculture.resource("tungsten"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0x616669, LazyIngredient.tag("forge:ingots/tungsten"));
-    public static final Crop TITANIUM = new Crop(MysticalAgriculture.resource("titanium"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0xD0D1DA, LazyIngredient.tag("forge:ingots/titanium"));
-    public static final Crop URANIUM = new Crop(MysticalAgriculture.resource("uranium"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/uranium"));
-    public static final Crop CHROME = new Crop(MysticalAgriculture.resource("chrome"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0xCDB9BD, LazyIngredient.tag("forge:ingots/chrome"));
-    public static final Crop PLATINUM = new Crop(MysticalAgriculture.resource("platinum"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/platinum"));
-    public static final Crop IRIDIUM = new Crop(MysticalAgriculture.resource("iridium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/iridium"));
+    public static final Crop TIN = new Crop(MysticalAgriculture.resource("tin"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/tin"));
+    public static final Crop BRONZE = new Crop(MysticalAgriculture.resource("bronze"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/bronze"));
+    public static final Crop ZINC = new Crop(MysticalAgriculture.resource("zinc"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/zinc"));
+    public static final Crop BRASS = new Crop(MysticalAgriculture.resource("brass"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/brass"));
+    public static final Crop SILVER = new Crop(MysticalAgriculture.resource("silver"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/silver"));
+    public static final Crop LEAD = new Crop(MysticalAgriculture.resource("lead"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/lead"));
+    public static final Crop GRAPHITE = new Crop(MysticalAgriculture.resource("graphite"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/graphite"));
+    public static final Crop STEEL = new Crop(MysticalAgriculture.resource("steel"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/steel"));
+    public static final Crop NICKEL = new Crop(MysticalAgriculture.resource("nickel"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/nickel"));
+    public static final Crop CONSTANTAN = new Crop(MysticalAgriculture.resource("constantan"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/constantan"));
+    public static final Crop ELECTRUM = new Crop(MysticalAgriculture.resource("electrum"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/electrum"));
+    public static final Crop INVAR = new Crop(MysticalAgriculture.resource("invar"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/invar"));
+    public static final Crop MITHRIL = new Crop(MysticalAgriculture.resource("mithril"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0x659ABB, LazyIngredient.tag("c:ingots/mithril"));
+    public static final Crop TUNGSTEN = new Crop(MysticalAgriculture.resource("tungsten"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0x616669, LazyIngredient.tag("c:ingots/tungsten"));
+    public static final Crop TITANIUM = new Crop(MysticalAgriculture.resource("titanium"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0xD0D1DA, LazyIngredient.tag("c:ingots/titanium"));
+    public static final Crop URANIUM = new Crop(MysticalAgriculture.resource("uranium"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/uranium"));
+    public static final Crop CHROME = new Crop(MysticalAgriculture.resource("chrome"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0xCDB9BD, LazyIngredient.tag("c:ingots/chrome"));
+    public static final Crop PLATINUM = new Crop(MysticalAgriculture.resource("platinum"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/platinum"));
+    public static final Crop IRIDIUM = new Crop(MysticalAgriculture.resource("iridium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/iridium"));
 
     // GEMS
-    public static final Crop APATITE = new Crop(MysticalAgriculture.resource("apatite"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("forge:gems/apatite"));
-    public static final Crop RUBY = new Crop(MysticalAgriculture.resource("ruby"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:gems/ruby"));
-    public static final Crop SAPPHIRE = new Crop(MysticalAgriculture.resource("sapphire"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:gems/sapphire"));
-    public static final Crop PERIDOT = new Crop(MysticalAgriculture.resource("peridot"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:gems/peridot"));
+    public static final Crop APATITE = new Crop(MysticalAgriculture.resource("apatite"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("c:gems/apatite"));
+    public static final Crop RUBY = new Crop(MysticalAgriculture.resource("ruby"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:gems/ruby"));
+    public static final Crop SAPPHIRE = new Crop(MysticalAgriculture.resource("sapphire"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:gems/sapphire"));
+    public static final Crop PERIDOT = new Crop(MysticalAgriculture.resource("peridot"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:gems/peridot"));
 
     // MYSTICAL AGRICULTURE
     public static final Crop SOULIUM = new Crop(MysticalAgriculture.resource("soulium"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:soulium_dust"));
 
     // THERMAL SERIES
-    public static final Crop BLIZZ = new Crop(MysticalAgriculture.resource("blizz"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.BLIZZ)));
-    public static final Crop BLITZ = new Crop(MysticalAgriculture.resource("blitz"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.BLITZ)));
-    public static final Crop BASALZ = new Crop(MysticalAgriculture.resource("basalz"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeTag(ModMobSoulTypes.BASALZ)));
-    public static final Crop SIGNALUM = new Crop(MysticalAgriculture.resource("signalum"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/signalum"));
-    public static final Crop LUMIUM = new Crop(MysticalAgriculture.resource("lumium"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/lumium"));
-    public static final Crop ENDERIUM = new Crop(MysticalAgriculture.resource("enderium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/enderium"));
+    public static final Crop BLIZZ = new Crop(MysticalAgriculture.resource("blizz"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.BLIZZ)));
+    public static final Crop BLITZ = new Crop(MysticalAgriculture.resource("blitz"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.BLITZ)));
+    public static final Crop BASALZ = new Crop(MysticalAgriculture.resource("basalz"), CropTier.THREE, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.BASALZ)));
+    public static final Crop SIGNALUM = new Crop(MysticalAgriculture.resource("signalum"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/signalum"));
+    public static final Crop LUMIUM = new Crop(MysticalAgriculture.resource("lumium"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/lumium"));
+    public static final Crop ENDERIUM = new Crop(MysticalAgriculture.resource("enderium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/enderium"));
 
     // REDSTONE ARSENAL
     public static final Crop FLUX_INFUSED_INGOT = new Crop(MysticalAgriculture.resource("flux_infused_ingot"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.item("redstone_arsenal:flux_ingot"));
     public static final Crop FLUX_INFUSED_GEM = new Crop(MysticalAgriculture.resource("flux_infused_gem"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.item("redstone_arsenal:flux_gem"));
 
     // IMMERSIVE ENGINEERING
-    public static final Crop HOP_GRAPHITE = new Crop(MysticalAgriculture.resource("hop_graphite"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/hop_graphite"));
+    public static final Crop HOP_GRAPHITE = new Crop(MysticalAgriculture.resource("hop_graphite"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/hop_graphite"));
 
     // TINKERS' CONSTRUCT
-    public static final Crop AMETHYST_BRONZE = new Crop(MysticalAgriculture.resource("amethyst_bronze"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/amethyst_bronze"));
-    public static final Crop SLIMESTEEL = new Crop(MysticalAgriculture.resource("slimesteel"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/slimesteel"));
-    public static final Crop PIG_IRON = new Crop(MysticalAgriculture.resource("pig_iron"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/pig_iron"));
-    public static final Crop COBALT = new Crop(MysticalAgriculture.resource("cobalt"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/cobalt"));
-    public static final Crop ROSE_GOLD = new Crop(MysticalAgriculture.resource("rose_gold"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/rose_gold"));
-    public static final Crop MANYULLYN = new Crop(MysticalAgriculture.resource("manyullyn"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/manyullyn"));
-    public static final Crop QUEENS_SLIME = new Crop(MysticalAgriculture.resource("queens_slime"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/queens_slime"));
-    public static final Crop HEPATIZON = new Crop(MysticalAgriculture.resource("hepatizon"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/hepatizon"));
+    public static final Crop AMETHYST_BRONZE = new Crop(MysticalAgriculture.resource("amethyst_bronze"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/amethyst_bronze"));
+    public static final Crop SLIMESTEEL = new Crop(MysticalAgriculture.resource("slimesteel"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/slimesteel"));
+    public static final Crop PIG_IRON = new Crop(MysticalAgriculture.resource("pig_iron"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/pig_iron"));
+    public static final Crop COBALT = new Crop(MysticalAgriculture.resource("cobalt"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/cobalt"));
+    public static final Crop ROSE_GOLD = new Crop(MysticalAgriculture.resource("rose_gold"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/rose_gold"));
+    public static final Crop MANYULLYN = new Crop(MysticalAgriculture.resource("manyullyn"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/manyullyn"));
+    public static final Crop QUEENS_SLIME = new Crop(MysticalAgriculture.resource("queens_slime"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/queens_slime"));
+    public static final Crop HEPATIZON = new Crop(MysticalAgriculture.resource("hepatizon"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/hepatizon"));
 
     // ENDER IO
     public static final Crop GRAINS_OF_INFINITY = new Crop(MysticalAgriculture.resource("grains_of_infinity"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.item("enderio:grains_of_infinity"));
@@ -153,10 +153,10 @@ public final class ModCrops {
     public static final Crop TERRASTEEL = new Crop(MysticalAgriculture.resource("terrasteel"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.item("botania:terrasteel_ingot"));
 
     // MEKANISM
-    public static final Crop OSMIUM = new Crop(MysticalAgriculture.resource("osmium"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/osmium"));
-    public static final Crop FLUORITE = new Crop(MysticalAgriculture.resource("fluorite"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:gems/fluorite"));
-    public static final Crop REFINED_GLOWSTONE = new Crop(MysticalAgriculture.resource("refined_glowstone"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/refined_glowstone"));
-    public static final Crop REFINED_OBSIDIAN = new Crop(MysticalAgriculture.resource("refined_obsidian"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/refined_obsidian"));
+    public static final Crop OSMIUM = new Crop(MysticalAgriculture.resource("osmium"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/osmium"));
+    public static final Crop FLUORITE = new Crop(MysticalAgriculture.resource("fluorite"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:gems/fluorite"));
+    public static final Crop REFINED_GLOWSTONE = new Crop(MysticalAgriculture.resource("refined_glowstone"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/refined_glowstone"));
+    public static final Crop REFINED_OBSIDIAN = new Crop(MysticalAgriculture.resource("refined_obsidian"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/refined_obsidian"));
 
     // CHISEL
     public static final Crop MARBLE = new Crop(MysticalAgriculture.resource("marble"), CropTier.TWO, CropType.RESOURCE, LazyIngredient.tag("mysticalagriculture:material/marble"));
@@ -178,19 +178,19 @@ public final class ModCrops {
     public static final Crop ROCK_CRYSTAL = new Crop(MysticalAgriculture.resource("rock_crystal"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.item("astralsorcery:rock_crystal"));
 
     // PNEUMATICCRAFT
-    public static final Crop COMPRESSED_IRON = new Crop(MysticalAgriculture.resource("compressed_iron"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/compressed_iron"));
+    public static final Crop COMPRESSED_IRON = new Crop(MysticalAgriculture.resource("compressed_iron"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/compressed_iron"));
 
     // DRACONIC EVOLUTION
-    public static final Crop DRACONIUM = new Crop(MysticalAgriculture.resource("draconium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/draconium"));
+    public static final Crop DRACONIUM = new Crop(MysticalAgriculture.resource("draconium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/draconium"));
 
     // EXTREME REACTORS 2
-    public static final Crop YELLORIUM = new Crop(MysticalAgriculture.resource("yellorium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/yellorium"));
-    public static final Crop CYANITE = new Crop(MysticalAgriculture.resource("cyanite"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("forge:ingots/cyanite"));
+    public static final Crop YELLORIUM = new Crop(MysticalAgriculture.resource("yellorium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/yellorium"));
+    public static final Crop CYANITE = new Crop(MysticalAgriculture.resource("cyanite"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/cyanite"));
 
     // APPLIED ENERGISTICS 2
     public static final Crop SKY_STONE = new Crop(MysticalAgriculture.resource("sky_stone"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.item("ae2:sky_stone_block"));
-    public static final Crop CERTUS_QUARTZ = new Crop(MysticalAgriculture.resource("certus_quartz"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("forge:gems/certus_quartz"));
-    public static final Crop FLUIX = new Crop(MysticalAgriculture.resource("fluix"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("forge:gems/fluix"));
+    public static final Crop CERTUS_QUARTZ = new Crop(MysticalAgriculture.resource("certus_quartz"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:gems/certus_quartz"));
+    public static final Crop FLUIX = new Crop(MysticalAgriculture.resource("fluix"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:gems/fluix"));
 
     // REFINED STORAGE
     public static final Crop QUARTZ_ENRICHED_IRON = new Crop(MysticalAgriculture.resource("quartz_enriched_iron"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.item("refinedstorage:quartz_enriched_iron"));

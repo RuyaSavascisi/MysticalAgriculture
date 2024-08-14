@@ -2,7 +2,7 @@ package com.blakebr0.mysticalagriculture.init;
 
 import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 import com.blakebr0.mysticalagriculture.api.components.AugmentComponent;
-import com.blakebr0.mysticalagriculture.api.components.MobSoulTypeComponent;
+import com.blakebr0.mysticalagriculture.api.components.SoulJarComponent;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -21,6 +21,6 @@ public final class ModDataComponentTypes {
             () -> DataComponentType.<Map<Integer, AugmentComponent>>builder().persistent(AugmentComponent.EQUIPPED_CODEC).networkSynchronized(AugmentComponent.EQUIPPED_STREAM_CODEC).build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EXPERIENCE_CAPSULE = REGISTRY.register("experience_capsule",
             () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT).build());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<MobSoulTypeComponent>> MOB_SOUL_TYPE = REGISTRY.register("mob_soul_type",
-            () -> DataComponentType.<MobSoulTypeComponent>builder().persistent(MobSoulTypeComponent.CODEC).networkSynchronized(MobSoulTypeComponent.STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SoulJarComponent>> SOUL_JAR = REGISTRY.register("soul_jar",
+            () -> DataComponentType.<SoulJarComponent>builder().persistent(SoulJarComponent.CODEC).networkSynchronized(SoulJarComponent.STREAM_CODEC).build());
 }

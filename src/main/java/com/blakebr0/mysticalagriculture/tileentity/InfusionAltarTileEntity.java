@@ -17,7 +17,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -31,7 +31,7 @@ public class InfusionAltarTileEntity extends BaseInventoryTileEntity implements 
     private final MultiblockPositions pedestalLocations = new MultiblockPositions.Builder()
             .pos(3, 0, 0).pos(0, 0, 3).pos(-3, 0, 0).pos(0, 0, -3)
             .pos(2, 0, 2).pos(2, 0, -2).pos(-2, 0, 2).pos(-2, 0, -2).build();
-    private final CachedRecipe<RecipeInput, IInfusionRecipe> recipe;
+    private final CachedRecipe<CraftingInput, IInfusionRecipe> recipe;
     private int progress;
     private boolean active;
 
@@ -95,7 +95,8 @@ public class InfusionAltarTileEntity extends BaseInventoryTileEntity implements 
                 var pedestals = tile.getPedestals();
 
                 if (tile.progress >= 100) {
-                    var remaining = recipe.getRemainingItems(tile.recipeInventory.asRecipeWrapper());
+                    var inventory = tile.toCraftingInput();
+                    var remaining = recipe.getRemainingItems(inventory);
 
                     for (var i = 0; i < pedestals.size(); i++) {
                         var pedestal = pedestals.get(i);
@@ -103,9 +104,9 @@ public class InfusionAltarTileEntity extends BaseInventoryTileEntity implements 
                         tile.spawnParticles(ParticleTypes.SMOKE, pedestal.getBlockPos(), 1.2D, 20);
                     }
 
-                    var result = recipe.assemble(tile.recipeInventory.asRecipeWrapper(), level.registryAccess());
+                    var result = recipe.assemble(inventory, level.registryAccess());
 
-                    tile.setOutput(result, remaining.get(0));
+                    tile.setOutput(result, remaining.getFirst());
                     tile.reset();
                     tile.setChangedFast();
                     tile.spawnParticles(ParticleTypes.HAPPY_VILLAGER, pos, 1.0D, 10);
@@ -145,7 +146,11 @@ public class InfusionAltarTileEntity extends BaseInventoryTileEntity implements 
 
         this.updateRecipeInventory(this.getPedestals());
 
-        return this.recipe.checkAndGet(this.recipeInventory, this.level);
+        return this.recipe.checkAndGet(this.toCraftingInput(), this.level);
+    }
+
+    private CraftingInput toCraftingInput() {
+        return this.recipeInventory.toCraftingInput(3, 3);
     }
 
     private void reset() {

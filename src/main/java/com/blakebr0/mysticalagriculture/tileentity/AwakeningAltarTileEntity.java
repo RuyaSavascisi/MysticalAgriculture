@@ -18,7 +18,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -33,7 +33,7 @@ public class AwakeningAltarTileEntity extends BaseInventoryTileEntity implements
             .pos(0, 0, -3).pos(2, 0, -2).pos(0, 0, 3).pos(-2, 0, 2).build();
     private final BaseItemStackHandler inventory;
     private final BaseItemStackHandler recipeInventory;
-    private final CachedRecipe<RecipeInput, IAwakeningRecipe> recipe;
+    private final CachedRecipe<CraftingInput, IAwakeningRecipe> recipe;
     private int progress;
     private boolean active;
 
@@ -101,7 +101,7 @@ public class AwakeningAltarTileEntity extends BaseInventoryTileEntity implements
                 var collections = tile.getPedestalCollections();
 
                 if (tile.progress >= 100) {
-                    var remaining = recipe.getRemainingItems(tile.recipeInventory.asRecipeWrapper());
+                    var remaining = recipe.getRemainingItems(tile.toCraftingInput());
 
                     for (var i = 0; i < collections.pedestals.size(); i++) {
                         var pedestal = collections.pedestals.get(i);
@@ -121,9 +121,9 @@ public class AwakeningAltarTileEntity extends BaseInventoryTileEntity implements
                         tile.spawnParticles(ParticleTypes.SMOKE, vessel.getBlockPos(), 1.2D, 20);
                     }
 
-                    var result = recipe.assemble(tile.recipeInventory.asRecipeWrapper(), level.registryAccess());
+                    var result = recipe.assemble(tile.toCraftingInput(), level.registryAccess());
 
-                    tile.setOutput(result, remaining.get(0));
+                    tile.setOutput(result, remaining.getFirst());
                     tile.reset();
                     tile.setChangedFast();
                     tile.spawnParticles(ParticleTypes.HAPPY_VILLAGER, pos, 1.0D, 10);
@@ -160,7 +160,7 @@ public class AwakeningAltarTileEntity extends BaseInventoryTileEntity implements
 
         this.updateRecipeInventory(this.getPedestalCollections());
 
-        return this.recipe.checkAndGet(this.recipeInventory, this.level);
+        return this.recipe.checkAndGet(this.toCraftingInput(), this.level);
     }
 
     public NonNullList<ItemStack> getEssenceItems() {
@@ -169,6 +169,10 @@ public class AwakeningAltarTileEntity extends BaseInventoryTileEntity implements
                 .stream()
                 .map(v -> v.getInventory().getStackInSlot(0))
                 .collect(Collectors.toCollection(NonNullList::create));
+    }
+
+    private CraftingInput toCraftingInput() {
+        return this.recipeInventory.toCraftingInput(3, 3);
     }
 
     private void updateRecipeInventory(PedestalTileEntityCollections collections) {

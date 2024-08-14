@@ -12,7 +12,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "forge:ingots/electrum"
+        "tag": "c:ingots/electrum"
       }
     }
   ],
@@ -67,6 +67,5 @@
   "result": {
     "count": 1,
     "id": "mysticalagriculture:electrum_seeds"
-  },
-  "transfer_components": false
+  }
 }

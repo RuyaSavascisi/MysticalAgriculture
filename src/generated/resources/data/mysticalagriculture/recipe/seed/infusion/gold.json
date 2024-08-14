@@ -12,7 +12,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "forge:ingots/gold"
+        "tag": "c:ingots/gold"
       }
     }
   ],
@@ -67,6 +67,5 @@
   "result": {
     "count": 1,
     "id": "mysticalagriculture:gold_seeds"
-  },
-  "transfer_components": false
+  }
 }

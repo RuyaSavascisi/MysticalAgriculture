@@ -12,7 +12,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "forge:ingots/manyullyn"
+        "tag": "c:ingots/manyullyn"
       }
     }
   ],
@@ -67,6 +67,5 @@
   "result": {
     "count": 1,
     "id": "mysticalagriculture:manyullyn_seeds"
-  },
-  "transfer_components": false
+  }
 }

@@ -77,12 +77,15 @@ public class AwakeningCategory implements IRecipeCategory<IAwakeningRecipe> {
     private static List<List<ItemStack>> toItemStackLists(IAwakeningRecipe recipe) {
         var result = new ArrayList<List<ItemStack>>(9);
 
+        var input = recipe.getAltarIngredient();
         var ingredients = recipe.getIngredients();
         var essences = recipe.getEssences();
 
+        result.add(List.of(input.getItems()));
+
         for (int i = 0; i < ingredients.size(); i++) {
             // essence vessel ingredient
-            if (i % 2 == 1) {
+            if (i % 2 == 0) {
                 result.add(List.of(essences.get(Math.floorDiv(i, 2))));
             } else {
                 result.add(List.of(ingredients.get(i).getItems()));

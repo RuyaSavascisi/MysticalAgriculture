@@ -25,7 +25,7 @@ public class EnchanterOutputSlot extends Slot {
 
     @Override
     public void onTake(Player player, ItemStack stack) {
-        var remaining = player.level().getRecipeManager().getRemainingItemsFor(ModRecipeTypes.ENCHANTER.get(), this.matrix.asRecipeWrapper(), player.level());
+        var remaining = player.level().getRecipeManager().getRemainingItemsFor(ModRecipeTypes.ENCHANTER.get(), this.matrix.toCraftingInput(2, 1), player.level());
 
         for (int i = 0; i < remaining.size(); i++) {
             this.matrix.setStackInSlot(i, remaining.get(i));

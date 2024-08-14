@@ -26,7 +26,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,7 +44,7 @@ public class ReprocessorTileEntity extends BaseInventoryTileEntity implements Me
     private final UpgradeItemStackHandler upgradeInventory;
     private final DynamicEnergyStorage energy;
     private final SidedInventoryWrapper[] sidedInventoryWrappers;
-    private final CachedRecipe<RecipeInput, IReprocessorRecipe> recipe;
+    private final CachedRecipe<CraftingInput, IReprocessorRecipe> recipe;
     private MachineUpgradeTier tier;
     private int progress;
     private int fuelLeft;
@@ -163,7 +163,7 @@ public class ReprocessorTileEntity extends BaseInventoryTileEntity implements Me
                 var recipe = tile.getActiveRecipe();
 
                 if (recipe != null) {
-                    var recipeOutput = recipe.assemble(tile.inventory.asRecipeWrapper(), level.registryAccess());
+                    var recipeOutput = recipe.assemble(tile.toCraftingInput(), level.registryAccess());
                     if (!recipeOutput.isEmpty() && (output.isEmpty() || StackHelper.canCombineStacks(output, recipeOutput))) {
                         tile.isRunning = true;
                         tile.progress++;
@@ -180,8 +180,6 @@ public class ReprocessorTileEntity extends BaseInventoryTileEntity implements Me
                     }
                 }
             } else {
-                tile.isRunning = false;
-
                 if (tile.progress > 0) {
                     tile.progress = 0;
 
@@ -215,7 +213,7 @@ public class ReprocessorTileEntity extends BaseInventoryTileEntity implements Me
         if (this.level == null)
             return null;
 
-        return this.recipe.checkAndGet(this.inventory, this.level);
+        return this.recipe.checkAndGet(this.toCraftingInput(), this.level);
     }
 
     public DynamicEnergyStorage getEnergy() {
@@ -246,6 +244,10 @@ public class ReprocessorTileEntity extends BaseInventoryTileEntity implements Me
             return FUEL_USAGE;
 
         return (int) (FUEL_USAGE * this.tier.getFuelUsageMultiplier());
+    }
+
+    private CraftingInput toCraftingInput() {
+        return this.inventory.toShapelessCraftingInput(0, 1);
     }
 
     private boolean canInsertStackSided(int slot, ItemStack stack, Direction direction) {

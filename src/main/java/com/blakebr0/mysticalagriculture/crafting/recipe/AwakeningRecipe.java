@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalagriculture.crafting.recipe;
 
-import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.mysticalagriculture.api.crafting.IAwakeningRecipe;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
@@ -14,13 +13,12 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.common.util.RecipeMatcher;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -28,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
+public class AwakeningRecipe implements IAwakeningRecipe {
     public static final int RECIPE_SIZE = 9;
 
     private final Ingredient input;
@@ -39,36 +37,50 @@ public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
     // for CraftTweaker recipes
     private BiFunction<Integer, ItemStack, ItemStack> transformer;
 
-    // the input is specified separately in JSON but is part of the ingredients list in practice
     public AwakeningRecipe(Ingredient input, NonNullList<Ingredient> inputs, NonNullList<ItemStack> essences, ItemStack result, boolean transferComponents) {
         this.input = input;
         this.essences = essences;
         this.result = result;
         this.transferComponents = transferComponents;
 
-        var allInputs = NonNullList.withSize(9, Ingredient.EMPTY);
+        var allInputs = NonNullList.withSize(8, Ingredient.EMPTY);
 
-        allInputs.set(0, input);
-        allInputs.set(1, Ingredient.of(essences.get(0)));
-        allInputs.set(2, inputs.get(0));
-        allInputs.set(3, Ingredient.of(essences.get(1)));
-        allInputs.set(4, inputs.get(1));
-        allInputs.set(5, Ingredient.of(essences.get(2)));
-        allInputs.set(6, inputs.get(2));
-        allInputs.set(7, Ingredient.of(essences.get(3)));
-        allInputs.set(8, inputs.get(3));
+        allInputs.set(0, Ingredient.of(essences.get(0)));
+        allInputs.set(1, inputs.get(0));
+        allInputs.set(2, Ingredient.of(essences.get(1)));
+        allInputs.set(3, inputs.get(1));
+        allInputs.set(4, Ingredient.of(essences.get(2)));
+        allInputs.set(5, inputs.get(2));
+        allInputs.set(6, Ingredient.of(essences.get(3)));
+        allInputs.set(7, inputs.get(3));
 
         this.inputs = allInputs;
     }
 
     @Override
-    public boolean matches(RecipeInput inventory, Level level) {
-        var altarStack = inventory.getItem(0);
-        return !this.inputs.isEmpty() && this.inputs.getFirst().test(altarStack) && ISpecialRecipe.super.matches(inventory, level);
+    public boolean matches(CraftingInput inventory, Level level) {
+        var input = inventory.getItem(0);
+        if (!this.input.test(input))
+            return false;
+
+        // -1 ingredient for the input item
+        if (this.inputs.size() != inventory.ingredientCount() - 1)
+            return false;
+
+        var inputs = NonNullList.<ItemStack>create();
+
+        for (var i = 1; i < inventory.size(); i++) {
+            var item = inventory.getItem(i);
+            if (!item.isEmpty()) {
+                inputs.add(item);
+            }
+        }
+
+        return RecipeMatcher.findMatches(inputs, this.inputs) != null;
     }
 
     @Override
-    public ItemStack assemble(RecipeInput inventory, HolderLookup.Provider provider) {
+    public ItemStack assemble(CraftingInput inventory, HolderLookup.Provider provider) {
         var stack = inventory.getItem(0);
         var result = this.result.copy();
 
@@ -105,14 +117,14 @@ public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(IItemHandler inventory) {
-        var remaining = NonNullList.withSize(inventory.getSlots(), ItemStack.EMPTY);
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inventory) {
+        var remaining = NonNullList.withSize(inventory.size(), ItemStack.EMPTY);
         // we need to track this separately since the recipe stores vessels and pedestals in alternating order,
         // while the recipe inventory stores them in sequential order
-        var vesselIndex = 1;
+        var vesselIndex = 0;
 
         for (int i = 0; i < remaining.size(); i++) {
-            var stack = inventory.getStackInSlot(i);
+            var stack = inventory.getItem(i);
 
             // slot indexes 5 -> 8 are the essence vessels
             if (i > 4) {
@@ -157,6 +169,11 @@ public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
         }
 
         return remaining;
+    }
+
+    @Override
+    public Ingredient getAltarIngredient() {
+        return this.input;
     }
 
     @Override
@@ -206,12 +223,13 @@ public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
                                 .fieldOf("ingredients")
                                 .flatXmap(
                                         field -> {
-                                            Ingredient[] ingredients = field.toArray(Ingredient[]::new);
+                                            var max = 4;
+                                            var ingredients = field.toArray(Ingredient[]::new);
                                             if (ingredients.length == 0) {
-                                                return DataResult.error(() -> "No ingredients for shapeless recipe");
+                                                return DataResult.error(() -> "No ingredients for awakening recipe");
                                             } else {
-                                                return ingredients.length > 4
-                                                        ? DataResult.error(() -> "Too many ingredients for shapeless recipe. The maximum is: %s".formatted(4))
+                                                return ingredients.length > max
+                                                        ? DataResult.error(() -> "Too many ingredients for awakening recipe. The maximum is: %s".formatted(max))
                                                         : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
                                             }
                                         },
@@ -220,15 +238,16 @@ public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
                                 .forGetter(recipe -> recipe.inputs),
                         ItemStack.STRICT_CODEC
                                 .listOf()
-                                .fieldOf("ingredients")
+                                .fieldOf("essences")
                                 .flatXmap(
                                         field -> {
+                                            var max = 4;
                                             var stacks = field.toArray(ItemStack[]::new);
                                             if (stacks.length == 0) {
-                                                return DataResult.error(() -> "No ingredients for shapeless recipe");
+                                                return DataResult.error(() -> "No essences for awakening recipe");
                                             } else {
-                                                return stacks.length > ShapedRecipePattern.getMaxHeight() * ShapedRecipePattern.getMaxWidth()
-                                                        ? DataResult.error(() -> "Too many ingredients for shapeless recipe. The maximum is: %s".formatted(4))
+                                                return stacks.length > max
+                                                        ? DataResult.error(() -> "Too many essences for awakening recipe. The maximum is: %s".formatted(max))
                                                         : DataResult.success(NonNullList.of(ItemStack.EMPTY, stacks));
                                             }
                                         },
@@ -236,7 +255,7 @@ public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
                                 )
                                 .forGetter(recipe -> recipe.essences),
                         ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
-                        Codec.BOOL.fieldOf("transfer_components").forGetter(recipe -> recipe.transferComponents)
+                        Codec.BOOL.optionalFieldOf("transfer_components", false).forGetter(recipe -> recipe.transferComponents)
                 ).apply(builder, AwakeningRecipe::new)
         );
         public static final StreamCodec<RegistryFriendlyByteBuf, AwakeningRecipe> STREAM_CODEC = StreamCodec.of(
@@ -254,6 +273,7 @@ public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
         }
 
         private static AwakeningRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
+            var input = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
             int size = buffer.readVarInt();
             var inputs = NonNullList.withSize(size, Ingredient.EMPTY);
 
@@ -271,14 +291,16 @@ public class AwakeningRecipe implements ISpecialRecipe, IAwakeningRecipe {
             var result = ItemStack.STREAM_CODEC.decode(buffer);
             var transferComponents = buffer.readBoolean();
 
-            return new AwakeningRecipe(inputs.getFirst(), inputs, essences, result, transferComponents);
+            return new AwakeningRecipe(input, inputs, essences, result, transferComponents);
         }
 
         private static void toNetwork(RegistryFriendlyByteBuf buffer, AwakeningRecipe recipe) {
-            buffer.writeVarInt(5);
+            Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.input);
+
+            buffer.writeVarInt(4);
 
             // only send the non-vessel ingredients
-            for (int i = 0; i <= 8; i += 2) {
+            for (int i = 1; i <= 7; i += 2) {
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.inputs.get(i));
             }
 

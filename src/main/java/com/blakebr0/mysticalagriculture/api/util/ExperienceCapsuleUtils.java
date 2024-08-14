@@ -1,7 +1,7 @@
 package com.blakebr0.mysticalagriculture.api.util;
 
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureDataComponentTypes;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,17 +12,13 @@ public class ExperienceCapsuleUtils {
     public static final int MAX_XP_POINTS = 1200;
 
     /**
-     * Creates a tag for the experience capsule with this amount of xp
+     * Creates a {@link DataComponentMap} with the necessary components for the experience capsule with this amount of xp
      *
      * @param xp the amount of xp points
      * @return a tag compound for the specified amount of xp
      */
-    public static CompoundTag makeTag(int xp) {
-        var nbt = new CompoundTag();
-
-        nbt.putInt("Experience", Math.min(MAX_XP_POINTS, xp));
-
-        return nbt;
+    public static DataComponentMap makeComponentMap(int xp) {
+        return DataComponentMap.builder().set(MysticalAgricultureDataComponentTypes.EXPERIENCE_CAPSULE, Math.min(MAX_XP_POINTS, xp)).build();
     }
 
     /**

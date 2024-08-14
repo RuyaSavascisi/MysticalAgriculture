@@ -28,7 +28,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,7 +46,7 @@ public class SoulExtractorTileEntity extends BaseInventoryTileEntity implements 
     private final UpgradeItemStackHandler upgradeInventory;
     private final DynamicEnergyStorage energy;
     private final SidedInventoryWrapper[] sidedInventoryWrappers;
-    private final CachedRecipe<RecipeInput, ISoulExtractionRecipe> recipe;
+    private final CachedRecipe<CraftingInput, ISoulExtractionRecipe> recipe;
     private MachineUpgradeTier tier;
     private int progress;
     private int fuelLeft;
@@ -166,7 +166,7 @@ public class SoulExtractorTileEntity extends BaseInventoryTileEntity implements 
 
                 if (tile.progress >= tile.getOperationTime()) {
                     tile.inventory.setStackInSlot(0, StackHelper.shrink(tile.inventory.getStackInSlot(0), 1, false));
-                    tile.inventory.setStackInSlot(2, recipe.assemble(tile.inventory.asRecipeWrapper(), level.registryAccess()));
+                    tile.inventory.setStackInSlot(2, recipe.assemble(tile.toCraftingInput(), level.registryAccess()));
 
                     tile.progress = 0;
                 }
@@ -202,7 +202,7 @@ public class SoulExtractorTileEntity extends BaseInventoryTileEntity implements 
         if (this.level == null)
             return null;
 
-        return (ISoulExtractionRecipe) this.recipe.checkAndGet(this.inventory, this.level);
+        return this.recipe.checkAndGet(this.toCraftingInput(), this.level);
     }
 
     public DynamicEnergyStorage getEnergy() {
@@ -233,6 +233,10 @@ public class SoulExtractorTileEntity extends BaseInventoryTileEntity implements 
             return FUEL_USAGE;
 
         return (int) (FUEL_USAGE * this.tier.getFuelUsageMultiplier());
+    }
+
+    private CraftingInput toCraftingInput() {
+        return this.inventory.toShapelessCraftingInput();
     }
 
     private boolean canInsertStackSided(int slot, ItemStack stack, Direction direction) {

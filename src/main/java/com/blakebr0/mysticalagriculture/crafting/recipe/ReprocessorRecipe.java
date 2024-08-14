@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalagriculture.crafting.recipe;
 
-import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.mysticalagriculture.api.crafting.IReprocessorRecipe;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
 import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
@@ -11,12 +10,14 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.util.RecipeMatcher;
 
-public class ReprocessorRecipe implements ISpecialRecipe, IReprocessorRecipe {
+public class ReprocessorRecipe implements IReprocessorRecipe {
     private final NonNullList<Ingredient> inputs;
     private final ItemStack result;
 
@@ -26,7 +27,24 @@ public class ReprocessorRecipe implements ISpecialRecipe, IReprocessorRecipe {
     }
 
     @Override
-    public ItemStack assemble(RecipeInput inventory, HolderLookup.Provider provider) {
+    public boolean matches(CraftingInput inventory, Level level) {
+        if (this.inputs.size() != inventory.ingredientCount())
+            return false;
+
+        var inputs = NonNullList.<ItemStack>create();
+
+        for (var i = 0; i < inventory.size(); i++) {
+            var item = inventory.getItem(i);
+            if (!item.isEmpty()) {
+                inputs.add(item);
+            }
+        }
+
+        return RecipeMatcher.findMatches(inputs, this.inputs) != null;
+    }
+
+    @Override
+    public ItemStack assemble(CraftingInput inventory, HolderLookup.Provider provider) {
         return this.result.copy();
     }
 

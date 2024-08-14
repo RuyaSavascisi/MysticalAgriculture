@@ -202,7 +202,7 @@ public class EssenceFurnaceTileEntity extends BaseInventoryTileEntity implements
     }
 
     public SmeltingRecipe getActiveRecipe() {
-        return this.recipe.checkAndGet(this.inventory, this.level);
+        return this.recipe.checkAndGet(new SingleRecipeInput(this.inventory.getStackInSlot(0)), this.level);
     }
 
     public DynamicEnergyStorage getEnergy() {

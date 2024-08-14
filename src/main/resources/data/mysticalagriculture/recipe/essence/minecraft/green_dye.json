@@ -1,0 +1,23 @@
+{
+  "type": "cucumber:shaped_no_mirror",
+  "neoforge:conditions": [
+    {
+      "type": "mysticalagriculture:crop_enabled",
+      "crop": "mysticalagriculture:dye"
+    }
+  ],
+  "pattern": [
+    "  E",
+    "EE ",
+    "   "
+  ],
+  "key": {
+    "E": {
+      "item": "mysticalagriculture:dye_essence"
+    }
+  },
+  "result": {
+    "id": "minecraft:green_dye",
+    "count": 6
+  }
+}

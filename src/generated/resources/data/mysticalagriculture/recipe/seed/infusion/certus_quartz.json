@@ -12,7 +12,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "forge:gems/certus_quartz"
+        "tag": "c:gems/certus_quartz"
       }
     }
   ],
@@ -67,6 +67,5 @@
   "result": {
     "count": 1,
     "id": "mysticalagriculture:certus_quartz_seeds"
-  },
-  "transfer_components": false
+  }
 }

@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalagriculture.crafting.recipe;
 
-import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.cucumber.crafting.ingredient.IngredientWithCount;
 import com.blakebr0.mysticalagriculture.api.crafting.ISouliumSpawnerRecipe;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
@@ -17,10 +16,11 @@ import net.minecraft.util.random.Weight;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class SouliumSpawnerRecipe implements ISpecialRecipe, ISouliumSpawnerRecipe {
+public class SouliumSpawnerRecipe implements ISouliumSpawnerRecipe {
     private final NonNullList<IngredientWithCount> inputs;
     private final WeightedRandomList<WeightedEntry.Wrapper<ResourceLocation>> entityTypes;
 
@@ -38,7 +38,13 @@ public class SouliumSpawnerRecipe implements ISpecialRecipe, ISouliumSpawnerReci
     }
 
     @Override
-    public ItemStack assemble(RecipeInput recipeInput, HolderLookup.Provider provider) {
+    public boolean matches(CraftingInput inventory, Level level) {
+        var stack = inventory.getItem(0);
+        return this.inputs.getFirst().test(stack);
+    }
+
+    @Override
+    public ItemStack assemble(CraftingInput inventory, HolderLookup.Provider lookup) {
         return ItemStack.EMPTY;
     }
 
@@ -95,7 +101,7 @@ public class SouliumSpawnerRecipe implements ISpecialRecipe, ISouliumSpawnerReci
     public static class Serializer implements RecipeSerializer<SouliumSpawnerRecipe> {
         public static final MapCodec<SouliumSpawnerRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
                 builder.group(
-                        IngredientWithCount.CODEC.fieldOf("input").forGetter(recipe -> recipe.inputs.getFirst()),
+                        IngredientWithCount.MAP_CODEC.fieldOf("input").forGetter(recipe -> recipe.inputs.getFirst()),
                         WeightedRandomList.codec(
                                 RecordCodecBuilder.<WeightedEntry.Wrapper<ResourceLocation>>create(wrapper ->
                                         wrapper.group(

@@ -55,18 +55,19 @@ public class InfusionCategory implements IRecipeCategory<IInfusionRecipe> {
 
         assert level != null;
 
+        var input = recipe.getAltarIngredient();
         var inputs = recipe.getIngredients();
         var output = recipe.getResultItem(level.registryAccess());
 
-        builder.addSlot(RecipeIngredientRole.INPUT, 33, 33).addIngredients(inputs.get(0));
-        builder.addSlot(RecipeIngredientRole.INPUT, 7, 7).addIngredients(inputs.get(1));
-        builder.addSlot(RecipeIngredientRole.INPUT, 33, 1).addIngredients(inputs.get(2));
-        builder.addSlot(RecipeIngredientRole.INPUT, 59, 7).addIngredients(inputs.get(3));
-        builder.addSlot(RecipeIngredientRole.INPUT, 65, 33).addIngredients(inputs.get(4));
-        builder.addSlot(RecipeIngredientRole.INPUT, 59, 59).addIngredients(inputs.get(5));
-        builder.addSlot(RecipeIngredientRole.INPUT, 33, 64).addIngredients(inputs.get(6));
-        builder.addSlot(RecipeIngredientRole.INPUT, 7, 59).addIngredients(inputs.get(7));
-        builder.addSlot(RecipeIngredientRole.INPUT, 1, 33).addIngredients(inputs.get(8));
+        builder.addSlot(RecipeIngredientRole.INPUT, 33, 33).addIngredients(input);
+        builder.addSlot(RecipeIngredientRole.INPUT, 7, 7).addIngredients(inputs.get(0));
+        builder.addSlot(RecipeIngredientRole.INPUT, 33, 1).addIngredients(inputs.get(1));
+        builder.addSlot(RecipeIngredientRole.INPUT, 59, 7).addIngredients(inputs.get(2));
+        builder.addSlot(RecipeIngredientRole.INPUT, 65, 33).addIngredients(inputs.get(3));
+        builder.addSlot(RecipeIngredientRole.INPUT, 59, 59).addIngredients(inputs.get(4));
+        builder.addSlot(RecipeIngredientRole.INPUT, 33, 64).addIngredients(inputs.get(5));
+        builder.addSlot(RecipeIngredientRole.INPUT, 7, 59).addIngredients(inputs.get(6));
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 33).addIngredients(inputs.get(7));
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 123, 33).addItemStack(output);
     }

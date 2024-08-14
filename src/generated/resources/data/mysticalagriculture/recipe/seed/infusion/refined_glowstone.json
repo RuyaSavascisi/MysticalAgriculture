@@ -12,7 +12,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "forge:ingots/refined_glowstone"
+        "tag": "c:ingots/refined_glowstone"
       }
     }
   ],
@@ -67,6 +67,5 @@
   "result": {
     "count": 1,
     "id": "mysticalagriculture:refined_glowstone_seeds"
-  },
-  "transfer_components": false
+  }
 }

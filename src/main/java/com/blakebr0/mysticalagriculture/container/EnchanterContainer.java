@@ -54,16 +54,17 @@ public class EnchanterContainer extends ExtendedContainerMenu {
     }
 
     @Override
-    public void slotsChanged(Container inventory) {
-        var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.ENCHANTER.get(), this.inventory.asRecipeWrapper(), this.level);
+    public void slotsChanged(Container matrix) {
+        var inventory = this.inventory.toShapelessCraftingInput(0, 3);
+        var recipe = this.level.getRecipeManager().getRecipeFor(ModRecipeTypes.ENCHANTER.get(), inventory, this.level);
 
         if (recipe.isPresent()) {
-            this.result.setItem(0, recipe.get().value().assemble(this.inventory.asRecipeWrapper(), this.level.registryAccess()));
+            this.result.setItem(0, recipe.get().value().assemble(inventory, this.level.registryAccess()));
         } else {
             this.result.setItem(0, ItemStack.EMPTY);
         }
 
-        super.slotsChanged(inventory);
+        super.slotsChanged(matrix);
     }
 
     @Override

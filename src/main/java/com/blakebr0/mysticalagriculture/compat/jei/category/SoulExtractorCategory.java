@@ -67,7 +67,7 @@ public class SoulExtractorCategory implements IRecipeCategory<ISoulExtractionRec
         var inputs = recipe.getIngredients();
         var output = recipe.getResultItem(RegistryAccess.EMPTY);
 
-        builder.addSlot(RecipeIngredientRole.INPUT, 1, 5).addIngredients(inputs.get(0));
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 5).addIngredients(inputs.getFirst());
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 61, 5).addItemStack(output);
     }

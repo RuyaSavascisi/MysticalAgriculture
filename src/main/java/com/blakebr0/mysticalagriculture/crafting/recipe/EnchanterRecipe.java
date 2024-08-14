@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalagriculture.crafting.recipe;
 
-import com.blakebr0.cucumber.crafting.ISpecialRecipe;
 import com.blakebr0.cucumber.crafting.ingredient.IngredientWithCount;
 import com.blakebr0.mysticalagriculture.api.crafting.IEnchanterRecipe;
 import com.blakebr0.mysticalagriculture.init.ModRecipeSerializers;
@@ -16,6 +15,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -24,11 +24,13 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
+import net.neoforged.neoforge.common.util.RecipeMatcher;
 
 import java.util.stream.Collectors;
 
-public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
+public class EnchanterRecipe implements IEnchanterRecipe {
     private final NonNullList<IngredientWithCount> inputs;
     private final Holder<Enchantment> enchantment;
 
@@ -38,7 +40,21 @@ public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
     }
 
     @Override
-    public ItemStack assemble(RecipeInput inventory, HolderLookup.Provider provider) {
+    public boolean matches(CraftingInput inventory, Level level) {
+        var inputs = NonNullList.<ItemStack>create();
+
+        for (var i = 0; i < inventory.size() - 1; i++) {
+            var item = inventory.getItem(i);
+            if (!item.isEmpty()) {
+                inputs.add(item);
+            }
+        }
+
+        return RecipeMatcher.findMatches(inputs, this.inputs) != null;
+    }
+
+    @Override
+    public ItemStack assemble(CraftingInput inventory, HolderLookup.Provider provider) {
         return this.getEnchantedOutputItemStack(inventory);
     }
 
@@ -70,7 +86,7 @@ public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(RecipeInput inventory) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput inventory) {
         var remaining = NonNullList.withSize(inventory.size(), ItemStack.EMPTY);
 
         for (int i = 0; i < 2; i++) {
@@ -152,18 +168,19 @@ public class EnchanterRecipe implements ISpecialRecipe, IEnchanterRecipe {
     public static class Serializer implements RecipeSerializer<EnchanterRecipe> {
         public static final MapCodec<EnchanterRecipe> CODEC = RecordCodecBuilder.mapCodec(builder ->
                 builder.group(
-                        IngredientWithCount.CODEC
+                        IngredientWithCount.MAP_CODEC
                                 .codec()
                                 .listOf()
                                 .fieldOf("ingredients")
                                 .flatXmap(
                                         field -> {
+                                            var max = 2;
                                             var ingredients = field.toArray(IngredientWithCount[]::new);
                                             if (ingredients.length == 0) {
-                                                return DataResult.error(() -> "No ingredients for shapeless recipe");
+                                                return DataResult.error(() -> "No ingredients for enchanter recipe");
                                             } else {
-                                                return ingredients.length > 4
-                                                        ? DataResult.error(() -> "Too many ingredients for shapeless recipe. The maximum is: %s".formatted(4))
+                                                return ingredients.length > max
+                                                        ? DataResult.error(() -> "Too many ingredients for enchanter recipe. The maximum is: %s".formatted(max))
                                                         : DataResult.success(NonNullList.of(IngredientWithCount.EMPTY, ingredients));
                                             }
                                         },

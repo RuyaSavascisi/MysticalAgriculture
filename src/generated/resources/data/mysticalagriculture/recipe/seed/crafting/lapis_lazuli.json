@@ -15,7 +15,7 @@
       "type": "neoforge:not",
       "value": {
         "type": "neoforge:tag_empty",
-        "tag": "forge:gems/lapis"
+        "tag": "c:gems/lapis"
       }
     }
   ],

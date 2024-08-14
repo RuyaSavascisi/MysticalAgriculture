@@ -65,7 +65,14 @@ public class CropComponentIngredient implements ICustomIngredient {
         var stack = switch (this.type) {
             case ESSENCE -> new ItemStack(crop.getTier().getEssence());
             case SEED -> new ItemStack(crop.getType().getCraftingSeed());
-            case MATERIAL -> crop.getCraftingMaterial().getItems()[0];
+            case MATERIAL -> {
+                var material = crop.getCraftingMaterial();
+                if (material.hasNoItems()) {
+                    yield ItemStack.EMPTY;
+                }
+
+                yield material.getItems()[0];
+            }
         };
 
         this.stacks = new ItemStack[] { stack };
