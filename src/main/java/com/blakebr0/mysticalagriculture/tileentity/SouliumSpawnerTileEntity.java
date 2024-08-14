@@ -34,7 +34,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
@@ -43,6 +43,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements MenuProvider, IUpgradeableMachine {
@@ -56,7 +57,7 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
     private final UpgradeItemStackHandler upgradeInventory;
     private final DynamicEnergyStorage energy;
     private final SidedInventoryWrapper[] sidedInventoryWrappers;
-    private final CachedRecipe<RecipeInput, ISouliumSpawnerRecipe> recipe;
+    private final CachedRecipe<CraftingInput, ISouliumSpawnerRecipe> recipe;
     private MachineUpgradeTier tier;
     private int progress;
     private int fuelLeft;
@@ -138,6 +139,8 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
     }
 
     public IItemHandler getSidedInventory(Direction direction) {
+        if (direction == null) direction = Direction.NORTH;
+
         return switch (direction) {
             case UP -> this.sidedInventoryWrappers[0];
             case DOWN -> this.sidedInventoryWrappers[1];
@@ -303,13 +306,19 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
         return this.displayEntities[index];
     }
 
+    private CraftingInput toCraftingInput() {
+        return this.inventory.toShapelessCraftingInput(0, 1);
+    }
+
+    // TODO: 1.21 does this work?
     private boolean attemptSpawn(ISouliumSpawnerRecipe recipe) {
         if (this.level == null)
             return false;
 
         var registry = this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         var entity = recipe.getRandomEntityType(this.level.random)
-                .map(e -> registry.get(e.data()).create(this.level))
+                .map(e -> registry.get(e.data()))
+                .map(e -> e.create(this.level))
                 .orElse(null);
 
         if (entity == null)
@@ -362,11 +371,12 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
         this.setChangedFast();
     }
 
+    // TODO: 1.21 does this work?
     private void reloadActiveRecipe() {
         if (this.level == null)
             return;
 
-        var recipe = this.recipe.checkAndGet(this.inventory, this.level);
+        var recipe = this.recipe.checkAndGet(this.toCraftingInput(), this.level);
 
         if (recipe != null) {
             var entities = recipe.getEntityTypes().unwrap();
@@ -375,7 +385,14 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
 
             this.displayEntities = entities
                     .stream()
-                    .map(e -> new DisplayEntity(registry.get(e.data()).create(this.level), ((double) e.getWeight().asInt() / totalWeight) * 100D))
+                    .map(e -> {
+                        var entity = registry.get(e.data());
+                        if (entity == null)
+                            return null;
+
+                        return new DisplayEntity(entity.create(this.level), ((double) e.getWeight().asInt() / totalWeight) * 100D);
+                    })
+                    .filter(Objects::nonNull)
                     .toArray(DisplayEntity[]::new);
         } else {
             this.displayEntities = null;

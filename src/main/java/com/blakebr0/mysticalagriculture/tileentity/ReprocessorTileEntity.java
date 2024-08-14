@@ -31,6 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -102,7 +103,9 @@ public class ReprocessorTileEntity extends BaseInventoryTileEntity implements Me
         return this.upgradeInventory;
     }
 
-    public IItemHandler getSidedInventory(Direction direction) {
+    public IItemHandler getSidedInventory(@Nullable  Direction direction) {
+        if (direction == null) direction = Direction.NORTH;
+
         return switch (direction) {
             case UP -> this.sidedInventoryWrappers[0];
             case DOWN -> this.sidedInventoryWrappers[1];
