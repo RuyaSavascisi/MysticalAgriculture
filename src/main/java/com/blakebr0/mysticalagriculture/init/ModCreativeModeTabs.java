@@ -21,8 +21,6 @@ public final class ModCreativeModeTabs {
             .title(Component.translatable("itemGroup.mysticalagriculture"))
             .icon(() -> new ItemStack(ModItems.INFERIUM_ESSENCE.get()))
             .displayItems(FeatureFlagDisplayItemGenerator.create((parameters, output) -> {
-                var stack = ItemStack.EMPTY;
-
                 output.accept(ModBlocks.PROSPERITY_BLOCK);
                 output.accept(ModBlocks.INFERIUM_BLOCK);
                 output.accept(ModBlocks.PRUDENTIUM_BLOCK);
@@ -163,7 +161,9 @@ public final class ModCreativeModeTabs {
                 output.accept(ModItems.SOUL_JAR);
 
                 for (var type : MobSoulTypeRegistry.getInstance().getMobSoulTypes()) {
-                    output.accept(MobSoulUtils.getFilledSoulJar(type, ModItems.SOUL_JAR.get()));
+                    if (type.isEnabled()) {
+                        output.accept(MobSoulUtils.getFilledSoulJar(type, ModItems.SOUL_JAR.get()));
+                    }
                 }
 
                 output.accept(ModItems.EXPERIENCE_CAPSULE);
