@@ -55,7 +55,7 @@ public class HarvesterScreen extends BaseContainerScreen<HarvesterContainer> {
 
     @Override
     protected void renderBg(GuiGraphics gfx, float partialTicks, int mouseX, int mouseY) {
-        this.renderDefaultBg(gfx, partialTicks, mouseX, mouseY);
+        super.renderBg(gfx, partialTicks, mouseX, mouseY);
 
         int x = this.getGuiLeft();
         int y = this.getGuiTop();
