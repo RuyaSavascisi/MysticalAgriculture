@@ -1,6 +1,5 @@
 package com.blakebr0.mysticalagriculture;
 
-import com.blakebr0.cucumber.helper.ConfigHelper;
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.client.EssenceVesselColorManager;
 import com.blakebr0.mysticalagriculture.client.ModClientTooltipComponentFactories;
@@ -92,7 +91,7 @@ public final class MysticalAgriculture {
 		}
 
 		mod.registerConfig(ModConfig.Type.CLIENT, ModConfigs.CLIENT);
-		mod.registerConfig(ModConfig.Type.COMMON, ModConfigs.COMMON);
+		mod.registerConfig(ModConfig.Type.STARTUP, ModConfigs.COMMON, "mysticalagriculture-common.toml");
 
 		initAPI();
 
