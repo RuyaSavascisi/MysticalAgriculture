@@ -67,7 +67,7 @@ public class MysticalSeedsItem extends ItemNameBlockItem implements ICropProvide
         }
 
         if (flag.isAdvanced()) {
-            tooltip.add(ModTooltips.CROP_ID.args(this.crop.getId()).color(ChatFormatting.DARK_GRAY).build());
+            tooltip.add(ModTooltips.CROP_ID.args(this.crop.getId().toString()).color(ChatFormatting.DARK_GRAY).build());
         }
     }
 

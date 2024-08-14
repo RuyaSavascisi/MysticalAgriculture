@@ -31,7 +31,7 @@ public class SoulJarItem extends BaseItem {
             tooltip.add(ModTooltips.SOUL_JAR.args(entityName, souls, requirement).build());
 
             if (flag.isAdvanced()) {
-                tooltip.add(ModTooltips.MST_ID.args(type.getId()).color(ChatFormatting.DARK_GRAY).build());
+                tooltip.add(ModTooltips.MST_ID.args(type.getId().toString()).color(ChatFormatting.DARK_GRAY).build());
             }
         }
     }

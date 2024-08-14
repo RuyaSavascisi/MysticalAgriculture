@@ -45,7 +45,7 @@ public class AugmentItem extends BaseItem implements IAugmentProvider {
         }
 
         if (flag.isAdvanced()) {
-            tooltip.add(ModTooltips.AUGMENT_ID.args(this.augment.getId()).color(ChatFormatting.DARK_GRAY).build());
+            tooltip.add(ModTooltips.AUGMENT_ID.args(this.augment.getId().toString()).color(ChatFormatting.DARK_GRAY).build());
         }
     }
 
