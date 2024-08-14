@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -46,8 +47,8 @@ public class Augment {
         this.item = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MysticalAgricultureAPI.MOD_ID, id.getPath() + "_augment"));
         this.tier = tier;
         this.types = types;
-        this.primaryColor = primaryColor;
-        this.secondaryColor = secondaryColor;
+        this.primaryColor = FastColor.ARGB32.color(255, primaryColor);
+        this.secondaryColor = FastColor.ARGB32.color(255, secondaryColor);
         this.enabled = true;
     }
 

@@ -4,6 +4,7 @@ import com.blakebr0.mysticalagriculture.api.farmland.IEssenceFarmland;
 import com.blakebr0.mysticalagriculture.api.lib.LazyIngredient;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -75,7 +76,7 @@ public class Crop {
      * @param craftingMaterial the crafting ingredient for this crop
      */
     public Crop(ResourceLocation id, CropTier tier, CropType type, CropTextures textures, LazyIngredient craftingMaterial) {
-        this(id, tier, type, textures, -1, craftingMaterial);
+        this(id, tier, type, textures, 0, craftingMaterial);
     }
 
     /**
@@ -211,7 +212,7 @@ public class Crop {
      * @return is the crop's flower colored
      */
     public boolean isFlowerColored() {
-        return this.getFlowerColor() > -1;
+        return this.flowerColor != 0;
     }
 
     /**
@@ -228,7 +229,7 @@ public class Crop {
      * @return this crop
      */
     public Crop setFlowerColor(int color) {
-        this.flowerColor = color;
+        this.flowerColor = FastColor.ARGB32.color(255, color);
         return this;
     }
 
@@ -237,7 +238,7 @@ public class Crop {
      * @return is the crop's essence colored
      */
     public boolean isEssenceColored() {
-        return this.getEssenceColor() > -1;
+        return this.essenceColor != 0;
     }
 
     /**
@@ -254,7 +255,7 @@ public class Crop {
      * @return this crop
      */
     public Crop setEssenceColor(int color) {
-        this.essenceColor = color;
+        this.essenceColor = FastColor.ARGB32.color(255, color);
         return this;
     }
 
@@ -263,7 +264,7 @@ public class Crop {
      * @return is the crop's seed colored
      */
     public boolean isSeedColored() {
-        return this.getSeedColor() > -1;
+        return this.seedColor != 0;
     }
 
     /**
@@ -280,7 +281,7 @@ public class Crop {
      * @return this crop
      */
     public Crop setSeedColor(int color) {
-        this.seedColor = color;
+        this.seedColor = FastColor.ARGB32.color(255, color);
         return this;
     }
 
@@ -513,7 +514,7 @@ public class Crop {
     }
 
     /**
-     * Whether or not this crops items should have the enchantment glint effect
+     * Whether this crops items should have the enchantment glint effect
      * @param stack the stack
      * @return should the crop have the glint effect
      */
@@ -522,7 +523,7 @@ public class Crop {
     }
 
     /**
-     * Set whether or not this crop should have the enchantment glint effect
+     * Set whether this crop should have the enchantment glint effect
      * @param hasEffect the effect state
      * @return this crop
      */
@@ -563,9 +564,11 @@ public class Crop {
      * @return this crop
      */
     public Crop setColor(int color) {
-        this.setFlowerColor(color);
-        this.setEssenceColor(color);
-        this.setSeedColor(color);
+        if (color != 0) {
+            this.setFlowerColor(color);
+            this.setEssenceColor(color);
+            this.setSeedColor(color);
+        }
 
         return this;
     }
