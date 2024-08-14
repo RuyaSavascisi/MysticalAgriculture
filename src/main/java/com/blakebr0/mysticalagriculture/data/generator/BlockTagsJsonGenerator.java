@@ -1,7 +1,7 @@
 package com.blakebr0.mysticalagriculture.data.generator;
 
 import com.blakebr0.mysticalagriculture.MysticalAgriculture;
-import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
+import com.blakebr0.mysticalagriculture.api.MysticalAgricultureTags;
 import com.blakebr0.mysticalagriculture.registry.CropRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,7 +27,7 @@ public class BlockTagsJsonGenerator extends TagsProvider<Block> {
     protected void addTags(HolderLookup.Provider provider) {
         for (var crop : CropRegistry.getInstance().getCrops()) {
             var id = BuiltInRegistries.BLOCK.getResourceKey(crop.getCropBlock());
-            this.tag(MysticalAgricultureAPI.CROPS_TAG).add(id.get());
+            this.tag(MysticalAgricultureTags.Blocks.CROPS).add(id.get());
         }
     }
 
