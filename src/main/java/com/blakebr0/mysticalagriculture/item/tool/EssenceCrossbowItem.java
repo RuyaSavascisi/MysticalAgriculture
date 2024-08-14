@@ -9,7 +9,6 @@ import com.blakebr0.mysticalagriculture.init.ModDataComponentTypes;
 import com.blakebr0.mysticalagriculture.lib.ModTooltips;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,7 +22,6 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -109,7 +107,7 @@ public class EssenceCrossbowItem extends BaseCrossbowItem implements ITinkerable
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity entity) {
         var augments = AugmentUtils.getAugments(stack);
-        var success = super.mineBlock(stack, level, state, pos, entity);;
+        var success = super.mineBlock(stack, level, state, pos, entity);
 
         for (var augment : augments) {
             if (augment.onBlockDestroyed(stack, level, state, pos, entity))
@@ -132,19 +130,18 @@ public class EssenceCrossbowItem extends BaseCrossbowItem implements ITinkerable
             return super.damageItem(stack, amount, null, onBroken);
         }
 
-        stack.hurtAndBreak(amount, (ServerLevel) entity.level(), entity, (item) -> {
-            for (var augment : AugmentUtils.getAugments(stack)) {
-                Block.popResource(entity.level(), entity.getOnPos(), new ItemStack(augment.getItem()));
-            }
+        if (entity instanceof Player player) {
+            var isBreaking = stack.getDamageValue() + amount >= stack.getMaxDamage();
+            if (stack.isDamageableItem() && !player.isCreative() && isBreaking) {
+                for (var augment : AugmentUtils.getAugments(stack)) {
+                    player.getInventory().placeItemBackInInventory(new ItemStack(augment.getItem()));
+                }
 
-            if (entity instanceof Player player) {
                 player.awardStat(Stats.ITEM_BROKEN.get(this));
             }
+        }
 
-            onBroken.accept(item);
-        });
-
-        return 0;
+        return amount;
     }
 
     @Override

@@ -25,7 +25,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -67,19 +66,18 @@ public class EssenceChestplateItem extends BaseArmorItem implements ITinkerable 
             return super.damageItem(stack, amount, null, onBroken);
         }
 
-        stack.hurtAndBreak(amount, (ServerLevel) entity.level(), entity, (item) -> {
-            for (var augment : AugmentUtils.getAugments(stack)) {
-                Block.popResource(entity.level(), entity.getOnPos(), new ItemStack(augment.getItem()));
-            }
+        if (entity instanceof Player player) {
+            var isBreaking = stack.getDamageValue() + amount >= stack.getMaxDamage();
+            if (stack.isDamageableItem() && !player.isCreative() && isBreaking) {
+                for (var augment : AugmentUtils.getAugments(stack)) {
+                    player.getInventory().placeItemBackInInventory(new ItemStack(augment.getItem()));
+                }
 
-            if (entity instanceof Player player) {
                 player.awardStat(Stats.ITEM_BROKEN.get(this));
             }
+        }
 
-            onBroken.accept(item);
-        });
-
-        return 0;
+        return amount;
     }
 
     @Override
