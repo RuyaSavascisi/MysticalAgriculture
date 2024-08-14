@@ -26,7 +26,6 @@ import com.blakebr0.mysticalagriculture.init.ModBlocks;
 import com.blakebr0.mysticalagriculture.init.ModConditionSerializers;
 import com.blakebr0.mysticalagriculture.init.ModCreativeModeTabs;
 import com.blakebr0.mysticalagriculture.init.ModDataComponentTypes;
-import com.blakebr0.mysticalagriculture.init.ModEnchantments;
 import com.blakebr0.mysticalagriculture.init.ModIngredientTypes;
 import com.blakebr0.mysticalagriculture.init.ModItems;
 import com.blakebr0.mysticalagriculture.init.ModMenuTypes;
@@ -65,7 +64,6 @@ public final class MysticalAgriculture {
 		bus.register(this);
 		bus.register(new ModBlocks());
 		bus.register(new ModItems());
-		bus.register(new ModEnchantments());
 		bus.register(new ModDataGenerators());
 
 		ModArmorMaterials.REGISTRY.register(bus);
@@ -99,8 +97,6 @@ public final class MysticalAgriculture {
 		initAPI();
 
 		PluginRegistry.getInstance().loadPlugins();
-
-		ConfigHelper.load(ModConfigs.COMMON, "mysticalagriculture-common.toml");
 	}
 
 	@SubscribeEvent
