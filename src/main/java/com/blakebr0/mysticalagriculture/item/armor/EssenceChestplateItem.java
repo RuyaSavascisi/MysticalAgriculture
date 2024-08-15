@@ -14,23 +14,18 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class EssenceChestplateItem extends BaseArmorItem implements ITinkerable {
     private static final EnumSet<AugmentType> TYPES = EnumSet.of(AugmentType.ARMOR, AugmentType.CHESTPLATE);
@@ -58,26 +53,6 @@ public class EssenceChestplateItem extends BaseArmorItem implements ITinkerable 
         for (var augment : AugmentUtils.getAugments(stack)) {
             augment.onInventoryTick(stack, level, entity, slot, isSelected);
         }
-    }
-
-    @Override
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
-        if (entity == null) {
-            return super.damageItem(stack, amount, null, onBroken);
-        }
-
-        if (entity instanceof Player player) {
-            var isBreaking = stack.getDamageValue() + amount >= stack.getMaxDamage();
-            if (stack.isDamageableItem() && !player.isCreative() && isBreaking) {
-                for (var augment : AugmentUtils.getAugments(stack)) {
-                    player.getInventory().placeItemBackInInventory(new ItemStack(augment.getItem()));
-                }
-
-                player.awardStat(Stats.ITEM_BROKEN.get(this));
-            }
-        }
-
-        return amount;
     }
 
     @Override

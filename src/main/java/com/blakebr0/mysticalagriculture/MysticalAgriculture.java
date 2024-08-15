@@ -19,6 +19,7 @@ import com.blakebr0.mysticalagriculture.handler.ExperienceCapsuleHandler;
 import com.blakebr0.mysticalagriculture.handler.MobDropHandler;
 import com.blakebr0.mysticalagriculture.handler.MobSoulHandler;
 import com.blakebr0.mysticalagriculture.handler.RegisterCapabilityHandler;
+import com.blakebr0.mysticalagriculture.handler.TinkerableHandler;
 import com.blakebr0.mysticalagriculture.init.ModArmorMaterials;
 import com.blakebr0.mysticalagriculture.init.ModBiomeModifiers;
 import com.blakebr0.mysticalagriculture.init.ModBlocks;
@@ -104,6 +105,7 @@ public final class MysticalAgriculture {
 		NeoForge.EVENT_BUS.register(new MobSoulHandler());
 		NeoForge.EVENT_BUS.register(new ExperienceCapsuleHandler());
 		NeoForge.EVENT_BUS.register(new AugmentHandler());
+		NeoForge.EVENT_BUS.register(new TinkerableHandler());
 		NeoForge.EVENT_BUS.register(DynamicRecipeManager.INSTANCE);
 		NeoForge.EVENT_BUS.register(RecipeIngredientCache.INSTANCE);
 
