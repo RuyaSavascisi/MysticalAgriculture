@@ -2,6 +2,7 @@ package com.blakebr0.mysticalagriculture.tileentity;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
+import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.MultiblockPositions;
 import com.blakebr0.mysticalagriculture.api.crafting.IInfusionRecipe;
@@ -37,7 +38,7 @@ public class InfusionAltarTileEntity extends BaseInventoryTileEntity implements 
 
     public InfusionAltarTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.INFUSION_ALTAR.get(), pos, state);
-        this.inventory = createInventoryHandler(this::setChangedFast);
+        this.inventory = createInventoryHandler((slot) -> this.setChangedFast());
         this.recipeInventory = BaseItemStackHandler.create(9);
         this.recipe = new CachedRecipe<>(ModRecipeTypes.INFUSION.get());
     }
@@ -128,7 +129,7 @@ public class InfusionAltarTileEntity extends BaseInventoryTileEntity implements 
         tile.dispatchIfChanged();
     }
 
-    public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+    public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
         return BaseItemStackHandler.create(2, onContentsChanged, builder -> {
             builder.setDefaultSlotLimit(1);
             builder.setCanInsert((slot, stack) -> builder.getStackInSlot(1).isEmpty());

@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.energy.DynamicEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
+import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.inventory.SidedInventoryWrapper;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
@@ -53,7 +54,7 @@ public class EssenceFurnaceTileEntity extends BaseInventoryTileEntity implements
 
     public EssenceFurnaceTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FURNACE.get(), pos, state);
-        this.inventory = createInventoryHandler(this::setChangedFast);
+        this.inventory = createInventoryHandler((slot) -> this.setChangedFast());
         this.upgradeInventory = new UpgradeItemStackHandler();
         this.energy = new DynamicEnergyStorage(FUEL_CAPACITY, this::setChangedFast);
         this.sidedInventoryWrappers = SidedInventoryWrapper.create(this.inventory, List.of(Direction.UP, Direction.DOWN, Direction.NORTH), this::canInsertStackSided, null);
@@ -254,7 +255,7 @@ public class EssenceFurnaceTileEntity extends BaseInventoryTileEntity implements
         return createInventoryHandler(null);
     }
 
-    public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
-        return BaseItemStackHandler.create(3, onContentsChanged);
+    public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
+        return BaseItemStackHandler.create(3, onContentsChanged, builder -> {});
     }
 }

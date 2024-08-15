@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.energy.DynamicEnergyStorage;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.CachedRecipe;
+import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.inventory.SidedInventoryWrapper;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
@@ -68,7 +69,7 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
 
     public SouliumSpawnerTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.SOULIUM_SPAWNER.get(), pos, state);
-        this.inventory = createInventoryHandler(this::onInventoryChanged);
+        this.inventory = createInventoryHandler((slot) -> this.onInventoryChanged());
         this.upgradeInventory = new UpgradeItemStackHandler();
         this.energy = new DynamicEnergyStorage(FUEL_CAPACITY, this::setChangedFast);
         this.sidedInventoryWrappers = SidedInventoryWrapper.create(this.inventory, List.of(Direction.UP, Direction.DOWN, Direction.NORTH), this::canInsertStackSided, null);
@@ -249,7 +250,7 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
         return createInventoryHandler(null);
     }
 
-    public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+    public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
         return BaseItemStackHandler.create(2, onContentsChanged, builder -> {
             builder.addSlotLimit(0, 512);
         });

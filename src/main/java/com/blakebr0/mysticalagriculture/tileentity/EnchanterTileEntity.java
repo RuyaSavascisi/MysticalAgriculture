@@ -1,6 +1,7 @@
 package com.blakebr0.mysticalagriculture.tileentity;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.mysticalagriculture.container.EnchanterContainer;
 import com.blakebr0.mysticalagriculture.init.ModTileEntities;
@@ -17,7 +18,7 @@ public class EnchanterTileEntity extends BaseInventoryTileEntity implements Menu
 
     public EnchanterTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.ENCHANTER.get(), pos, state);
-        this.inventory = createInventoryHandler(this::setChangedAndDispatch);
+        this.inventory = createInventoryHandler((slot) -> this.setChangedAndDispatch());
     }
 
     @Override
@@ -39,7 +40,7 @@ public class EnchanterTileEntity extends BaseInventoryTileEntity implements Menu
         return createInventoryHandler(null);
     }
 
-    public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+    public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
         return BaseItemStackHandler.create(3, onContentsChanged, handler -> {
             handler.addSlotLimit(0, 512);
             handler.addSlotLimit(1, 512);

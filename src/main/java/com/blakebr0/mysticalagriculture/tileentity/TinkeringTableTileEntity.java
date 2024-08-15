@@ -1,6 +1,7 @@
 package com.blakebr0.mysticalagriculture.tileentity;
 
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.mysticalagriculture.api.tinkering.IAugmentProvider;
@@ -21,7 +22,7 @@ public class TinkeringTableTileEntity extends BaseInventoryTileEntity implements
 
     public TinkeringTableTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.TINKERING_TABLE.get(), pos, state);
-        this.inventory = createInventoryHandler(this::setChangedAndDispatch);
+        this.inventory = createInventoryHandler((slot) -> this.setChangedAndDispatch());
     }
 
     @Override
@@ -43,7 +44,7 @@ public class TinkeringTableTileEntity extends BaseInventoryTileEntity implements
         return createInventoryHandler(null);
     }
 
-    public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+    public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
         return BaseItemStackHandler.create(7, onContentsChanged, builder -> {
             builder.setDefaultSlotLimit(1);
             builder.setCanInsert((slot, stack) -> {

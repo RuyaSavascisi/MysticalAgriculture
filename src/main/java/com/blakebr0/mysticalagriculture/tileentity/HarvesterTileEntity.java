@@ -4,6 +4,7 @@ import com.blakebr0.cucumber.energy.DynamicEnergyStorage;
 import com.blakebr0.cucumber.helper.CropHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
+import com.blakebr0.cucumber.inventory.OnContentsChangedFunction;
 import com.blakebr0.cucumber.tileentity.BaseInventoryTileEntity;
 import com.blakebr0.cucumber.util.Localizable;
 import com.blakebr0.mysticalagriculture.block.HarvesterBlock;
@@ -53,7 +54,7 @@ public class HarvesterTileEntity extends BaseInventoryTileEntity implements Menu
 
     public HarvesterTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.HARVESTER.get(), pos, state);
-        this.inventory = createInventoryHandler(this::setChangedFast);
+        this.inventory = createInventoryHandler((slot) -> this.setChangedFast());
         this.upgradeInventory = new UpgradeItemStackHandler();
         this.energy = new DynamicEnergyStorage(FUEL_CAPACITY, this::setChangedFast);
     }
@@ -213,7 +214,7 @@ public class HarvesterTileEntity extends BaseInventoryTileEntity implements Menu
         return createInventoryHandler(null);
     }
 
-    public static BaseItemStackHandler createInventoryHandler(Runnable onContentsChanged) {
+    public static BaseItemStackHandler createInventoryHandler(OnContentsChangedFunction onContentsChanged) {
         return BaseItemStackHandler.create(16, onContentsChanged, builder -> {
             builder.setCanInsert((slot, stack) -> slot == 0 && stack.getBurnTime(null) > 0);
             builder.setCanExtract(slot -> slot > 0);

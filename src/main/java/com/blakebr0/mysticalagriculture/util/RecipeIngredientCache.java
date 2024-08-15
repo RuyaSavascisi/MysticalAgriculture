@@ -93,7 +93,7 @@ public class RecipeIngredientCache {
     private static <C extends RecipeInput, T extends Recipe<C>> void cache(RecipeType<T> type) {
         INSTANCE.caches.put(type, new HashMap<>());
 
-        for (var recipe : RecipeHelper.getRecipes(type)) {
+        for (var recipe : RecipeHelper.byType(type)) {
             for (var ingredient : recipe.value().getIngredients()) {
                 var items = new HashSet<>();
                 for (var stack : ingredient.getItems()) {
@@ -111,7 +111,7 @@ public class RecipeIngredientCache {
     }
 
     private static void cacheVesselItems() {
-        for (var recipe : RecipeHelper.getRecipes(ModRecipeTypes.AWAKENING.get())) {
+        for (var recipe : RecipeHelper.byType(ModRecipeTypes.AWAKENING.get())) {
             for (var essence : recipe.value().getEssences()) {
                 INSTANCE.validVesselItems.add(essence.getItem());
             }

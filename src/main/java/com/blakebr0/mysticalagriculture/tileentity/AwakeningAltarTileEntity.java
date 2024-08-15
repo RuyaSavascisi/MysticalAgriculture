@@ -39,7 +39,7 @@ public class AwakeningAltarTileEntity extends BaseInventoryTileEntity implements
 
     public AwakeningAltarTileEntity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AWAKENING_ALTAR.get(), pos, state);
-        this.inventory = BaseItemStackHandler.create(2, this::setChangedFast, handler -> {
+        this.inventory = BaseItemStackHandler.create(2, (slot) -> this.setChangedFast(), handler -> {
             handler.setDefaultSlotLimit(1);
             handler.setCanInsert((slot, stack) -> handler.getStackInSlot(1).isEmpty());
             handler.setOutputSlots(1);
