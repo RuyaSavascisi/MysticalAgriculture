@@ -5,9 +5,7 @@ import com.blakebr0.mysticalagriculture.api.MysticalAgricultureDataComponentType
 import com.blakebr0.mysticalagriculture.api.components.AugmentComponent;
 import com.blakebr0.mysticalagriculture.api.tinkering.Augment;
 import com.blakebr0.mysticalagriculture.api.tinkering.ITinkerable;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;

@@ -21,7 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -44,7 +43,6 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements MenuProvider, IUpgradeableMachine {
@@ -311,15 +309,12 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
         return this.inventory.toShapelessCraftingInput(0, 1);
     }
 
-    // TODO: 1.21 does this work?
     private boolean attemptSpawn(ISouliumSpawnerRecipe recipe) {
         if (this.level == null)
             return false;
 
-        var registry = this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
         var entity = recipe.getRandomEntityType(this.level.random)
-                .map(e -> registry.get(e.data()))
-                .map(e -> e.create(this.level))
+                .map(e -> e.data().create(this.level))
                 .orElse(null);
 
         if (entity == null)
@@ -372,7 +367,6 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
         this.setChangedFast();
     }
 
-    // TODO: 1.21 does this work?
     private void reloadActiveRecipe() {
         if (this.level == null)
             return;
@@ -382,18 +376,10 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
         if (recipe != null) {
             var entities = recipe.getEntityTypes().unwrap();
             var totalWeight = entities.stream().map(e -> e.getWeight().asInt()).reduce(0, Integer::sum);
-            var registry = this.level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
 
             this.displayEntities = entities
                     .stream()
-                    .map(e -> {
-                        var entity = registry.get(e.data());
-                        if (entity == null)
-                            return null;
-
-                        return new DisplayEntity(entity.create(this.level), ((double) e.getWeight().asInt() / totalWeight) * 100D);
-                    })
-                    .filter(Objects::nonNull)
+                    .map(e -> new DisplayEntity(e.data().create(this.level), ((double) e.getWeight().asInt() / totalWeight) * 100D))
                     .toArray(DisplayEntity[]::new);
         } else {
             this.displayEntities = null;

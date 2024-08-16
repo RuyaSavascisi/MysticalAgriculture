@@ -14,9 +14,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.random.WeightedEntry;
@@ -88,17 +86,9 @@ public class SouliumSpawnerCategory implements IRecipeCategory<ISouliumSpawnerRe
     }
 
     private static List<ItemStack> createOutputsList(ISouliumSpawnerRecipe recipe) {
-        var level = Minecraft.getInstance().level;
-
-        assert level != null;
-
-        var registry = level.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-
         return recipe.getEntityTypes().unwrap()
                 .stream()
                 .map(WeightedEntry.Wrapper::data)
-                .map(registry::get)
-                .filter(Objects::nonNull)
                 .map(SpawnEggItem::byId)
                 .filter(Objects::nonNull)
                 .map(ItemStack::new)

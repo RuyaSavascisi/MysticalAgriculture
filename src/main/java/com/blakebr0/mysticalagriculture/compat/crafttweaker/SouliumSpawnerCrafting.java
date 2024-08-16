@@ -11,9 +11,11 @@ import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.random.WeightedEntry;
 import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -49,19 +51,20 @@ public final class SouliumSpawnerCrafting implements IRecipeManager<ISouliumSpaw
         );
     }
 
-    private static WeightedRandomList<WeightedEntry.Wrapper<ResourceLocation>> toEntityTypeList(String[] entities) {
-        List<WeightedEntry.Wrapper<ResourceLocation>> entityTypes = new ArrayList<>();
+    private static WeightedRandomList<WeightedEntry.Wrapper<EntityType<?>>> toEntityTypeList(String[] entities) {
+        List<WeightedEntry.Wrapper<EntityType<?>>> entityTypes = new ArrayList<>();
 
         for (var entity : entities) {
             var entityIDParts = entity.split("@");
             var entityTypeID = ResourceLocation.parse(entityIDParts[0]);
+            var entityType = BuiltInRegistries.ENTITY_TYPE.get(entityTypeID);
             var weight = 1;
 
             if (entityIDParts.length > 1) {
                 weight = Integer.parseInt(entityIDParts[1]);
             }
 
-            entityTypes.add(WeightedEntry.wrap(entityTypeID, weight));
+            entityTypes.add(WeightedEntry.wrap(entityType, weight));
         }
 
         return WeightedRandomList.create(entityTypes);
