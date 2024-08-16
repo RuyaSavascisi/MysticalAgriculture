@@ -153,7 +153,7 @@ public class SoulExtractionRecipe implements ISoulExtractionRecipe {
         public Result(ResourceLocation type, double souls) {
             this.type = type;
             this.souls = souls;
-            this.stack = MobSoulUtils.getFilledSoulJar(MobSoulTypeRegistry.getInstance().getMobSoulTypeById(type), ModItems.SOUL_JAR.get());
+            this.stack = MobSoulUtils.getSoulJar(MobSoulTypeRegistry.getInstance().getMobSoulTypeById(type), souls, ModItems.SOUL_JAR.get());
         }
     }
 }
