@@ -3,11 +3,11 @@
   "neoforge:conditions": [
     {
       "type": "mysticalagriculture:crop_enabled",
-      "crop": "mysticalagriculture:deepslate"
+      "crop": "mysticalagriculture:copper"
     },
     {
       "type": "mysticalagriculture:crop_enabled",
-      "crop": "mysticalagriculture:end"
+      "crop": "mysticalagriculture:stone"
     }
   ],
   "pattern": [
@@ -20,16 +20,16 @@
       "item": "mysticalagriculture:blank_record"
     },
     "C": {
-      "item": "mysticalagriculture:deepslate_essence"
+      "item": "mysticalagriculture:copper_essence"
     },
     "S": {
-      "item": "mysticalagriculture:end_essence"
+      "item": "mysticalagriculture:stone_essence"
     },
     "D": {
       "tag": "c:dyes/cyan"
     }
   },
   "result": {
-    "id": "minecraft:music_disc_5"
+    "id": "minecraft:music_disc_precipice"
   }
 }
