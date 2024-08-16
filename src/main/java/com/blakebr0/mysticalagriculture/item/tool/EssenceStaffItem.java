@@ -11,8 +11,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 public class EssenceStaffItem extends BaseItem implements ITinkerable, IElementalItem {
@@ -21,7 +21,7 @@ public class EssenceStaffItem extends BaseItem implements ITinkerable, IElementa
     private final int slots;
 
     public EssenceStaffItem(int tinkerableTier, int slots) {
-        super(p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
+        super(p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }

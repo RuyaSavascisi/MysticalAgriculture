@@ -8,8 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public record AugmentComponent(ResourceLocation id, int slot) {
     public static final MapCodec<AugmentComponent> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
@@ -26,10 +25,6 @@ public record AugmentComponent(ResourceLocation id, int slot) {
             AugmentComponent::slot,
             AugmentComponent::new
     );
-    public static final Codec<Map<Integer, AugmentComponent>> EQUIPPED_CODEC = Codec.unboundedMap(Codec.INT, CODEC);
-    public static final StreamCodec<FriendlyByteBuf, Map<Integer, AugmentComponent>> EQUIPPED_STREAM_CODEC = ByteBufCodecs.map(
-            HashMap::new,
-            ByteBufCodecs.INT,
-            STREAM_CODEC
-    );
+    public static final Codec<List<AugmentComponent>> EQUIPPED_CODEC = Codec.list(CODEC);
+    public static final StreamCodec<FriendlyByteBuf, List<AugmentComponent>> EQUIPPED_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
 }

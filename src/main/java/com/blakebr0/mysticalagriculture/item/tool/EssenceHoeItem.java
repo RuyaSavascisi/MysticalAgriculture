@@ -22,8 +22,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 public class EssenceHoeItem extends BaseHoeItem implements ITinkerable {
@@ -32,7 +32,7 @@ public class EssenceHoeItem extends BaseHoeItem implements ITinkerable {
     private final int slots;
 
     public EssenceHoeItem(Tier tier, int tinkerableTier, int slots) {
-        super(tier, 0, tinkerableTier - 1.0F, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
+        super(tier, 0, tinkerableTier - 1.0F, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }

@@ -22,8 +22,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 public class EssenceSwordItem extends BaseSwordItem implements ITinkerable {
@@ -32,7 +32,7 @@ public class EssenceSwordItem extends BaseSwordItem implements ITinkerable {
     private final int slots;
 
     public EssenceSwordItem(Tier tier, int tinkerableTier, int slots) {
-        super(tier, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
+        super(tier, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }

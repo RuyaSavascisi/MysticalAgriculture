@@ -15,18 +15,18 @@ import java.util.List;
 
 public class StrengthAugment extends Augment {
     private static final ResourceLocation ATTRIBUTE_ID = MysticalAgriculture.resource("strength_augment");
-    private final int amplifier;
+    private final List<AugmentAttributeModifier> attributes;
 
     public StrengthAugment(ResourceLocation id, int tier, int amplifier) {
         super(id, tier, EnumSet.of(AugmentType.SWORD), getColor(0xFFFD90, tier), getColor(0xCC8E27, tier));
-        this.amplifier = amplifier;
+        this.attributes = List.of(
+                new AugmentAttributeModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTRIBUTE_ID, 5 * amplifier, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+        );
     }
 
     @Override
     public List<AugmentAttributeModifier> getAttributeModifiers() {
-        return List.of(
-                new AugmentAttributeModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTRIBUTE_ID, 5 * this.amplifier, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.ANY)
-        );
+        return this.attributes;
     }
 
     private static int getColor(int color, int tier) {

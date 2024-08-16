@@ -22,8 +22,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 public class EssenceCrossbowItem extends BaseCrossbowItem implements ITinkerable {
@@ -34,7 +34,7 @@ public class EssenceCrossbowItem extends BaseCrossbowItem implements ITinkerable
     private final float bonusDamage;
 
     public EssenceCrossbowItem(Tier tier, int tinkerableTier, int slots, float drawSpeedMulti, float bonusDamage) {
-        super(p -> p.durability(tier.getUses()).component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
+        super(p -> p.durability(tier.getUses()).component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
         this.drawSpeedMulti = drawSpeedMulti;

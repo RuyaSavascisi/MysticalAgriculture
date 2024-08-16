@@ -10,15 +10,15 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Map;
+import java.util.List;
 
 public final class ModDataComponentTypes {
     public static final DeferredRegister<DataComponentType<?>> REGISTRY = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, MysticalAgriculture.MOD_ID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> WATERING_CAN_ACTIVE = REGISTRY.register("watering_can_active",
             () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Map<Integer, AugmentComponent>>> EQUIPPED_AUGMENTS = REGISTRY.register("equipped_augments",
-            () -> DataComponentType.<Map<Integer, AugmentComponent>>builder().persistent(AugmentComponent.EQUIPPED_CODEC).networkSynchronized(AugmentComponent.EQUIPPED_STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<AugmentComponent>>> EQUIPPED_AUGMENTS = REGISTRY.register("equipped_augments",
+            () -> DataComponentType.<List<AugmentComponent>>builder().persistent(AugmentComponent.EQUIPPED_CODEC).networkSynchronized(AugmentComponent.EQUIPPED_STREAM_CODEC).build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EXPERIENCE_CAPSULE = REGISTRY.register("experience_capsule",
             () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT).build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SoulJarComponent>> SOUL_JAR = REGISTRY.register("soul_jar",

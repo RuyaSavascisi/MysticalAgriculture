@@ -23,8 +23,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 public class EssenceSickleItem extends BaseSickleItem implements ITinkerable {
@@ -35,7 +35,7 @@ public class EssenceSickleItem extends BaseSickleItem implements ITinkerable {
     private final int slots;
 
     public EssenceSickleItem(Tier tier, int range, ChatFormatting textColor, int tinkerableTier, int slots) {
-        super(tier, range, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
+        super(tier, range, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.range = range;
         this.textColor = textColor;
         this.tinkerableTier = tinkerableTier;

@@ -5,13 +5,10 @@ import com.blakebr0.mysticalagriculture.api.MysticalAgricultureDataComponentType
 import com.blakebr0.mysticalagriculture.api.components.AugmentComponent;
 import com.blakebr0.mysticalagriculture.api.tinkering.Augment;
 import com.blakebr0.mysticalagriculture.api.tinkering.ITinkerable;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class AugmentUtils {
@@ -27,17 +24,15 @@ public class AugmentUtils {
 
         if (item instanceof ITinkerable tinkerable) {
             if (slot < tinkerable.getAugmentSlots() && tinkerable.getTinkerableTier() >= augment.getTier()) {
-                var component = stack.getOrDefault(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<Integer, AugmentComponent>());
-                component.put(slot, new AugmentComponent(augment.getId(), slot));
-                stack.set(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS, component);
-
-                var augmentModifiers = augment.getAttributeModifiers();
-                if (!augmentModifiers.isEmpty()) {
-                    var itemModifiers = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
-                    for (var modifier : augmentModifiers) {
-                        itemModifiers = itemModifiers.withModifierAdded(modifier.attribute(), modifier.modifier(), modifier.slot());
-                    }
+                var component = stack.get(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS);
+                if (component == null) {
+                    component = new ArrayList<>(tinkerable.getAugmentSlots());
                 }
+
+                component.removeIf(a -> a.slot() == slot);
+                component.add(new AugmentComponent(augment.getId(), slot));
+
+                stack.set(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS, component);
             }
         }
     }
@@ -58,16 +53,8 @@ public class AugmentUtils {
         if (item instanceof ITinkerable tinkerable) {
             var augment = getAugment(stack, slot);
             if (slot < tinkerable.getAugmentSlots() && augment != null) {
-                component.remove(slot);
+                component.removeIf(a -> a.slot() == slot);
                 stack.set(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS, component);
-
-                var augmentModifiers = augment.getAttributeModifiers();
-                if (!augmentModifiers.isEmpty()) {
-                    var itemModifiers = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
-                    for (var modifier : augmentModifiers) {
-                        itemModifiers = itemModifiers.withModifierAdded(modifier.attribute(), modifier.modifier(), modifier.slot());
-                    }
-                }
             }
         }
     }
@@ -87,8 +74,15 @@ public class AugmentUtils {
         var item = stack.getItem();
 
         if (item instanceof ITinkerable tinkerable) {
-            var augment = component.get(slot);
-            if (slot < tinkerable.getAugmentSlots() && augment != null) {
+            var augment = component.stream()
+                    .filter(a -> a.slot() == slot)
+                    .findFirst()
+                    .orElse(null);
+
+            if (augment == null)
+                return null;
+
+            if (slot < tinkerable.getAugmentSlots()) {
                 return MysticalAgricultureAPI.getAugmentRegistry().getAugmentById(augment.id());
             }
         }

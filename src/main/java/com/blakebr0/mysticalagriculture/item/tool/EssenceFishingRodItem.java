@@ -22,8 +22,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 public class EssenceFishingRodItem extends BaseFishingRodItem implements ITinkerable {
@@ -32,7 +32,7 @@ public class EssenceFishingRodItem extends BaseFishingRodItem implements ITinker
     private final int slots;
 
     public EssenceFishingRodItem(Tier tier, int tinkerableTier, int slots) {
-        super(p -> p.durability(tier.getUses()).component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
+        super(p -> p.durability(tier.getUses()).component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }

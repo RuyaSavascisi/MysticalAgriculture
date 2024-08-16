@@ -23,8 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 
 public class EssenceChestplateItem extends BaseArmorItem implements ITinkerable {
@@ -33,7 +33,7 @@ public class EssenceChestplateItem extends BaseArmorItem implements ITinkerable 
     private final int slots;
 
     public EssenceChestplateItem(Holder<ArmorMaterial> material, int tinkerableTier, int slots) {
-        super(material, Type.CHESTPLATE, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new HashMap<>()));
+        super(material, Type.CHESTPLATE, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }
