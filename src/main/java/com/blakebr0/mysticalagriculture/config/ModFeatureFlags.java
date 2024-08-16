@@ -6,7 +6,6 @@ import com.blakebr0.mysticalagriculture.MysticalAgriculture;
 
 @FeatureFlags
 public final class ModFeatureFlags {
-    public static final FeatureFlag ANIMATED_GROWTH_ACCELERATORS = FeatureFlag.create(MysticalAgriculture.resource("animated_growth_accelerators"), ModConfigs.ANIMATED_GROWTH_ACCELERATORS);
     public static final FeatureFlag DRAGON_DROPS_COGNIZANT = FeatureFlag.create(MysticalAgriculture.resource("dragon_crops_cognizant"), ModConfigs.DRAGON_DROPS_COGNIZANT);
     public static final FeatureFlag DRAGON_DROPS_ESSENCE = FeatureFlag.create(MysticalAgriculture.resource("dragon_drops_essence"), ModConfigs.DRAGON_DROPS_ESSENCE);
     public static final FeatureFlag ENCHANTABLE_SUPREMIUM_TOOLS = FeatureFlag.create(MysticalAgriculture.resource("enchantable_supremium_tools"), ModConfigs.ENCHANTABLE_SUPREMIUM_TOOLS);

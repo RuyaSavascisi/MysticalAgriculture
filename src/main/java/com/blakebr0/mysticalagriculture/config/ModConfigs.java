@@ -4,23 +4,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class ModConfigs {
-    public static final ModConfigSpec CLIENT;
     public static final ModConfigSpec COMMON;
-
-    public static final ModConfigSpec.BooleanValue ANIMATED_GROWTH_ACCELERATORS;
-
-    // Client
-    static {
-        final var client = new ModConfigSpec.Builder();
-
-        client.comment("General configuration options.").push("General");
-        ANIMATED_GROWTH_ACCELERATORS = client
-                .comment("Should Growth Accelerators use animated textures?")
-                .define("animatedGrowthAccelerators", true);
-        client.pop();
-
-        CLIENT = client.build();
-    }
 
     public static final ModConfigSpec.DoubleValue INFERIUM_DROP_CHANCE;
     public static final ModConfigSpec.IntValue INFUSION_CRYSTAL_USES;

@@ -31,14 +31,6 @@ public final class ModelHandler {
 
     @SubscribeEvent
     public void onRegisterAdditionalModels(ModelEvent.RegisterAdditional event) {
-        if (!ModConfigs.ANIMATED_GROWTH_ACCELERATORS.get()) {
-            for (var type : List.of("block", "item")) {
-                for (var tier : List.of("inferium", "prudentium", "tertium", "imperium", "supremium")) {
-                    event.register(ModelResourceLocation.inventory(MysticalAgriculture.resource(String.format("%s/%s_growth_accelerator_static", type, tier))));
-                }
-            }
-        }
-
         for (int i = 0; i < 8; i++) {
             event.register(ModelResourceLocation.standalone(MysticalAgriculture.resource("block/mystical_resource_crop_" + i)));
             event.register(ModelResourceLocation.standalone(MysticalAgriculture.resource("block/mystical_mob_crop_" + i)));
@@ -67,20 +59,7 @@ public final class ModelHandler {
     @SubscribeEvent
     public void onModifyBakingResults(ModelEvent.ModifyBakingResult event) {
         var stopwatch = Stopwatch.createStarted();
-
         var registry = event.getModels();
-
-        if (!ModConfigs.ANIMATED_GROWTH_ACCELERATORS.get()) {
-            for (var tier : List.of("inferium", "prudentium", "tertium", "imperium", "supremium")) {
-                var loc = String.format("%s_growth_accelerator", tier);
-                var blockModel = registry.get(ModelResourceLocation.inventory(MysticalAgriculture.resource("block/" + loc + "_static")));
-                var itemModel = registry.get(ModelResourceLocation.inventory(MysticalAgriculture.resource("item/" + loc + "_static")));
-
-                registry.replace(ModelResourceLocation.inventory(MysticalAgriculture.resource(loc)), blockModel);
-                registry.replace(ModelResourceLocation.inventory(MysticalAgriculture.resource(loc)), itemModel);
-            }
-        }
-
         var cropModels = new HashMap<ResourceLocation, BakedModel[]>();
 
         for (var cropType : CropRegistry.getInstance().getTypes()) {

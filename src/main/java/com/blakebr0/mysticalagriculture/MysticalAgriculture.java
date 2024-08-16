@@ -91,7 +91,6 @@ public final class MysticalAgriculture {
 			bus.register(EssenceVesselColorManager.INSTANCE);
 		}
 
-		mod.registerConfig(ModConfig.Type.CLIENT, ModConfigs.CLIENT);
 		mod.registerConfig(ModConfig.Type.STARTUP, ModConfigs.COMMON, "mysticalagriculture-common.toml");
 
 		initAPI();
