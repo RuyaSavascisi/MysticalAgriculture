@@ -55,6 +55,7 @@ public final class ModCreativeModeTabs {
                 output.accept(ModBlocks.TERTIUM_GROWTH_ACCELERATOR);
                 output.accept(ModBlocks.IMPERIUM_GROWTH_ACCELERATOR);
                 output.accept(ModBlocks.SUPREMIUM_GROWTH_ACCELERATOR);
+                output.accept(ModBlocks.AWAKENED_SUPREMIUM_GROWTH_ACCELERATOR);
                 output.accept(ModBlocks.PROSPERITY_ORE);
                 output.accept(ModBlocks.DEEPSLATE_PROSPERITY_ORE);
                 output.accept(ModBlocks.INFERIUM_ORE);

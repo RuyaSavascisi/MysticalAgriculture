@@ -73,11 +73,12 @@ public final class ModBlocks {
     public static final DeferredHolder<Block, Block> TERTIUM_FARMLAND = register("tertium_farmland", () -> new InfusedFarmlandBlock(CropTier.THREE));
     public static final DeferredHolder<Block, Block> IMPERIUM_FARMLAND = register("imperium_farmland", () -> new InfusedFarmlandBlock(CropTier.FOUR));
     public static final DeferredHolder<Block, Block> SUPREMIUM_FARMLAND = register("supremium_farmland", () -> new InfusedFarmlandBlock(CropTier.FIVE));
-    public static final DeferredHolder<Block, Block> INFERIUM_GROWTH_ACCELERATOR = register("inferium_growth_accelerator", () -> new GrowthAcceleratorBlock(12, CropTier.ONE.getTextColor()));
-    public static final DeferredHolder<Block, Block> PRUDENTIUM_GROWTH_ACCELERATOR = register("prudentium_growth_accelerator", () -> new GrowthAcceleratorBlock(24, CropTier.TWO.getTextColor()));
-    public static final DeferredHolder<Block, Block> TERTIUM_GROWTH_ACCELERATOR = register("tertium_growth_accelerator", () -> new GrowthAcceleratorBlock(36, CropTier.THREE.getTextColor()));
-    public static final DeferredHolder<Block, Block> IMPERIUM_GROWTH_ACCELERATOR = register("imperium_growth_accelerator", () -> new GrowthAcceleratorBlock(48, CropTier.FOUR.getTextColor()));
-    public static final DeferredHolder<Block, Block> SUPREMIUM_GROWTH_ACCELERATOR = register("supremium_growth_accelerator", () -> new GrowthAcceleratorBlock(60, CropTier.FIVE.getTextColor()));
+    public static final DeferredHolder<Block, Block> INFERIUM_GROWTH_ACCELERATOR = register("inferium_growth_accelerator", () -> new GrowthAcceleratorBlock(9, CropTier.ONE.getTextColor()));
+    public static final DeferredHolder<Block, Block> PRUDENTIUM_GROWTH_ACCELERATOR = register("prudentium_growth_accelerator", () -> new GrowthAcceleratorBlock(18, CropTier.TWO.getTextColor()));
+    public static final DeferredHolder<Block, Block> TERTIUM_GROWTH_ACCELERATOR = register("tertium_growth_accelerator", () -> new GrowthAcceleratorBlock(27, CropTier.THREE.getTextColor()));
+    public static final DeferredHolder<Block, Block> IMPERIUM_GROWTH_ACCELERATOR = register("imperium_growth_accelerator", () -> new GrowthAcceleratorBlock(36, CropTier.FOUR.getTextColor()));
+    public static final DeferredHolder<Block, Block> SUPREMIUM_GROWTH_ACCELERATOR = register("supremium_growth_accelerator", () -> new GrowthAcceleratorBlock(45, CropTier.FIVE.getTextColor()));
+    public static final DeferredHolder<Block, Block> AWAKENED_SUPREMIUM_GROWTH_ACCELERATOR = register("awakened_supremium_growth_accelerator", () -> new GrowthAcceleratorBlock(54, CropTier.FIVE.getTextColor()));
     public static final DeferredHolder<Block, Block> PROSPERITY_ORE = register("prosperity_ore", () -> new BaseOreBlock(SoundType.STONE, 3.0F, 3.0F, 2, 5));
     public static final DeferredHolder<Block, Block> DEEPSLATE_PROSPERITY_ORE = register("deepslate_prosperity_ore", () -> new BaseOreBlock(SoundType.DEEPSLATE, 4.5F, 3.0F, 2, 5));
     public static final DeferredHolder<Block, Block> INFERIUM_ORE = register("inferium_ore", () -> new BaseOreBlock(SoundType.STONE, 3.0F, 3.0F, 2, 5));
