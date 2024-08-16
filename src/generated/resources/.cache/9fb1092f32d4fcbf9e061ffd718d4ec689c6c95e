@@ -1,4 +1,4 @@
-// 1.21	2024-08-14T12:02:33.2638729	Recipes
+// 1.21	2024-08-16T11:15:36.1877895	Recipes
 231da6992d24aad1d5cbc483f2975edddef7fb8d data/mysticalagriculture/recipe/seed/crafting/air.json
 263dd26f879474c7f97666c353032ad9532134d2 data/mysticalagriculture/recipe/seed/crafting/aluminum.json
 a361309d5855654c123923fe5d5a776651738660 data/mysticalagriculture/recipe/seed/crafting/amethyst.json
@@ -15,7 +15,6 @@ eef7f35dcf5c478b4da6a49b78b3d845b460c861 data/mysticalagriculture/recipe/seed/cr
 cbffed8e921b2fead1875347d9b19f9e0788e0dc data/mysticalagriculture/recipe/seed/crafting/bronze.json
 a55172ab27b58b7344fc509d556d3a6d5c54269c data/mysticalagriculture/recipe/seed/crafting/certus_quartz.json
 8b1cd005601f07ef1203872aaf823f41220fdbfa data/mysticalagriculture/recipe/seed/crafting/chicken.json
-b47b2ef8387c344dcdd940d2c8f130883adf26f3 data/mysticalagriculture/recipe/seed/crafting/chrome.json
 3586a35a23c4522e1b85973b2f3774fbd9c47867 data/mysticalagriculture/recipe/seed/crafting/coal.json
 dc0f2fdf58d65bfcaa95237650ebfb80330a93a1 data/mysticalagriculture/recipe/seed/crafting/cobalt.json
 15179af587be3739057ef5dcf1b42ea519c770df data/mysticalagriculture/recipe/seed/crafting/compressed_iron.json
@@ -73,7 +72,6 @@ f9f3fccccb1ac264cff610d982a5d7be896b00e0 data/mysticalagriculture/recipe/seed/cr
 87f4da9b073f44463f0da7134a2a418005a7c326 data/mysticalagriculture/recipe/seed/crafting/manyullyn.json
 b47d6541097976ec0e081e2564b37d7dbf190c42 data/mysticalagriculture/recipe/seed/crafting/marble.json
 6fd583468450b36e9038b19990012e5e631076f1 data/mysticalagriculture/recipe/seed/crafting/menril.json
-42f6aa1eafd9ae3500ab91b494ae254956135b8f data/mysticalagriculture/recipe/seed/crafting/mithril.json
 5a9fac37450701b462518e87ee425ce80e8fb9d5 data/mysticalagriculture/recipe/seed/crafting/mystical_flower.json
 a2b709cb94830ee08b674c35962a9c91beff34d7 data/mysticalagriculture/recipe/seed/crafting/nature.json
 b06cacc7a477aab742967a0857183730020b7c3b data/mysticalagriculture/recipe/seed/crafting/nether.json
@@ -122,8 +120,6 @@ f6975c054baed941eb1038fab4ebb5695fdb376b data/mysticalagriculture/recipe/seed/cr
 9263a97d3119ecc259068fdb6d8472b3eec82ec8 data/mysticalagriculture/recipe/seed/crafting/sulfur.json
 6428b0bde243b5c6b9db0c36d4de8241ba8bd1e3 data/mysticalagriculture/recipe/seed/crafting/terrasteel.json
 39c8cdf7b837a660ee45288de8f04b3900bfb7f5 data/mysticalagriculture/recipe/seed/crafting/tin.json
-982d0a41f65cd44c764eb18e982d6da3f6ba38c7 data/mysticalagriculture/recipe/seed/crafting/titanium.json
-92d902058719e473a7338b4b43d3b068c9eb004e data/mysticalagriculture/recipe/seed/crafting/tungsten.json
 c97677d9d8f154292f987b1b2632523ad324a1c9 data/mysticalagriculture/recipe/seed/crafting/turtle.json
 0f4c98112f652f7494145a977debf9a8bd939ad8 data/mysticalagriculture/recipe/seed/crafting/uraninite.json
 78ccaa5f17a4661bf3c34ad82acad088728ab094 data/mysticalagriculture/recipe/seed/crafting/uranium.json
@@ -150,7 +146,6 @@ a13432ce82b48047d059d31d0b6571a8d9c4d30c data/mysticalagriculture/recipe/seed/in
 bc6af211fd8560c08fbcdd37782140ba1135a20d data/mysticalagriculture/recipe/seed/infusion/bronze.json
 b74eed7f6b290b3b44d708034228b2b044122fcd data/mysticalagriculture/recipe/seed/infusion/certus_quartz.json
 bd7a72dba3e49ab4c3aa42affc503a9f41103865 data/mysticalagriculture/recipe/seed/infusion/chicken.json
-8579ac264daf78cba13bcfc731a336716183fb70 data/mysticalagriculture/recipe/seed/infusion/chrome.json
 9c3f5a33af1db091544f67e3a112c3a7e5894796 data/mysticalagriculture/recipe/seed/infusion/coal.json
 d98bfc86cd6a13b42c8cd2b622fe65596ad62c0a data/mysticalagriculture/recipe/seed/infusion/cobalt.json
 c8b1cc5667602adc995638eb6594b888881a96e1 data/mysticalagriculture/recipe/seed/infusion/compressed_iron.json
@@ -208,7 +203,6 @@ a5faf5f2ba43a490d65dc26abed42a2bd9006a2e data/mysticalagriculture/recipe/seed/in
 fc922a63d8e3f21eaddb6227a097ef8d88880fad data/mysticalagriculture/recipe/seed/infusion/manyullyn.json
 dbfc1b7a8de01c086d609e4f5930bca2eaa5c852 data/mysticalagriculture/recipe/seed/infusion/marble.json
 ae68d74906f7a960eac656a5260d185b8a6a7694 data/mysticalagriculture/recipe/seed/infusion/menril.json
-bd6570b3db5b9fdba259693679c928cbd5f641c3 data/mysticalagriculture/recipe/seed/infusion/mithril.json
 c7e77abf4743e56b2bed09ea86198cedc7af8de6 data/mysticalagriculture/recipe/seed/infusion/mystical_flower.json
 06c2958a0a886e69583df8c73c7517152735edcb data/mysticalagriculture/recipe/seed/infusion/nature.json
 07651f8b0b75f1ac8cd44d2e78283689cc634685 data/mysticalagriculture/recipe/seed/infusion/nether.json
@@ -257,8 +251,6 @@ c3262f3cd40d6cb22f39135b9c87e0363ab6ca9c data/mysticalagriculture/recipe/seed/in
 047dfb65ad296d86a44aa4973716128e93dad581 data/mysticalagriculture/recipe/seed/infusion/sulfur.json
 39da8f5bea268bcdbd1772a262bafd6fdf4b2fae data/mysticalagriculture/recipe/seed/infusion/terrasteel.json
 97becccf459fcc7c4b69f849173162bfef3bb967 data/mysticalagriculture/recipe/seed/infusion/tin.json
-9a34ece4d819f2c462deace001d013a0b8002621 data/mysticalagriculture/recipe/seed/infusion/titanium.json
-9f25df283af6d64dbfece64b59f394531e0d8929 data/mysticalagriculture/recipe/seed/infusion/tungsten.json
 719d6db129b7212f695163aee452daa4de37d2bd data/mysticalagriculture/recipe/seed/infusion/turtle.json
 d342e499c243f9d05bcce39fca0f9a646eee5cff data/mysticalagriculture/recipe/seed/infusion/uraninite.json
 13320a45672def420379ef950a3f0b0e6fd9718c data/mysticalagriculture/recipe/seed/infusion/uranium.json
@@ -285,7 +277,6 @@ ca6be793457bacd93a1d3a143e3b72a743e8daa8 data/mysticalagriculture/recipe/seed/re
 9813088ae06a375a793a27d9b9cfec4d0190649f data/mysticalagriculture/recipe/seed/reprocessor/bronze.json
 8ae58399ab8318973b0148d3934dbdd5c97f45b8 data/mysticalagriculture/recipe/seed/reprocessor/certus_quartz.json
 10e700af08256c7367a64dd1c3f082d49c6328e6 data/mysticalagriculture/recipe/seed/reprocessor/chicken.json
-f0cd7e3950a4f8f938b223c6a3ed11ec9a110184 data/mysticalagriculture/recipe/seed/reprocessor/chrome.json
 4bdd81a80c519b44f6fac2be2265125eba21e3fb data/mysticalagriculture/recipe/seed/reprocessor/coal.json
 b4e927440c667a64ba918f78ffcc95eb3c7112cf data/mysticalagriculture/recipe/seed/reprocessor/cobalt.json
 2f8e3212bdd8fe0aca42d3611e116ec99781f058 data/mysticalagriculture/recipe/seed/reprocessor/compressed_iron.json
@@ -344,7 +335,6 @@ a2264111b227939595377367345d944076182ae2 data/mysticalagriculture/recipe/seed/re
 d32e97e51b79b483e0f9b894bd3c7da4728b13ea data/mysticalagriculture/recipe/seed/reprocessor/manyullyn.json
 3ee423387850bb103e745690cc78fcc9df51b36c data/mysticalagriculture/recipe/seed/reprocessor/marble.json
 1dbd53f2b6c0c2cb5fd92a11c93966bab1322b2d data/mysticalagriculture/recipe/seed/reprocessor/menril.json
-2da50ba5a8d3b99ab81ba07b6c00746ec44ccc2f data/mysticalagriculture/recipe/seed/reprocessor/mithril.json
 b5f3cc02a4c0130584caf3cc9aef44a79a9cc32e data/mysticalagriculture/recipe/seed/reprocessor/mystical_flower.json
 9c12667b7ad5d3e72af72c10a5ed1974e52ee6ef data/mysticalagriculture/recipe/seed/reprocessor/nature.json
 d6291eaffa1f8e7843c83e77403b2da65f730a7b data/mysticalagriculture/recipe/seed/reprocessor/nether.json
@@ -393,8 +383,6 @@ b2d33a34de53f472cce9e80c5910a8f13fdc5bc6 data/mysticalagriculture/recipe/seed/re
 f1f33b1a7bfe7e867bd0c5d046eb00eb311ecdc7 data/mysticalagriculture/recipe/seed/reprocessor/sulfur.json
 22ae1e93f5b996458501f649c1cdf2a8a3103af5 data/mysticalagriculture/recipe/seed/reprocessor/terrasteel.json
 c220b7c4ccdb6a16fad8f556c2c80483718d0011 data/mysticalagriculture/recipe/seed/reprocessor/tin.json
-f14b1aa30cf4ff6955baf5e5d048229dbca8a734 data/mysticalagriculture/recipe/seed/reprocessor/titanium.json
-fec95ff85da6f4a765d6bc4cc4d22887f566d16d data/mysticalagriculture/recipe/seed/reprocessor/tungsten.json
 b2463c50a8a5c99f6b5f8b970aa2cb68f3461426 data/mysticalagriculture/recipe/seed/reprocessor/turtle.json
 0ab1de15e9f04e6da0a0b3182d8ef9739c8d368c data/mysticalagriculture/recipe/seed/reprocessor/uraninite.json
 69991d25881ec427dc3c81c0dd123e15c6879aa5 data/mysticalagriculture/recipe/seed/reprocessor/uranium.json

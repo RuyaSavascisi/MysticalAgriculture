@@ -92,11 +92,7 @@ public final class ModCrops {
     public static final Crop CONSTANTAN = new Crop(MysticalAgriculture.resource("constantan"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/constantan"));
     public static final Crop ELECTRUM = new Crop(MysticalAgriculture.resource("electrum"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/electrum"));
     public static final Crop INVAR = new Crop(MysticalAgriculture.resource("invar"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/invar"));
-    public static final Crop MITHRIL = new Crop(MysticalAgriculture.resource("mithril"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0x659ABB, LazyIngredient.tag("c:ingots/mithril"));
-    public static final Crop TUNGSTEN = new Crop(MysticalAgriculture.resource("tungsten"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0x616669, LazyIngredient.tag("c:ingots/tungsten"));
-    public static final Crop TITANIUM = new Crop(MysticalAgriculture.resource("titanium"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0xD0D1DA, LazyIngredient.tag("c:ingots/titanium"));
     public static final Crop URANIUM = new Crop(MysticalAgriculture.resource("uranium"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:ingots/uranium"));
-    public static final Crop CHROME = new Crop(MysticalAgriculture.resource("chrome"), CropTier.FOUR, CropType.RESOURCE, CropTextures.INGOT_CROP_TEXTURES, 0xCDB9BD, LazyIngredient.tag("c:ingots/chrome"));
     public static final Crop PLATINUM = new Crop(MysticalAgriculture.resource("platinum"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/platinum"));
     public static final Crop IRIDIUM = new Crop(MysticalAgriculture.resource("iridium"), CropTier.FIVE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/iridium"));
 
@@ -280,11 +276,7 @@ public final class ModCrops {
         registry.register(CONSTANTAN);
         registry.register(ELECTRUM);
         registry.register(INVAR);
-        registry.register(MITHRIL);
-        registry.register(TUNGSTEN);
-        registry.register(TITANIUM);
         registry.register(URANIUM);
-        registry.register(CHROME);
         registry.register(PLATINUM);
         registry.register(IRIDIUM);
 
