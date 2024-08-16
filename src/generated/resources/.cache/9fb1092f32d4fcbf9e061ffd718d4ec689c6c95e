@@ -1,10 +1,11 @@
-// 1.21	2024-08-16T11:15:36.1877895	Recipes
+// 1.21	2024-08-16T14:11:00.5668413	Recipes
 231da6992d24aad1d5cbc483f2975edddef7fb8d data/mysticalagriculture/recipe/seed/crafting/air.json
 263dd26f879474c7f97666c353032ad9532134d2 data/mysticalagriculture/recipe/seed/crafting/aluminum.json
 a361309d5855654c123923fe5d5a776651738660 data/mysticalagriculture/recipe/seed/crafting/amethyst.json
 48f91f8d2e05c197f4c5f4324beff76b724e6ed2 data/mysticalagriculture/recipe/seed/crafting/amethyst_bronze.json
 82300ced5ae8c8a05474b7849a2969bc910dde54 data/mysticalagriculture/recipe/seed/crafting/apatite.json
 eef7f35dcf5c478b4da6a49b78b3d845b460c861 data/mysticalagriculture/recipe/seed/crafting/aquamarine.json
+ecf02ee214de9c59ffad9de63b6b5e9b2b3e8466 data/mysticalagriculture/recipe/seed/crafting/armadillo.json
 5adea27cc20daf97e0e121029a0ba396826eb324 data/mysticalagriculture/recipe/seed/crafting/basalt.json
 0cbcca6d3866ae5d1f6714584a798fd1bf0bcbf4 data/mysticalagriculture/recipe/seed/crafting/basalz.json
 258bff89de84a719f7aff70a0ebe6bb5183f4d5e data/mysticalagriculture/recipe/seed/crafting/blaze.json
@@ -12,6 +13,7 @@ eef7f35dcf5c478b4da6a49b78b3d845b460c861 data/mysticalagriculture/recipe/seed/cr
 3714a2782b48400edea0d96d477f1f6b5953e684 data/mysticalagriculture/recipe/seed/crafting/blitz.json
 12859c3e6851f12d2fde7d028cec1b8def02b5f2 data/mysticalagriculture/recipe/seed/crafting/blizz.json
 857ac9b6456099a7c50a29fa2366b1aa7663a499 data/mysticalagriculture/recipe/seed/crafting/brass.json
+cf04034181f23b64e6a210e4c1bf8a974d077ce5 data/mysticalagriculture/recipe/seed/crafting/breeze.json
 cbffed8e921b2fead1875347d9b19f9e0788e0dc data/mysticalagriculture/recipe/seed/crafting/bronze.json
 a55172ab27b58b7344fc509d556d3a6d5c54269c data/mysticalagriculture/recipe/seed/crafting/certus_quartz.json
 8b1cd005601f07ef1203872aaf823f41220fdbfa data/mysticalagriculture/recipe/seed/crafting/chicken.json
@@ -136,6 +138,7 @@ eccb07157153f2cc6071de798d7c0e69c0a7ef22 data/mysticalagriculture/recipe/seed/cr
 dc4c50aede87ac86dec2de0f0039834273d918fd data/mysticalagriculture/recipe/seed/infusion/amethyst_bronze.json
 af452b576375d95fc7173b00103d8e595a07c809 data/mysticalagriculture/recipe/seed/infusion/apatite.json
 5d7bebfe4f8add0785de58f7ca80a99155c501e5 data/mysticalagriculture/recipe/seed/infusion/aquamarine.json
+a765cc8f4ae8abbcdbd924da75298b6a05f55c4f data/mysticalagriculture/recipe/seed/infusion/armadillo.json
 9167283a5bb0d7996f4be9eb98e8c9cb44f98cea data/mysticalagriculture/recipe/seed/infusion/basalt.json
 e3a80321aff036879f0c9c12a9cd6fac2d26b994 data/mysticalagriculture/recipe/seed/infusion/basalz.json
 69922057145810f437c9d4985905fb74aa1d680b data/mysticalagriculture/recipe/seed/infusion/blaze.json
@@ -143,6 +146,7 @@ e3a80321aff036879f0c9c12a9cd6fac2d26b994 data/mysticalagriculture/recipe/seed/in
 e99727b46fbe5cf162e0a5df9a7c23a756511799 data/mysticalagriculture/recipe/seed/infusion/blitz.json
 a13432ce82b48047d059d31d0b6571a8d9c4d30c data/mysticalagriculture/recipe/seed/infusion/blizz.json
 851ddf919cd0e28df5a1386d8a34ff996aaf2ada data/mysticalagriculture/recipe/seed/infusion/brass.json
+2777b2590638a6a3caa1c2f85011a376e92dbf7a data/mysticalagriculture/recipe/seed/infusion/breeze.json
 bc6af211fd8560c08fbcdd37782140ba1135a20d data/mysticalagriculture/recipe/seed/infusion/bronze.json
 b74eed7f6b290b3b44d708034228b2b044122fcd data/mysticalagriculture/recipe/seed/infusion/certus_quartz.json
 bd7a72dba3e49ab4c3aa42affc503a9f41103865 data/mysticalagriculture/recipe/seed/infusion/chicken.json
@@ -267,6 +271,7 @@ e7477693ce3d785308d48034518a6872a42a3dc3 data/mysticalagriculture/recipe/seed/in
 0ab1f99200a3ee09557b80bac22346c07ebb58b5 data/mysticalagriculture/recipe/seed/reprocessor/amethyst_bronze.json
 8a992354ff15533259e34095043422f1f6b9ebc3 data/mysticalagriculture/recipe/seed/reprocessor/apatite.json
 866d59391737aca1a5f21b7dd2c00b35b98c2fe9 data/mysticalagriculture/recipe/seed/reprocessor/aquamarine.json
+0da6b73a06f734d4c00b5f5c6212ebcbf683252c data/mysticalagriculture/recipe/seed/reprocessor/armadillo.json
 f8d3bef8719851df5e794a171594cbc23c6fa844 data/mysticalagriculture/recipe/seed/reprocessor/basalt.json
 ca6be793457bacd93a1d3a143e3b72a743e8daa8 data/mysticalagriculture/recipe/seed/reprocessor/basalz.json
 3ae2736c86d708144298e17b621f6be776a39c8d data/mysticalagriculture/recipe/seed/reprocessor/blaze.json
@@ -274,6 +279,7 @@ ca6be793457bacd93a1d3a143e3b72a743e8daa8 data/mysticalagriculture/recipe/seed/re
 0d76b656fbd48d8703e20446b1a5b5447184d251 data/mysticalagriculture/recipe/seed/reprocessor/blitz.json
 2aed9ed083829246a51a1ec53042341e0ca3a8a0 data/mysticalagriculture/recipe/seed/reprocessor/blizz.json
 4a249ccca432a73cb71e8746a21d7ce0847da60a data/mysticalagriculture/recipe/seed/reprocessor/brass.json
+5218470ba5f0581b4cc0edcc4124ede3012d57f3 data/mysticalagriculture/recipe/seed/reprocessor/breeze.json
 9813088ae06a375a793a27d9b9cfec4d0190649f data/mysticalagriculture/recipe/seed/reprocessor/bronze.json
 8ae58399ab8318973b0148d3934dbdd5c97f45b8 data/mysticalagriculture/recipe/seed/reprocessor/certus_quartz.json
 10e700af08256c7367a64dd1c3f082d49c6328e6 data/mysticalagriculture/recipe/seed/reprocessor/chicken.json

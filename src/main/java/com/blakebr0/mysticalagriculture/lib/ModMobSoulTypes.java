@@ -26,11 +26,13 @@ public final class ModMobSoulTypes {
     public static final MobSoulType FISH = new MobSoulType(MysticalAgriculture.resource("fish"), FISH_IDS, "fish", 6, 12691306);
     public static final MobSoulType SLIME = new MobSoulType(MysticalAgriculture.resource("slime"), SLIME_IDS, "slime", 12, 5349438);
     public static final MobSoulType TURTLE = new MobSoulType(MysticalAgriculture.resource("turtle"), ResourceLocation.parse("minecraft:turtle"), 6, 44975);
+    public static final MobSoulType ARMADILLO = new MobSoulType(MysticalAgriculture.resource("armadillo"), ResourceLocation.parse("minecraft:armadillo"), 6, 0xb67b76);
     public static final MobSoulType ZOMBIE = new MobSoulType(MysticalAgriculture.resource("zombie"), ZOMBIE_IDS, "zombie", 10, 7969893);
     public static final MobSoulType SKELETON = new MobSoulType(MysticalAgriculture.resource("skeleton"), ResourceLocation.parse("minecraft:skeleton"), 10, 12698049);
     public static final MobSoulType CREEPER = new MobSoulType(MysticalAgriculture.resource("creeper"), ResourceLocation.parse("minecraft:creeper"), 10, 894731);
     public static final MobSoulType SPIDER = new MobSoulType(MysticalAgriculture.resource("spider"), SPIDER_IDS, "spider", 10, 3419431);
     public static final MobSoulType RABBIT = new MobSoulType(MysticalAgriculture.resource("rabbit"), ResourceLocation.parse("minecraft:rabbit"), 6, 10051392);
+    public static final MobSoulType BREEZE = new MobSoulType(MysticalAgriculture.resource("breeze"), ResourceLocation.parse("minecraft:breeze"), 4, 0x7982c7);
     public static final MobSoulType BLAZE = new MobSoulType(MysticalAgriculture.resource("blaze"), ResourceLocation.parse("minecraft:blaze"), 10, 16167425);
     public static final MobSoulType GHAST = new MobSoulType(MysticalAgriculture.resource("ghast"), ResourceLocation.parse("minecraft:ghast"), 4, 16382457);
     public static final MobSoulType ENDERMAN = new MobSoulType(MysticalAgriculture.resource("enderman"), ResourceLocation.parse("minecraft:enderman"), 8, 1447446);
@@ -50,11 +52,13 @@ public final class ModMobSoulTypes {
         registry.register(FISH);
         registry.register(SLIME);
         registry.register(TURTLE);
+        registry.register(ARMADILLO);
         registry.register(ZOMBIE);
         registry.register(SKELETON);
         registry.register(CREEPER);
         registry.register(SPIDER);
         registry.register(RABBIT);
+        registry.register(BREEZE);
         registry.register(BLAZE);
         registry.register(GHAST);
         registry.register(ENDERMAN);

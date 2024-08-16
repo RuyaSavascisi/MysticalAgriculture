@@ -47,6 +47,7 @@ public final class ModCrops {
     public static final Crop FISH = new Crop(MysticalAgriculture.resource("fish"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.FISH)));
     public static final Crop SLIME = new Crop(MysticalAgriculture.resource("slime"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.SLIME)));
     public static final Crop TURTLE = new Crop(MysticalAgriculture.resource("turtle"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.TURTLE)));
+    public static final Crop ARMADILLO = new Crop(MysticalAgriculture.resource("armadillo"), CropTier.TWO, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.ARMADILLO)));
 
     public static final Crop IRON = new Crop(MysticalAgriculture.resource("iron"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.tag("c:ingots/iron"));
     public static final Crop COPPER = new Crop(MysticalAgriculture.resource("copper"), CropTier.THREE, CropType.RESOURCE, LazyIngredient.item("minecraft:copper_ingot"));
@@ -65,6 +66,7 @@ public final class ModCrops {
     public static final Crop LAPIS_LAZULI = new Crop(MysticalAgriculture.resource("lapis_lazuli"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.tag("c:gems/lapis"));
     public static final Crop END = new Crop(MysticalAgriculture.resource("end"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:end_agglomeratio"));
     public static final Crop EXPERIENCE = new Crop(MysticalAgriculture.resource("experience"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:experience_capsule", ExperienceCapsuleUtils.makeComponentMap(ExperienceCapsuleUtils.MAX_XP_POINTS)));
+    public static final Crop BREEZE = new Crop(MysticalAgriculture.resource("breeze"), CropTier.FOUR, CropType.RESOURCE, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.BREEZE)));
     public static final Crop BLAZE = new Crop(MysticalAgriculture.resource("blaze"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.BLAZE)));
     public static final Crop GHAST = new Crop(MysticalAgriculture.resource("ghast"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.GHAST)));
     public static final Crop ENDERMAN = new Crop(MysticalAgriculture.resource("enderman"), CropTier.FOUR, CropType.MOB, LazyIngredient.item("mysticalagriculture:soul_jar", MobSoulUtils.makeComponentMap(ModMobSoulTypes.ENDERMAN)));
@@ -231,6 +233,7 @@ public final class ModCrops {
         registry.register(FISH);
         registry.register(SLIME);
         registry.register(TURTLE);
+        registry.register(ARMADILLO);
 
         registry.register(IRON);
         registry.register(COPPER);
@@ -249,6 +252,7 @@ public final class ModCrops {
         registry.register(LAPIS_LAZULI);
         registry.register(END);
         registry.register(EXPERIENCE);
+        registry.register(BREEZE);
         registry.register(BLAZE);
         registry.register(GHAST);
         registry.register(ENDERMAN);
