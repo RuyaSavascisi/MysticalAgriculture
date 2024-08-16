@@ -142,26 +142,4 @@ public class AugmentUtils {
 
         return augments;
     }
-
-    /**
-     * Get the tooltip color for the provided int tier
-     *
-     * @param tier the tier
-     * @return the color
-     */
-    @Deprecated(forRemoval = true)
-    public static ChatFormatting getColorForTier(int tier) {
-        return TinkerableUtils.getColorForTier(tier);
-    }
-
-    /**
-     * Gets the text component variant of the provided tier number for use in tooltips
-     *
-     * @param tier the tier
-     * @return the formatted tier
-     */
-    @Deprecated(forRemoval = true)
-    public static Component getTooltipForTier(int tier) {
-        return Component.literal(String.valueOf(tier)).withStyle(getColorForTier(tier));
-    }
 }

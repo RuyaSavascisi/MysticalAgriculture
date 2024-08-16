@@ -280,24 +280,6 @@ public class Augment {
     public void onPlayerFall(Level level, Player player, LivingFallEvent event) { }
 
     /**
-     * Add or modify the tool attributes
-     * @param attributes the attribute map
-     * @param slot the equipment slot type
-     * @param stack the item
-     */
-    @Deprecated(forRemoval = true)
-    public void addToolAttributeModifiers(Multimap<Attribute, AttributeModifier> attributes, EquipmentSlot slot, ItemStack stack) { }
-
-    /**
-     * Add or modify the armor attributes
-     * @param attributes the attribute map
-     * @param slot the equipment slot type
-     * @param stack the item
-     */
-    @Deprecated(forRemoval = true)
-    public void addArmorAttributeModifiers(Multimap<Attribute, AttributeModifier> attributes, EquipmentSlot slot, ItemStack stack) { }
-
-    /**
      * The list of {@link AttributeModifier}s that will be automatically applied when equipping this augment
      * @return the attribute modifiers that this augment will apply to the item
      */
