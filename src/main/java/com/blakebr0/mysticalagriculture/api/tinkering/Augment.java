@@ -23,6 +23,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.EnumSet;
@@ -233,7 +234,7 @@ public class Augment {
     }
 
     /**
-     * Called when a block is destroyed using this item, {@link Item#on(ItemStack, Level, BlockState, BlockPos, LivingEntity)}
+     * Called when a block is destroyed using this item, {@link Item#mineBlock(ItemStack, Level, BlockState, BlockPos, LivingEntity)}
      * @param stack the item
      * @param level the level
      * @param state the block destroyed
@@ -246,7 +247,7 @@ public class Augment {
     }
 
     /**
-     * Called when the item is ticked in the player's inventory
+     * Called when the item is ticked in the player's inventory, {@link Item#inventoryTick(ItemStack, Level, Entity, int, boolean)}
      * @param stack the item
      * @param level the level
      * @param entity the player
@@ -256,7 +257,7 @@ public class Augment {
     public void onInventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean isSelected) { }
 
     /**
-     * Called every tick for equipped armor, {@link Item#onArmorTick(ItemStack, Level, Player)}
+     * Called every tick for equipped armor, {@link Item#inventoryTick(ItemStack, Level, Entity, int, boolean)}
      * @param stack the item
      * @param level the level
      * @param player the player
@@ -264,7 +265,7 @@ public class Augment {
     public void onArmorTick(ItemStack stack, Level level, Player player) { }
 
     /**
-     * Called every tick for equipped armor, meant for player ability changes, {@link LivingEvent.LivingTickEvent}
+     * Called every tick for equipped armor, meant for player ability changes, {@link PlayerTickEvent.Pre}
      * @param level the level
      * @param player the player
      * @param cache the ability cache
@@ -272,7 +273,7 @@ public class Augment {
     public void onPlayerTick(Level level, Player player, AbilityCache cache) { }
 
     /**
-     * Called when the player hits the ground
+     * Called when the player hits the ground, {@link LivingFallEvent}
      * @param level the level
      * @param player the player
      * @param event the fall event
