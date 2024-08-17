@@ -1,6 +1,6 @@
 package com.blakebr0.mysticalagriculture.container;
 
-import com.blakebr0.cucumber.container.BaseContainerMenu;
+import com.blakebr0.cucumber.container.ExtendedContainerMenu;
 import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
 import com.blakebr0.mysticalagriculture.container.inventory.UpgradeItemStackHandler;
@@ -16,7 +16,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-public class SouliumSpawnerContainer extends BaseContainerMenu {
+public class SouliumSpawnerContainer extends ExtendedContainerMenu {
     private SouliumSpawnerContainer(MenuType<?> type, int id, Inventory playerInventory, BlockPos pos) {
         this(type, id, playerInventory, SouliumSpawnerTileEntity.createInventoryHandler(), new UpgradeItemStackHandler(), pos);
     }
