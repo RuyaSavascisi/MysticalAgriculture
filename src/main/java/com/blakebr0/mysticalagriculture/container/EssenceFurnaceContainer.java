@@ -5,7 +5,6 @@ import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
 import com.blakebr0.mysticalagriculture.container.inventory.UpgradeItemStackHandler;
 import com.blakebr0.mysticalagriculture.init.ModMenuTypes;
-import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
 import com.blakebr0.mysticalagriculture.item.MachineUpgradeItem;
 import com.blakebr0.mysticalagriculture.tileentity.EssenceFurnaceTileEntity;
 import com.blakebr0.mysticalagriculture.util.RecipeIngredientCache;
@@ -16,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class EssenceFurnaceContainer extends BaseContainerMenu {
     private EssenceFurnaceContainer(MenuType<?> type, int id, Inventory playerInventory, BlockPos pos) {
@@ -51,18 +51,12 @@ public class EssenceFurnaceContainer extends BaseContainerMenu {
             var itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
-            if (index == 3) {
-                if (!this.moveItemStackTo(itemstack1, 4, 40, true)) {
-                    return ItemStack.EMPTY;
-                }
-
-                slot.onQuickCraft(itemstack1, itemstack);
-            } else if (index != 2 && index != 1) {
+            if (index > 3) {
                 if (itemstack1.getItem() instanceof MachineUpgradeItem) {
                     if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (RecipeIngredientCache.INSTANCE.isValidInput(itemstack1, ModRecipeTypes.REPROCESSOR.get())) {
+                } else if (RecipeIngredientCache.INSTANCE.isValidInput(itemstack1, RecipeType.SMELTING)) {
                     if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }

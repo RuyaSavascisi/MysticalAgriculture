@@ -5,7 +5,6 @@ import com.blakebr0.cucumber.inventory.BaseItemStackHandler;
 import com.blakebr0.cucumber.inventory.slot.BaseItemStackHandlerSlot;
 import com.blakebr0.mysticalagriculture.container.inventory.UpgradeItemStackHandler;
 import com.blakebr0.mysticalagriculture.init.ModMenuTypes;
-import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
 import com.blakebr0.mysticalagriculture.item.MachineUpgradeItem;
 import com.blakebr0.mysticalagriculture.tileentity.SouliumSpawnerTileEntity;
 import com.blakebr0.mysticalagriculture.util.RecipeIngredientCache;
@@ -55,7 +54,7 @@ public class SouliumSpawnerContainer extends BaseContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (RecipeIngredientCache.INSTANCE.isValidInput(itemstack1, ModRecipeTypes.SOULIUM_SPAWNER.get())) {
+                } else if (RecipeIngredientCache.INSTANCE.isValidSouliumSpawnerInput(itemstack1)) {
                     if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }

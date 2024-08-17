@@ -60,18 +60,12 @@ public class SoulExtractorContainer extends BaseContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (itemstack1.getBurnTime(null) > 0) {
-                    if (!this.moveItemStackTo(itemstack1, 2, 3, false)) {
-                        if (RecipeIngredientCache.INSTANCE.isValidInput(itemstack1, ModRecipeTypes.SOUL_EXTRACTION.get())) {
-                            if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
-                                return ItemStack.EMPTY;
-                            }
-                        } else {
-                            return ItemStack.EMPTY;
-                        }
-                    }
                 } else if (RecipeIngredientCache.INSTANCE.isValidInput(itemstack1, ModRecipeTypes.SOUL_EXTRACTION.get())) {
                     if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (itemstack1.getBurnTime(null) > 0) {
+                    if (!this.moveItemStackTo(itemstack1, 2, 3, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (index < 31) {

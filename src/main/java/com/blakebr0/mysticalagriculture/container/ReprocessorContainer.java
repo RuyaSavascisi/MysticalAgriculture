@@ -51,13 +51,7 @@ public class ReprocessorContainer extends BaseContainerMenu {
             var itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
-            if (index == 3) {
-                if (!this.moveItemStackTo(itemstack1, 4, 40, true)) {
-                    return ItemStack.EMPTY;
-                }
-
-                slot.onQuickCraft(itemstack1, itemstack);
-            } else if (index != 2 && index != 1) {
+            if (index > 3) {
                 if (itemstack1.getItem() instanceof MachineUpgradeItem) {
                     if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;

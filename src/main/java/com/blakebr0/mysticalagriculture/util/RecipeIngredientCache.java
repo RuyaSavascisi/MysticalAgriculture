@@ -57,6 +57,7 @@ public class RecipeIngredientCache {
 
             this.caches.clear();
 
+            cache(RecipeType.SMELTING);
             cache(ModRecipeTypes.REPROCESSOR.get());
             cache(ModRecipeTypes.SOUL_EXTRACTION.get());
             cache(ModRecipeTypes.SOULIUM_SPAWNER.get());
@@ -84,6 +85,11 @@ public class RecipeIngredientCache {
     public boolean isValidInput(ItemStack stack, RecipeType<?> type) {
         var cache = this.caches.getOrDefault(type, Collections.emptyMap()).get(stack.getItem());
         return cache != null && cache.stream().anyMatch(i -> i.test(stack));
+    }
+
+    // soulium spawner ingredients are count dependant, and we don't care in this case
+    public boolean isValidSouliumSpawnerInput(ItemStack stack) {
+        return isValidInput(stack.copyWithCount(Integer.MAX_VALUE), ModRecipeTypes.SOULIUM_SPAWNER.get());
     }
 
     public boolean isValidVesselItem(ItemStack stack) {

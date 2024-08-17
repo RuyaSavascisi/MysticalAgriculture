@@ -419,7 +419,7 @@ public class SouliumSpawnerTileEntity extends BaseInventoryTileEntity implements
         if (direction == null)
             return true;
         if (slot == 0 && direction == Direction.UP)
-            return RecipeIngredientCache.INSTANCE.isValidInput(stack, ModRecipeTypes.SOULIUM_SPAWNER.get());
+            return RecipeIngredientCache.INSTANCE.isValidSouliumSpawnerInput(stack);
         if (slot == 1 && direction == Direction.NORTH)
             return FurnaceBlockEntity.isFuel(stack);
 
