@@ -11,7 +11,7 @@
   },
   "ingredients": [
     {
-      "tag": "c:storage_blocks/quartz"
+      "item": "minecraft:quartz_block"
     },
     {
       "item": "mysticalagriculture:tertium_essence"
@@ -23,7 +23,7 @@
       "item": "mysticalagriculture:tertium_essence"
     },
     {
-      "tag": "c:storage_blocks/quartz"
+      "item": "minecraft:quartz_block"
     },
     {
       "item": "mysticalagriculture:tertium_essence"
