@@ -2,6 +2,7 @@ package com.blakebr0.mysticalagriculture;
 
 import com.blakebr0.mysticalagriculture.api.MysticalAgricultureAPI;
 import com.blakebr0.mysticalagriculture.client.EssenceVesselColorManager;
+import com.blakebr0.mysticalagriculture.client.ModClientExtensions;
 import com.blakebr0.mysticalagriculture.client.ModClientTooltipComponentFactories;
 import com.blakebr0.mysticalagriculture.client.ModMenuScreens;
 import com.blakebr0.mysticalagriculture.client.ModRecipeBookCategories;
@@ -88,6 +89,7 @@ public final class MysticalAgriculture {
 			bus.register(new ModRecipeBookCategories());
 			bus.register(new ModClientTooltipComponentFactories());
 			bus.register(new ModMenuScreens());
+			bus.register(new ModClientExtensions());
 			bus.register(EssenceVesselColorManager.INSTANCE);
 		}
 
