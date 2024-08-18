@@ -1,9 +1,9 @@
-mods.mysticalagriculture.EnchanterCrafting.addRecipe("fancy_sharpness", "minecraft:protection", [
+<recipetype:mysticalagriculture:enchanter>.addRecipe("fancy_sharpness", "minecraft:protection", [
     <item:minecraft:carrot> * 24, <item:minecraft:cobblestone> * 128
 ]);
 
-//mods.mysticalagriculture.EnchanterCrafting.remove("minecraft:sharpness");
+//<recipetype:mysticalagriculture:enchanter>.removeByEnchantment("minecraft:sharpness");
 
-var recipes = <recipetype:mysticalagriculture:enchanter>.getAllRecipes();
+var recipes = <recipetype:mysticalagriculture:enchanter>.allRecipes;
 
 println("There are " + recipes.length + " enchanter recipes");

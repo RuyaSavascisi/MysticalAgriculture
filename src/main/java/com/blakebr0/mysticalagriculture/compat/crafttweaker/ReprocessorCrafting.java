@@ -6,12 +6,10 @@ import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
-import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.openzen.zencode.java.ZenCodeType;
@@ -19,23 +17,16 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("mods.mysticalagriculture.ReprocessorCrafting")
 @ZenRegister
 public final class ReprocessorCrafting implements IRecipeManager<IReprocessorRecipe> {
-    private static final ReprocessorCrafting INSTANCE = new ReprocessorCrafting();
-
     @Override
     public RecipeType<IReprocessorRecipe> getRecipeType() {
         return ModRecipeTypes.REPROCESSOR.get();
     }
 
     @ZenCodeType.Method
-    public static void addRecipe(String name, IItemStack output, IIngredient input) {
-        var id = CraftTweakerConstants.rl(INSTANCE.fixRecipeName(name));
+    public void addRecipe(String name, IItemStack output, IIngredient input) {
+        var id = CraftTweakerConstants.rl(this.fixRecipeName(name));
         var recipe = new ReprocessorRecipe(input.asVanillaIngredient(), output.getInternal());
 
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, new RecipeHolder<>(id, recipe)));
-    }
-
-    @ZenCodeType.Method
-    public static void remove(IItemStack stack) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.value().getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new RecipeHolder<>(id, recipe)));
     }
 }

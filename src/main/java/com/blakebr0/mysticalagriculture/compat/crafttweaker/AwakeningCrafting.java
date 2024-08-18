@@ -6,14 +6,12 @@ import com.blakebr0.mysticalagriculture.init.ModRecipeTypes;
 import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.CraftTweakerConstants;
 import com.blamejared.crafttweaker.api.action.recipe.ActionAddRecipe;
-import com.blamejared.crafttweaker.api.action.recipe.ActionRemoveRecipe;
 import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker.api.ingredient.IIngredient;
 import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.item.MCItemStack;
 import com.blamejared.crafttweaker.api.recipe.manager.base.IRecipeManager;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -23,33 +21,25 @@ import org.openzen.zencode.java.ZenCodeType;
 @ZenCodeType.Name("mods.mysticalagriculture.AwakeningCrafting")
 @ZenRegister
 public final class AwakeningCrafting implements IRecipeManager<IAwakeningRecipe> {
-    private static final AwakeningCrafting INSTANCE = new AwakeningCrafting();
-
     @Override
     public RecipeType<IAwakeningRecipe> getRecipeType() {
         return ModRecipeTypes.AWAKENING.get();
     }
 
     @ZenCodeType.Method
-    public static void addRecipe(String name, IItemStack output, IIngredient[] inputs, IItemStack[] essences, @ZenCodeType.OptionalBoolean boolean transferComponents) {
-        var id = CraftTweakerConstants.rl(INSTANCE.fixRecipeName(name));
-        var recipe = new AwakeningRecipe(inputs[0].asVanillaIngredient(), toIngredientsList(inputs), toItemStackList(essences), output.getInternal(), transferComponents);
+    public void addRecipe(String name, IItemStack output, IIngredient input, IIngredient[] inputs, IItemStack[] essences, @ZenCodeType.OptionalBoolean boolean transferComponents) {
+        var id = CraftTweakerConstants.rl(this.fixRecipeName(name));
+        var recipe = new AwakeningRecipe(input.asVanillaIngredient(), toIngredientsList(inputs), toItemStackList(essences), output.getInternal(), transferComponents);
 
         recipe.setTransformer((slot, stack) -> inputs[slot].getRemainingItem(new MCItemStack(stack)).getInternal());
 
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, new RecipeHolder<>(id, recipe)));
-    }
-
-    @ZenCodeType.Method
-    public static void remove(IItemStack stack) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.value().getResultItem(RegistryAccess.EMPTY).is(stack.getInternal().getItem())));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new RecipeHolder<>(id, recipe)));
     }
 
     private static NonNullList<Ingredient> toIngredientsList(IIngredient... iingredients) {
         var ingredients = NonNullList.withSize(4, Ingredient.EMPTY);
 
-        // first ingredient is passed in as its own parameter
-        for (int i = 1; i < iingredients.length; i++) {
+        for (int i = 0; i < iingredients.length; i++) {
             ingredients.set(i, iingredients[i].asVanillaIngredient());
         }
 

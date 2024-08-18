@@ -27,25 +27,23 @@ import java.util.List;
 @ZenCodeType.Name("mods.mysticalagriculture.SouliumSpawnerCrafting")
 @ZenRegister
 public final class SouliumSpawnerCrafting implements IRecipeManager<ISouliumSpawnerRecipe> {
-    private static final SouliumSpawnerCrafting INSTANCE = new SouliumSpawnerCrafting();
-
     @Override
     public RecipeType<ISouliumSpawnerRecipe> getRecipeType() {
         return ModRecipeTypes.SOULIUM_SPAWNER.get();
     }
 
     @ZenCodeType.Method
-    public static void addRecipe(String name, IIngredient input, int inputCount, String[] entities) {
-        var id = CraftTweakerConstants.rl(INSTANCE.fixRecipeName(name));
+    public void addRecipe(String name, IIngredient input, int inputCount, String[] entities) {
+        var id = CraftTweakerConstants.rl(this.fixRecipeName(name));
         var ingredient = new IngredientWithCount(new Ingredient.ItemValue(input.getItems()[0].getInternal()), inputCount);
         var recipe = new SouliumSpawnerRecipe(ingredient, toEntityTypeList(entities));
 
-        CraftTweakerAPI.apply(new ActionAddRecipe<>(INSTANCE, new RecipeHolder<>(id, recipe)));
+        CraftTweakerAPI.apply(new ActionAddRecipe<>(this, new RecipeHolder<>(id, recipe)));
     }
 
     @ZenCodeType.Method
-    public static void remove(String entity) {
-        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(INSTANCE, recipe -> recipe.value().getEntityTypes().unwrap()
+    public void removeByEntity(String entity) {
+        CraftTweakerAPI.apply(new ActionRemoveRecipe<>(this, recipe -> recipe.value().getEntityTypes().unwrap()
                 .stream()
                 .anyMatch(e -> e.data().toString().equals(entity)))
         );

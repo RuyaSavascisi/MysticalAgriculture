@@ -1,9 +1,11 @@
-mods.mysticalagriculture.AwakeningCrafting.addRecipe("netherite_from_dirt_2", <item:minecraft:netherite_ingot>, [
-    <item:minecraft:diamond>.transformReplace(<item:minecraft:apple>), <item:minecraft:dirt>.reuse(), <item:minecraft:dirt>.reuse(), <item:minecraft:dirt>, <item:minecraft:dirt>.reuse()
+<recipetype:mysticalagriculture:awakening>.addRecipe("netherite_from_dirt_2", <item:minecraft:netherite_ingot>, <item:minecraft:diamond>.transformReplace(<item:minecraft:apple>), [
+    <item:minecraft:dirt>.reuse(), <item:minecraft:dirt>.reuse(), <item:minecraft:dirt>, <item:minecraft:dirt>.reuse()
 ], [
     <item:mysticalagriculture:air_essence> * 10, <item:mysticalagriculture:earth_essence> * 20, <item:mysticalagriculture:water_essence> * 30, <item:mysticalagriculture:fire_essence> * 40
 ]);
 
-var recipes = <recipetype:mysticalagriculture:awakening>.getAllRecipes();
+//<recipetype:mysticalagriculture:awakening>.remove(<item:mysticalagriculture:awakened_supremium_block>);
+
+var recipes = <recipetype:mysticalagriculture:awakening>.allRecipes;
 
 println("There are " + recipes.length + " awakening recipes");
