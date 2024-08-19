@@ -3,28 +3,19 @@ package com.blakebr0.mysticalagriculture.augment;
 import com.blakebr0.cucumber.helper.ColorHelper;
 import com.blakebr0.mysticalagriculture.api.tinkering.Augment;
 import com.blakebr0.mysticalagriculture.api.tinkering.AugmentType;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.neoforge.common.ItemAbilities;
 
 import java.util.EnumSet;
-import java.util.Map;
 
 public class PathingAOEAugment extends Augment {
-    private static final Map<Block, BlockState> PATH_LOOKUP = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.DIRT_PATH.defaultBlockState()));
     private final int range;
 
     public PathingAOEAugment(ResourceLocation id, int tier, int range) {
@@ -39,15 +30,12 @@ public class PathingAOEAugment extends Augment {
         if (player == null)
             return false;
 
-        var stack = context.getItemInHand();
         var level = context.getLevel();
         var pos = context.getClickedPos();
-        var direction = context.getClickedFace();
-        var hand = context.getHand();
 
         var playedSound = false;
 
-        if (tryPath(stack, player, level, pos, direction, hand)) {
+        if (path(context, pos)) {
             level.playSound(player, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             playedSound = true;
@@ -62,7 +50,7 @@ public class PathingAOEAugment extends Augment {
             while (positions.hasNext()) {
                 var aoePos = positions.next();
 
-                if (tryPath(stack, player, level, aoePos, direction, hand) && !playedSound) {
+                if (path(context, aoePos) && !playedSound) {
                     level.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                     playedSound = true;
@@ -73,13 +61,19 @@ public class PathingAOEAugment extends Augment {
         return true;
     }
 
-    private static boolean tryPath(ItemStack stack, Player player, Level level, BlockPos pos, Direction direction, InteractionHand hand) {
-        if (direction != Direction.DOWN && level.isEmptyBlock(pos.above())) {
-            var state = PATH_LOOKUP.get(level.getBlockState(pos).getBlock());
+    private static boolean path(UseOnContext context, BlockPos pos) {
+        var level = context.getLevel();
+        var direction = context.getClickedFace();
 
-            if (state != null) {
+        if (direction != Direction.DOWN && level.isEmptyBlock(pos.above())) {
+            var modifiedState = level.getBlockState(pos).getToolModifiedState(context, ItemAbilities.SHOVEL_FLATTEN, false);
+            if (modifiedState != null) {
                 if (!level.isClientSide()) {
-                    level.setBlock(pos, state, 11);
+                    var stack = context.getItemInHand();
+                    var player = context.getPlayer();
+
+                    level.setBlock(pos, modifiedState, 11);
+                    level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, modifiedState));
 
                     if (player != null) {
                         stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);

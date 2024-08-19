@@ -3,28 +3,20 @@ package com.blakebr0.mysticalagriculture.augment;
 import com.blakebr0.cucumber.helper.ColorHelper;
 import com.blakebr0.mysticalagriculture.api.tinkering.Augment;
 import com.blakebr0.mysticalagriculture.api.tinkering.AugmentType;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.neoforge.common.ItemAbilities;
 
 import java.util.EnumSet;
-import java.util.Map;
 
 public class TillingAOEAugment extends Augment {
-    private static final Map<Block, BlockState> HOE_LOOKUP = Maps.newHashMap(ImmutableMap.of(Blocks.GRASS_BLOCK, Blocks.FARMLAND.defaultBlockState(), Blocks.DIRT_PATH, Blocks.FARMLAND.defaultBlockState(), Blocks.DIRT, Blocks.FARMLAND.defaultBlockState(), Blocks.COARSE_DIRT, Blocks.DIRT.defaultBlockState()));
     private final int range;
 
     public TillingAOEAugment(ResourceLocation id, int tier, int range) {
@@ -39,16 +31,13 @@ public class TillingAOEAugment extends Augment {
         if (player == null)
             return false;
 
-        var stack = context.getItemInHand();
-        var world = context.getLevel();
+        var level = context.getLevel();
         var pos = context.getClickedPos();
-        var direction = context.getClickedFace();
-        var hand = context.getHand();
 
         var playedSound = false;
 
-        if (tryTill(stack, player, world, pos, direction, hand)) {
-            world.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+        if (till(context, pos)) {
+            level.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             playedSound = true;
 
@@ -62,8 +51,8 @@ public class TillingAOEAugment extends Augment {
             while (positions.hasNext()) {
                 var aoePos = positions.next();
 
-                if (tryTill(stack, player, world, aoePos, direction, hand) && !playedSound) {
-                    world.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                if (till(context, aoePos) && !playedSound) {
+                    level.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                     playedSound = true;
                 }
@@ -73,14 +62,19 @@ public class TillingAOEAugment extends Augment {
         return true;
     }
 
-    // TODO: ForgeHooks.onUseHoe
-    private static boolean tryTill(ItemStack stack, Player player, Level level, BlockPos pos, Direction direction, InteractionHand hand) {
-        if (direction != Direction.DOWN && level.isEmptyBlock(pos.above())) {
-            var state = HOE_LOOKUP.get(level.getBlockState(pos).getBlock());
+    private static boolean till(UseOnContext context, BlockPos pos) {
+        var level = context.getLevel();
+        var direction = context.getClickedFace();
 
-            if (state != null) {
+        if (direction != Direction.DOWN && level.isEmptyBlock(pos.above())) {
+            var modifiedState = level.getBlockState(pos).getToolModifiedState(context, ItemAbilities.HOE_TILL, false);
+            if (modifiedState != null) {
                 if (!level.isClientSide()) {
-                    level.setBlock(pos, state, 11);
+                    var stack = context.getItemInHand();
+                    var player = context.getPlayer();
+
+                    level.setBlock(pos, modifiedState, 11);
+                    level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, modifiedState));
 
                     if (player != null) {
                         stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
