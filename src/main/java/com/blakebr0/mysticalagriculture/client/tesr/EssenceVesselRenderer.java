@@ -33,7 +33,7 @@ public class EssenceVesselRenderer implements BlockEntityRenderer<EssenceVesselT
             float fillPercentage = (float) stack.getCount() / (float) inventory.getSlotLimit(0);
 
             float filledAmount = 0.4f * fillPercentage;
-            float textureOffset = 16.0f - (11.0f * fillPercentage);
+            float textureOffset = ((16.0f - (11.0f * fillPercentage)) / 16.0F);
 
             matrix.pushPose();
 
@@ -116,7 +116,7 @@ public class EssenceVesselRenderer implements BlockEntityRenderer<EssenceVesselT
         renderer.addVertex(stack.last().pose(), x, y, z)
                 .setColor(color)
                 .setUv(u, v)
-                .setLight(combinedLight) // TODO: 1.21 this was changed
+                .setLight(combinedLight)
                 .setNormal(1, 0, 0);
     }
 }
