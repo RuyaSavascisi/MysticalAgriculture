@@ -42,6 +42,9 @@ public class SouliumSpawnerRecipe implements ISouliumSpawnerRecipe {
 
     @Override
     public boolean matches(CraftingInput inventory, Level level) {
+        if (this.inputs.size() != inventory.ingredientCount())
+            return false;
+
         var stack = inventory.getItem(0);
         return this.inputs.getFirst().test(stack);
     }
