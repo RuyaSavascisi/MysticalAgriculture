@@ -8,6 +8,7 @@ import com.blakebr0.mysticalagriculture.config.ModConfigs;
 import com.blakebr0.mysticalagriculture.init.ModDataComponentTypes;
 import com.blakebr0.mysticalagriculture.lib.ModTooltips;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,7 +34,16 @@ public class EssenceShearsItem extends BaseShearsItem implements ITinkerable {
     private final int slots;
 
     public EssenceShearsItem(Tier tier, int tinkerableTier, int slots) {
-        super(p -> p.durability(tier.getUses()).component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
+        super(p -> {
+            p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots));
+            if (tier.getUses() == -1) {
+                p.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
+            } else {
+                p.durability(tier.getUses());
+            }
+
+            return p;
+        });
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }
