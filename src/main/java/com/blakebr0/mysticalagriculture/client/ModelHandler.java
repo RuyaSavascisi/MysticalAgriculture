@@ -19,8 +19,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
@@ -62,7 +64,7 @@ public final class ModelHandler {
 
         for (var cropType : CropRegistry.getInstance().getTypes()) {
             cropModels.put(cropType.getId(), IntStream.range(0, 7)
-                    .mapToObj(i -> registry.get(ModelResourceLocation.inventory(cropType.getStemModel().withSuffix("_" + i))))
+                    .mapToObj(i -> registry.get(ModelResourceLocation.standalone(cropType.getStemModel().withSuffix("_" + i))))
                     .toArray(BakedModel[]::new));
         }
 
@@ -88,8 +90,8 @@ public final class ModelHandler {
                 if (bakedModel == null || bakedModel.getParticleIcon(ModelData.EMPTY).contents().name().equals(MISSING_NO)) {
                     var flower = textures.getFlowerTexture();
                     var type = crop.getType().getId();
-                    var path = ModelResourceLocation.inventory(ResourceLocation.fromNamespaceAndPath(type.getNamespace(), flower.getPath() + "_" + type.getPath()));
-                    var model = registry.get(path);
+                    var texture = ResourceLocation.fromNamespaceAndPath(type.getNamespace(), flower.getPath() + "_" + type.getPath());
+                    var model = getBakedModel(texture, registry);
 
                     registry.replace(location, model);
                 }
@@ -99,12 +101,12 @@ public final class ModelHandler {
             var essenceId = BuiltInRegistries.ITEM.getKey(essence);
 
             {
-                var location = new ModelResourceLocation(essenceId, "inventory");
+                var location = ModelResourceLocation.inventory(essenceId);
                 var bakedModel = registry.get(location);
 
                 if (bakedModel == null || bakedModel.getParticleIcon(ModelData.EMPTY).contents().name().equals(MISSING_NO)) {
                     var texture = textures.getEssenceTexture();
-                    var model = registry.get(texture);
+                    var model = getBakedModel(texture, registry);
 
                     registry.replace(location, model);
                 }
@@ -114,12 +116,12 @@ public final class ModelHandler {
             var seedsId = BuiltInRegistries.ITEM.getKey(seeds);
 
             {
-                var location = new ModelResourceLocation(seedsId, "inventory");
+                var location = ModelResourceLocation.inventory(seedsId);
                 var bakedModel = registry.get(location);
 
                 if (bakedModel == null || bakedModel.getParticleIcon(ModelData.EMPTY).contents().name().equals(MISSING_NO)) {
                     var texture = textures.getSeedTexture();
-                    var model = registry.get(texture);
+                    var model = getBakedModel(texture, registry);
 
                     registry.replace(location, model);
                 }
@@ -178,5 +180,19 @@ public final class ModelHandler {
             ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_CROSSBOW.get(), ResourceLocation.withDefaultNamespace("firework"), EssenceCrossbowItem.getFireworkPropertyGetter());
             ItemProperties.register(ModItems.AWAKENED_SUPREMIUM_FISHING_ROD.get(), ResourceLocation.withDefaultNamespace("cast"), EssenceFishingRodItem.getCastPropertyGetter());
         });
+    }
+
+    @Nullable // check for both standalone and inventory variants just in case
+    private static BakedModel getBakedModel(ResourceLocation location, Map<ModelResourceLocation, BakedModel> registry) {
+        var path = ModelResourceLocation.standalone(location);
+        var model = registry.get(path);
+
+        if (model != null)
+            return model;
+
+        path = ModelResourceLocation.inventory(location);
+        model = registry.get(path);
+
+        return model;
     }
 }
