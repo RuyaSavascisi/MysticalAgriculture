@@ -1,5 +1,6 @@
 {
   "type": "minecraft:block",
+  "random_sequence": "mysticalagriculture:blocks/inferium_ore",
   "pools": [
     {
       "name": "mysticalagriculture:inferium_ore",
@@ -18,7 +19,7 @@
                     "predicates": {
                       "minecraft:enchantments": [
                         {
-                          "enchantment": "minecraft:silk_touch",
+                          "enchantments": "minecraft:silk_touch",
                           "levels": {
                             "min": 1
                           }
