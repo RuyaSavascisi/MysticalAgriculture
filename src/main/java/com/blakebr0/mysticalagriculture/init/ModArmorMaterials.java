@@ -26,8 +26,7 @@ public final class ModArmorMaterials {
             12, SoundEvents.ARMOR_EQUIP_GOLD,
             () -> Ingredient.of(ModItems.INFERIUM_INGOT.get()),
             List.of(
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("inferium"), "", true),
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("inferium"), "_overlay", false)
+                    new ArmorMaterial.Layer(MysticalAgriculture.resource("inferium"), "", false)
             ),
             2.0F, 0.0F
     ));
@@ -41,8 +40,7 @@ public final class ModArmorMaterials {
             14, SoundEvents.ARMOR_EQUIP_GOLD,
             () -> Ingredient.of(ModItems.PRUDENTIUM_INGOT.get()),
             List.of(
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("prudentium"), "", true),
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("prudentium"), "_overlay", false)
+                    new ArmorMaterial.Layer(MysticalAgriculture.resource("prudentium"), "", false)
             ),
             2.25F, 0.0F
     ));
@@ -56,8 +54,7 @@ public final class ModArmorMaterials {
             16, SoundEvents.ARMOR_EQUIP_GOLD,
             () -> Ingredient.of(ModItems.TERTIUM_INGOT.get()),
             List.of(
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("tertium"), "", true),
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("tertium"), "_overlay", false)
+                    new ArmorMaterial.Layer(MysticalAgriculture.resource("tertium"), "", false)
             ),
             2.5F, 0.0F
     ));
@@ -71,8 +68,7 @@ public final class ModArmorMaterials {
             18, SoundEvents.ARMOR_EQUIP_GOLD,
             () -> Ingredient.of(ModItems.IMPERIUM_INGOT.get()),
             List.of(
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("imperium"), "", true),
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("imperium"), "_overlay", false)
+                    new ArmorMaterial.Layer(MysticalAgriculture.resource("imperium"), "", false)
             ),
             2.75F, 0.0F
     ));
@@ -86,8 +82,7 @@ public final class ModArmorMaterials {
             20, SoundEvents.ARMOR_EQUIP_GOLD,
             () -> Ingredient.of(ModItems.SUPREMIUM_INGOT.get()),
             List.of(
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("supremium"), "", true),
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("supremium"), "_overlay", false)
+                    new ArmorMaterial.Layer(MysticalAgriculture.resource("supremium"), "", false)
             ),
             3.0F, 0.0F
     ));
@@ -101,8 +96,7 @@ public final class ModArmorMaterials {
             22, SoundEvents.ARMOR_EQUIP_GOLD,
             () -> Ingredient.of(ModItems.AWAKENED_SUPREMIUM_INGOT.get()),
             List.of(
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("awakened_supremium"), "", true),
-                    new ArmorMaterial.Layer(MysticalAgriculture.resource("awakened_supremium"), "_overlay", false)
+                    new ArmorMaterial.Layer(MysticalAgriculture.resource("awakened_supremium"), "", false)
             ),
             3.5F, 0.0F
     ));
