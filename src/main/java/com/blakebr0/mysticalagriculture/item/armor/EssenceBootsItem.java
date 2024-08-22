@@ -26,8 +26,8 @@ public class EssenceBootsItem extends BaseArmorItem implements ITinkerable {
     private final int tinkerableTier;
     private final int slots;
 
-    public EssenceBootsItem(Holder<ArmorMaterial> material, int tinkerableTier, int slots) {
-        super(material, Type.BOOTS, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
+    public EssenceBootsItem(Holder<ArmorMaterial> material, int maxDamageFactor, int tinkerableTier, int slots) {
+        super(material, Type.BOOTS, maxDamageFactor, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }

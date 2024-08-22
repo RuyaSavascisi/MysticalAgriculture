@@ -32,8 +32,8 @@ public class EssenceChestplateItem extends BaseArmorItem implements ITinkerable 
     private final int tinkerableTier;
     private final int slots;
 
-    public EssenceChestplateItem(Holder<ArmorMaterial> material, int tinkerableTier, int slots) {
-        super(material, Type.CHESTPLATE, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
+    public EssenceChestplateItem(Holder<ArmorMaterial> material, int maxDamageFactor, int tinkerableTier, int slots) {
+        super(material, Type.CHESTPLATE, maxDamageFactor, p -> p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots)));
         this.tinkerableTier = tinkerableTier;
         this.slots = slots;
     }

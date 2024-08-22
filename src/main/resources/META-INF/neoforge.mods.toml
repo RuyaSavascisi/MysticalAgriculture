@@ -31,6 +31,6 @@ license="MIT"
     [[dependencies.mysticalagriculture]]
         modId="cucumber"
         mandatory=true
-        versionRange="[8.0.0,)"
+        versionRange="[8.0.1,)"
         ordering="NONE"
         side="BOTH"
