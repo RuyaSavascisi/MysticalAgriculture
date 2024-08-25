@@ -39,9 +39,13 @@ public class EssenceScytheItem extends BaseScytheItem implements ITinkerable {
     public EssenceScytheItem(Tier tier, int range, ChatFormatting textColor, int tinkerableTier, int slots) {
         super(tier, range, p -> {
             p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots));
-            if (tier.getUses() == -1) {
+
+            var uses = tier.getUses();
+            if (uses == 0) {
                 p.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
             }
+
+            p.durability(uses);
 
             return p;
         });

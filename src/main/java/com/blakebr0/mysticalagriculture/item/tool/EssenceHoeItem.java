@@ -36,9 +36,13 @@ public class EssenceHoeItem extends BaseHoeItem implements ITinkerable {
     public EssenceHoeItem(Tier tier, int tinkerableTier, int slots) {
         super(tier, 0, tinkerableTier - 1.0F, p -> {
             p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots));
-            if (tier.getUses() == -1) {
+
+            var uses = tier.getUses();
+            if (uses == 0) {
                 p.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
             }
+
+            p.durability(uses);
 
             return p;
         });

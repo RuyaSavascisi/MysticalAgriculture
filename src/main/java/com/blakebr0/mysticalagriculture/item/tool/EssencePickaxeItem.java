@@ -36,9 +36,13 @@ public class EssencePickaxeItem extends BasePickaxeItem implements ITinkerable {
     public EssencePickaxeItem(Tier tier, int tinkerableTier, int slots) {
         super(tier, p -> {
             p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots));
-            if (tier.getUses() == -1) {
+
+            var uses = tier.getUses();
+            if (uses == 0) {
                 p.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
             }
+
+            p.durability(uses);
 
             return p;
         });

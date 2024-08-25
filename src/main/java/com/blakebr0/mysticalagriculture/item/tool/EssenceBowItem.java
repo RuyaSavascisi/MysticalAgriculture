@@ -38,11 +38,13 @@ public class EssenceBowItem extends BaseBowItem implements ITinkerable {
     public EssenceBowItem(Tier tier, int tinkerableTier, int slots, float drawSpeedMulti, float bonusDamage) {
         super(p -> {
             p.component(ModDataComponentTypes.EQUIPPED_AUGMENTS, new ArrayList<>(slots));
-            if (tier.getUses() == -1) {
+
+            var uses = tier.getUses();
+            if (uses == 0) {
                 p.component(DataComponents.UNBREAKABLE, new Unbreakable(true));
-            } else {
-                p.durability(tier.getUses());
             }
+
+            p.durability(uses);
 
             return p;
         });
