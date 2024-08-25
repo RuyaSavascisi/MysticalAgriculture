@@ -39,7 +39,7 @@ public class SoulExtractionRecipe implements ISoulExtractionRecipe {
 
     @Override
     public boolean matches(CraftingInput inventory, Level level) {
-        if (this.inputs.size() != inventory.ingredientCount())
+        if (inventory.size() < 3)
             return false;
 
         var input = inventory.getItem(0);
