@@ -1,5 +1,5 @@
 {
-  "type": "cucumber:shaped_no_mirror",
+  "type": "crafting_shaped",
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
@@ -11,9 +11,9 @@
     }
   ],
   "pattern": [
-    "E  ",
-    " E ",
-    "  E"
+    "  E",
+    "  E",
+    "E  "
   ],
   "key": {
     "E": {

@@ -1,5 +1,5 @@
 {
-  "type": "cucumber:shaped_no_mirror",
+  "type": "crafting_shaped",
   "neoforge:conditions": [
     {
       "type": "mysticalagriculture:crop_enabled",
@@ -13,7 +13,7 @@
   "pattern": [
     " E ",
     " F ",
-    " E "
+    "  E"
   ],
   "key": {
     "E": {
