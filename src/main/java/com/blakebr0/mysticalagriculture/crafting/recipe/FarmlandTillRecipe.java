@@ -35,9 +35,13 @@ public class FarmlandTillRecipe extends ShapelessRecipe {
             if (stack.getItem() instanceof HoeItem) {
                 var hoe = stack.copy();
 
-                hoe.setDamageValue(hoe.getDamageValue() - 1);
-
-                if (hoe.getDamageValue() > 0) {
+                if (hoe.isDamageableItem()) {
+                    var damage = hoe.getDamageValue() + 1;
+                    hoe.setDamageValue(damage);
+                    if (damage < hoe.getMaxDamage()) {
+                        remaining.set(i, hoe);
+                    }
+                } else {
                     remaining.set(i, hoe);
                 }
             }
