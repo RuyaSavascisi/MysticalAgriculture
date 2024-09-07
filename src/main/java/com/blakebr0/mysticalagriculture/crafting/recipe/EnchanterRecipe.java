@@ -41,7 +41,7 @@ public class EnchanterRecipe implements IEnchanterRecipe {
 
     @Override
     public boolean matches(CraftingInput inventory, Level level) {
-        if (this.inputs.size() != inventory.ingredientCount())
+        if (this.inputs.size() != inventory.ingredientCount() - 1)
             return false;
 
         var inputs = NonNullList.<ItemStack>create();
