@@ -108,6 +108,9 @@ public class EssenceFurnaceScreen extends BaseContainerScreen<EssenceFurnaceCont
         if (this.tile == null)
             return 0;
 
+        // TODO: workaround for non-default cook time recipes
+        this.tile.getActiveRecipe();
+
         var tier = this.tile.getMachineTier();
         if (tier != null) {
             return (int) (this.tile.getOperationTime() * tier.getOperationTimeMultiplier());
