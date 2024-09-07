@@ -25,14 +25,16 @@ public class AugmentUtils {
         if (item instanceof ITinkerable tinkerable) {
             if (slot < tinkerable.getAugmentSlots() && tinkerable.getTinkerableTier() >= augment.getTier()) {
                 var component = stack.get(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS);
-                if (component == null) {
-                    component = new ArrayList<>(tinkerable.getAugmentSlots());
+                var augments = new ArrayList<AugmentComponent>();
+
+                if (component != null && !component.isEmpty()) {
+                    augments.addAll(component);
                 }
 
-                component.removeIf(a -> a.slot() == slot);
-                component.add(new AugmentComponent(augment.getId(), slot));
+                augments.removeIf(a -> a.slot() == slot);
+                augments.add(new AugmentComponent(augment.getId(), slot));
 
-                stack.set(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS, component);
+                stack.set(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS, augments);
             }
         }
     }
@@ -53,8 +55,15 @@ public class AugmentUtils {
         if (item instanceof ITinkerable tinkerable) {
             var augment = getAugment(stack, slot);
             if (slot < tinkerable.getAugmentSlots() && augment != null) {
-                component.removeIf(a -> a.slot() == slot);
-                stack.set(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS, component);
+                var augments = new ArrayList<AugmentComponent>();
+
+                if (!component.isEmpty()) {
+                    augments.addAll(component);
+                }
+
+                augments.removeIf(a -> a.slot() == slot);
+
+                stack.set(MysticalAgricultureDataComponentTypes.EQUIPPED_AUGMENTS, augments);
             }
         }
     }
