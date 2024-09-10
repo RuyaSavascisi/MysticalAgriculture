@@ -155,9 +155,17 @@ public class InfusionRecipe implements IInfusionRecipe {
                                             if (ingredients.length == 0) {
                                                 return DataResult.error(() -> "No ingredients for infusion recipe");
                                             } else {
-                                                return ingredients.length > max
-                                                        ? DataResult.error(() -> "Too many ingredients for infusion recipe. The maximum is: %s".formatted(max))
-                                                        : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
+                                                if (ingredients.length > max) {
+                                                    return DataResult.error(() -> "Too many ingredients for infusion recipe. The maximum is: %s".formatted(max));
+                                                }
+
+                                                var result = NonNullList.withSize(max, Ingredient.EMPTY);
+
+                                                for (int i = 0; i < ingredients.length; i++) {
+                                                    result.set(i, ingredients[i]);
+                                                }
+
+                                                return DataResult.success(result);
                                             }
                                         },
                                         DataResult::success

@@ -228,9 +228,17 @@ public class AwakeningRecipe implements IAwakeningRecipe {
                                             if (ingredients.length == 0) {
                                                 return DataResult.error(() -> "No ingredients for awakening recipe");
                                             } else {
-                                                return ingredients.length > max
-                                                        ? DataResult.error(() -> "Too many ingredients for awakening recipe. The maximum is: %s".formatted(max))
-                                                        : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
+                                                if (ingredients.length > max) {
+                                                    return DataResult.error(() -> "Too many ingredients for awakening recipe. The maximum is: %s".formatted(max));
+                                                }
+
+                                                var result = NonNullList.withSize(max, Ingredient.EMPTY);
+
+                                                for (int i = 0; i < ingredients.length; i++) {
+                                                    result.set(i, ingredients[i]);
+                                                }
+
+                                                return DataResult.success(result);
                                             }
                                         },
                                         DataResult::success
@@ -246,9 +254,17 @@ public class AwakeningRecipe implements IAwakeningRecipe {
                                             if (stacks.length == 0) {
                                                 return DataResult.error(() -> "No essences for awakening recipe");
                                             } else {
-                                                return stacks.length > max
-                                                        ? DataResult.error(() -> "Too many essences for awakening recipe. The maximum is: %s".formatted(max))
-                                                        : DataResult.success(NonNullList.of(ItemStack.EMPTY, stacks));
+                                                if (stacks.length > max) {
+                                                    return DataResult.error(() -> "Too many essences for awakening recipe. The maximum is: %s".formatted(max));
+                                                }
+
+                                                var result = NonNullList.withSize(max, ItemStack.EMPTY);
+
+                                                for (int i = 0; i < stacks.length; i++) {
+                                                    result.set(i, stacks[i]);
+                                                }
+
+                                                return DataResult.success(result);
                                             }
                                         },
                                         DataResult::success
