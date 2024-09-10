@@ -3,7 +3,7 @@
   "input": {
     "item": "minecraft:blaze_powder"
   },
-  "output": {
+  "result": {
     "type": "mysticalagriculture:blaze",
     "souls": 0.25
   }
